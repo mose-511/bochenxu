@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>博辰序 · 留资管理后台</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+  :root{--navy:#0A2A4A;--navy2:#0E3A66;--gold:#C9A227;--gold-d:#B8860B;--ink:#13293D;--ink2:#3E5A73;--line:#DCE6F0;--bg:#F5F8FB}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",sans-serif}
+  .top{background:var(--navy);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px}
+  .top b{font-size:18px;letter-spacing:2px}
+  .top .gold{color:var(--gold);font-size:12px;letter-spacing:3px}
+  .top .sp{flex:1}
+  .top button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer}
+  .wrap{max-width:1180px;margin:0 auto;padding:18px 16px 60px}
+  .login{max-width:380px;margin:12vh auto;background:#fff;border-radius:14px;padding:30px 26px;box-shadow:0 8px 30px rgba(13,42,74,.1);text-align:center}
+  .login h1{margin:0 0 6px;font-size:20px;color:var(--navy)}
+  .login p{margin:0 0 18px;font-size:13px;color:var(--ink2)}
+  .login input{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;font-size:15px;outline:none;text-align:center}
+  .login input:focus{border-color:#1B5FA8;box-shadow:0 0 0 3px rgba(27,95,168,.12)}
+  .login button{width:100%;margin-top:14px;padding:12px;border:none;border-radius:9px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#fff;font-size:15px;font-weight:700;letter-spacing:2px;cursor:pointer}
+  .login .err{display:none;margin-top:10px;color:#C0392B;font-size:13px}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .stat{flex:1;min-width:150px;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 3px 14px rgba(13,42,74,.06)}
+  .stat .n{font-size:26px;font-weight:800;color:var(--navy)}
+  .stat .t{font-size:12px;color:var(--ink2);margin-top:2px}
+  .bar{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 3px 14px rgba(13,42,74,.06);margin-bottom:14px;font-size:13px;color:var(--ink2);line-height:2}
+  .bar b{color:var(--navy)}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(13,42,74,.06);font-size:13.5px}
+  th{background:var(--navy);color:#fff;padding:10px 8px;text-align:left;font-weight:600;white-space:nowrap;position:sticky;top:0}
+  td{padding:9px 8px;border-bottom:1px solid #EEF3F8;white-space:nowrap}
+  tr:hover td{background:#F4F8FC}
+  td.ph{font-family:Consolas,monospace;letter-spacing:.5px}
+  .tag{display:inline-block;padding:1px 8px;border-radius:20px;font-size:12px;background:#EDF3FA;color:#1B5FA8}
+  .vsel{padding:3px 6px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;background:#fff;cursor:pointer;outline:none}
+  .vsel.v-verified{color:#1B8A4C;border-color:#8FCDA8;background:#EFF9F2}
+  .vsel.v-invalid{color:#C0392B;border-color:#E8A9A2;background:#FDF1EF}
+  .vsel.v-pending{color:#8A6D1C;border-color:#E2CE8E;background:#FDFAEC}
+  .empty{padding:40px;text-align:center;color:var(--ink2)}
+  @media (max-width:640px){td,th{padding:7px 5px;font-size:12px}.card-scroll{overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="top">
+  <b>博辰序</b><span class="gold">BOCHENXU</span>
+  <span style="font-size:14px;opacity:.85">留资管理后台</span>
+  <span class="sp"></span>
+  <button id="btnPwd" style="display:none">修改访问密码</button>
+  <button id="btnExport" style="display:none">导出 CSV</button>
+  <button id="btnRefresh" style="display:none">刷新</button>
+  <button id="btnOut" style="display:none">退出</button>
+</div>
+<div class="wrap">
+  <div class="login" id="loginView">
+    <h1>管理员登录</h1>
+    <p>仅站长可访问 · 请输入管理密码</p>
+    <input id="pwd" type="password" placeholder="管理密码" autocomplete="off">
+    <button id="btnIn" type="button">进入后台</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+
+  <div id="dashView" style="display:none">
+    <div class="stats">
+      <div class="stat"><div class="n" id="stTotal">—</div><div class="t">累计留资</div></div>
+      <div class="stat"><div class="n" id="stToday">—</div><div class="t">今日新增</div></div>
+      <div class="stat"><div class="n" id="stVerified">—</div><div class="t">已核实真号</div></div>
+      <div class="stat"><div class="n" id="stInvalid">—</div><div class="t">无效号</div></div>
+      <div class="stat"><div class="n" id="stProv">—</div><div class="t">覆盖省份</div></div>
+    </div>
+    <div class="bar" id="provBar">加载中…</div>
+    <div class="card-scroll">
+    <table>
+      <thead><tr><th>#</th><th>手机号</th><th>省份</th><th>城市</th><th>区县</th><th>孩子高中</th><th>年级</th><th>选科</th><th>登记时间</th><th>回访标记</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<script src="lib/workbuddy-cloud-sdk.global.js"></script>
+<script>
+(function(){
+  'use strict';
+  var PUB = {
+    endpoint: 'https://bochenxu.app.workbuddy.host',
+    publishableKey: 'wbpk_Fpg2xqmGc4MgJ42KU7tcbK_IWFSMPTZi0r4lpEk3AD4zt4xyJXvD2Hh'
+  };
+  var cloud = window.WorkBuddyCloud.createWorkBuddyCloud({ endpoint: PUB.endpoint, publishableKey: PUB.publishableKey });
+  var ROWS = [];
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  function fmtTime(ts){
+    if(!ts) return '';
+    var d = new Date(ts);
+    function p(n){ return (n<10?'0':'')+n; }
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+  }
+
+  var VSTATUS = {
+    pending:  { label: '待核实', cls: 'v-pending' },
+    verified: { label: '已核实真号', cls: 'v-verified' },
+    invalid:  { label: '无效', cls: 'v-invalid' }
+  };
+  function vOptions(cur){
+    var h='';
+    for(var k in VSTATUS){
+      h+='<option value="'+k+'"'+(k===cur?' selected':'')+'>'+VSTATUS[k].label+'</option>';
+    }
+    return h;
+  }
+
+  function render(rows){
+    ROWS = rows || [];
+    var tb = document.getElementById('tbody');
+    if(!ROWS.length){ tb.innerHTML = '<tr><td colspan="10" class="empty">暂无留资数据</td></tr>'; }
+    else{
+      var h='';
+      for(var i=0;i<ROWS.length;i++){
+        var r=ROWS[i];
+        var phone = String(r.phone||'');
+        var masked = phone.length===11 ? phone.slice(0,3)+'****'+phone.slice(7) : esc(phone);
+        var vs = VSTATUS[r.verify_status] ? r.verify_status : 'pending';
+        h+='<tr><td>'+(i+1)+'</td><td class="ph" title="'+esc(phone)+'">'+masked+'</td><td><span class="tag">'+esc(r.province)+'</span></td><td>'+esc(r.city)+'</td><td>'+esc(r.district||'—')+'</td><td>'+esc(r.school||'—')+'</td><td>'+esc(r.grade)+'</td><td>'+esc(r.subject)+'</td><td>'+fmtTime(r.created_at)+'</td>'
+          +'<td><select class="vsel v-'+vs+'" data-id="'+r.id+'">'+vOptions(vs)+'</select></td></tr>';
+      }
+      tb.innerHTML=h;
+    }
+    // 统计
+    var total=ROWS.length, today=0, nVerified=0, nInvalid=0, provMap={};
+    var t0=new Date(); t0.setHours(0,0,0,0);
+    for(var j=0;j<ROWS.length;j++){
+      var rt = ROWS[j].created_at ? new Date(ROWS[j].created_at).getTime() : 0;
+      if(rt>=t0.getTime()) today++;
+      if(ROWS[j].verify_status==='verified') nVerified++;
+      if(ROWS[j].verify_status==='invalid') nInvalid++;
+      var pv=ROWS[j].province||'未知'; provMap[pv]=(provMap[pv]||0)+1;
+    }
+    var topProv='—', topN=0, keys=Object.keys(provMap).sort(function(a,b){return provMap[b]-provMap[a];});
+    if(keys.length){ topProv=keys[0]; topN=provMap[keys[0]]; }
+    document.getElementById('stTotal').textContent=total;
+    document.getElementById('stToday').textContent=today;
+    document.getElementById('stVerified').textContent=nVerified;
+    document.getElementById('stInvalid').textContent=nInvalid;
+    document.getElementById('stProv').textContent=keys.length;
+    var bar='';
+    for(var k=0;k<Math.min(keys.length,10);k++){
+      bar+='<b>'+esc(keys[k])+'</b> '+provMap[keys[k]]+'人 &nbsp;·&nbsp; ';
+    }
+    document.getElementById('provBar').innerHTML = bar? ('省份分布：'+bar.replace(/ &nbsp;·&nbsp; $/,'')) : '暂无数据';
+  }
+
+  // 回访标记：下拉变更 → 调 update_lead_status（密码保护）
+  function onVerifyChange(e){
+    var sel=e.target;
+    if(sel.tagName!=='SELECT'||!sel.dataset.id) return;
+    var pwd=sessionStorage.getItem('bcx_admin');
+    if(!pwd) return;
+    var id=sel.dataset.id, st=sel.value;
+    var old=sel.getAttribute('data-prev')||'pending';
+    sel.disabled=true;
+    cloud.database.rpc('update_lead_status',{ p_password: pwd, p_id: Number(id), p_status: st }).then(function(r){
+      sel.disabled=false;
+      if(r && r.error){
+        alert('标记失败：'+((r.error&&r.error.message)||'请重试'));
+        sel.value=old; syncSelClass(sel);
+        return;
+      }
+      // 本地同步
+      for(var i=0;i<ROWS.length;i++){ if(String(ROWS[i].id)===String(id)) ROWS[i].verify_status=st; }
+      syncSelClass(sel); restat();
+    }).catch(function(){
+      sel.disabled=false;
+      alert('网络异常，标记失败');
+      sel.value=old; syncSelClass(sel);
+    });
+  }
+  function syncSelClass(sel){
+    sel.className='vsel v-'+(VSTATUS[sel.value]?sel.value:'pending');
+  }
+  // 只重算统计卡（不重渲染表格，避免打断下拉操作）
+  function restat(){
+    var total=ROWS.length, today=0, nVerified=0, nInvalid=0;
+    var t0=new Date(); t0.setHours(0,0,0,0);
+    for(var j=0;j<ROWS.length;j++){
+      var rt = ROWS[j].created_at ? new Date(ROWS[j].created_at).getTime() : 0;
+      if(rt>=t0.getTime()) today++;
+      if(ROWS[j].verify_status==='verified') nVerified++;
+      if(ROWS[j].verify_status==='invalid') nInvalid++;
+    }
+    document.getElementById('stTotal').textContent=total;
+    document.getElementById('stToday').textContent=today;
+    document.getElementById('stVerified').textContent=nVerified;
+    document.getElementById('stInvalid').textContent=nInvalid;
+  }
+
+  function fetchLeads(pwd){
+    document.getElementById('btnIn').disabled=true;
+    cloud.database.rpc('get_all_leads',{ p_password: pwd }).then(function(r){
+      document.getElementById('btnIn').disabled=false;
+      if(r.error){
+        var el=document.getElementById('loginErr');
+        el.textContent = (r.error.code==='42501'||/DENIED/i.test(r.error.message||'')) ? '密码错误' : ('查询失败：'+(r.error.message||''));
+        el.style.display='block';
+        return;
+      }
+      sessionStorage.setItem('bcx_admin', pwd);
+      document.getElementById('loginView').style.display='none';
+      document.getElementById('dashView').style.display='block';
+      ['btnPwd','btnExport','btnRefresh','btnOut'].forEach(function(id){document.getElementById(id).style.display='';});
+      render(r.data||[]);
+    }).catch(function(){
+      document.getElementById('btnIn').disabled=false;
+      var el=document.getElementById('loginErr');
+      el.textContent='网络异常，请重试'; el.style.display='block';
+    });
+  }
+
+  document.getElementById('btnIn').addEventListener('click', function(){
+    var v=document.getElementById('pwd').value;
+    if(!v){ var el=document.getElementById('loginErr'); el.textContent='请输入密码'; el.style.display='block'; return; }
+    document.getElementById('loginErr').style.display='none';
+    fetchLeads(v);
+  });
+  // 回访标记下拉（事件委托，渲染后无需重复绑定）
+  document.getElementById('tbody').addEventListener('change', onVerifyChange);
+  document.getElementById('pwd').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('btnIn').click(); });
+
+  // 修改访问密码（家长进门密码，随时可改，改后旧密码立即失效）
+  document.getElementById('btnPwd').addEventListener('click', function(){
+    var pwd=sessionStorage.getItem('bcx_admin');
+    if(!pwd) return;
+    var np=prompt('请输入新的访问密码（至少 6 位，建议字母+数字）\n修改后：旧密码立即失效，新密码发给您认可的家长即可');
+    if(np===null) return;
+    np=np.trim();
+    if(np.length<6){ alert('密码至少 6 位，未修改'); return; }
+    cloud.database.rpc('set_access_password',{ p_admin: pwd, p_new: np }).then(function(r){
+      if(r && r.error){
+        var msg=(r.error.code==='42501')?'管理密码校验失败':(r.error.message||'修改失败');
+        alert('修改失败：'+msg); return;
+      }
+      alert('访问密码已修改生效！\n新密码：'+np+'\n请把新密码发给您认可的家长。');
+    }).catch(function(){ alert('网络异常，修改失败，请重试'); });
+  });
+  document.getElementById('btnOut').addEventListener('click', function(){
+    sessionStorage.removeItem('bcx_admin');
+    location.reload();
+  });
+  document.getElementById('btnRefresh').addEventListener('click', function(){
+    var pwd=sessionStorage.getItem('bcx_admin');
+    if(pwd) fetchLeads(pwd);
+  });
+  document.getElementById('btnExport').addEventListener('click', function(){
+    var head=['手机号','省份','城市','区县','孩子高中','年级','选科','登记时间','回访标记'];
+    var lines=[head.join(',')];
+    for(var i=0;i<ROWS.length;i++){
+      var r=ROWS[i];
+      var t=r.created_at? new Date(r.created_at).toLocaleString('sv-SE') : '';
+      var vl=(VSTATUS[r.verify_status]||VSTATUS.pending).label;
+      lines.push([r.phone,r.province,r.city,r.district||'',r.school||'',r.grade,r.subject,t,vl].map(function(v){ v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }).join(','));
+    }
+    var blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='博辰序留资_'+new Date().toISOString().slice(0,10)+'.csv';
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+
+  var saved=sessionStorage.getItem('bcx_admin');
+  if(saved){ fetchLeads(saved); }
+})();
+</script>
+</body>
+</html>

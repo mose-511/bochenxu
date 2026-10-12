@@ -266,5 +266,6 @@ document.querySelectorAll("[data-diff]").forEach(b=>b.onclick=()=>{state.diff=b.
 document.querySelectorAll("[data-sort]").forEach(b=>b.onclick=()=>{state.sort=b.dataset.sort;document.querySelectorAll("[data-sort]").forEach(x=>x.classList.toggle("on",x===b));state.page=1;render()});
 render();
 </script>
+<script src="../watermark.js"></script>
 </body>
 </html>

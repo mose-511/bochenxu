@@ -1,15 +1,21 @@
 /* 星图站功能实测 v3：首页精修版（Hero地图视觉/工具箱/五步）+ tools.html + 省页 + 地图页 */
 const { chromium } = require('playwright-core');
 
-const BASE = 'https://star-map-folder.app.workbuddy.host';
+const BASE = 'https://bochenxu.app.workbuddy.host';
 const EDGE = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 
 (async () => {
   const browser = await chromium.launch({ executablePath: EDGE, headless: true });
-  const page = await browser.newPage({ viewport: { width: 1366, height: 768 } });
+  const context = await browser.newContext({ viewport: { width: 1366, height: 768 } });
+  // 预置"已登记家长"状态，避免留资墙拦截页面断言（密码需与站内访问密码一致，站长改密码后同步更新此处）
+  await context.addInitScript(function () {
+    try { localStorage.setItem('bcx_lead', JSON.stringify({ phone: '13800138000', pwd: 'bcx2026', ts: Date.now() })); } catch (e) {}
+  });
+  const page = await context.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push('[pageerror] ' + e.message.slice(0, 160)));
   page.on('console', m => { if (m.type() === 'error') errors.push('[console] ' + m.text().slice(0, 160)); });
+  page.on('response', r => { if (r.status() >= 400) errors.push('[http ' + r.status() + '] ' + r.url().slice(0, 160)); });
 
   const R = [];
   const ok = (name, cond) => R.push((cond ? 'PASS' : 'FAIL') + '  ' + name);
