@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云南产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f2f6f4;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e7e3;
+  --brand:#0f6b5f;
+  --brand-soft:#e3efed;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>云南产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年云南统计公报</b> · <b>「4+5+6」现代化产业体系（绿色铝/硅光伏/有色稀贵+高原农业/文旅/绿电/烟草/物流+生物医药等6大战新）</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">3.28万亿</div><div class="note">增长4.1%，全国第18</div></div>
+  <div class="stat"><div class="lab">电解铝产能</div><div class="val">全国第2</div><div class="note">规划投产后第1，绿色铝产值2002.8亿</div></div>
+  <div class="stat"><div class="lab">绿电占比</div><div class="val">91.2%</div><div class="note">电力装机1.71亿千瓦</div></div>
+  <div class="stat"><div class="lab">稀贵金属</div><div class="val">锡铟锗全球第一</div><div class="note">滇中集群唯一国家级</div></div>
+  <div class="stat"><div class="lab">鲜切花</div><div class="val">154.76亿枝</div><div class="note">全国第一、连续27年</div></div>
+  <div class="stat"><div class="lab">房地产开发</div><div class="val">-2.9%</div><div class="note">土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">州市产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：冶金、铝、硅、疫苗、药学、小语种、花卉、茶、电气、临床、云大、昆工、昆医">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：州市 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应云南高原无人机）、生物制造（对应云南疫苗/合成生物学）、储能/氢能（对应绿电+电池）全部对得上云南产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。云南高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>云南有千亿产业/国家集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应战新/未来产业，增速快但波动大（如硅光伏遇价格寒冬）。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应云南独有赛道（疫苗/小语种/花卉/文旅/民族学），分数友好但需选对方向。适合想留滇、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受投资/地产承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>云大线及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>云南大学（民族学A+/生态A-/计算机国家一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>昆明理工（冶金A-/材料/环境）、昆明医科（临床/药学）、云南农大（农/茶/食品）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴云南产业链</td><td>昆明理工（冶金/材料/化工）、云南师大（师范）、云南财经（财经）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>云南民族大学（小语种）、云南中医药（中药）、大理大学（临床/旅游）、西南林业（园林）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在云南读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>冶金/材料/电气/化工/环境/生物/计算机<br><span style="color:var(--ink-3);font-size:12.5px">（绿电+有色+生物硬科技）</span></td><td><b style="color:var(--green)">优先留滇</b></td><td>产业+昆工/云大双密集，昆工冶金A-全国第4、云大双一流，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床/药学/法学/小语种/旅游/师范/中药</td><td><b style="color:var(--green)">留滇或出省</b></td><td>昆医/云大/云师大/云民大在西南认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-2.9%、投资-7.7%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#0f6b5f;border-left-color:var(--brand);margin-top:14px">
+      <b>云南独有优势：绿色铝产能全国第2（规划第1）+ 硅光伏全产业链 + 锡铟锗全球第一 + 疫苗面向南亚东南亚 + 斗南花卉全国第一 + 绿电占比91.2% + 行业校壁垒。</b>云南高教梯度（云大211双流独苗 + 昆工等行业特色校），但<b>全省仅 1 所双一流</b>；<b>外省/河北考生来滇读「冶金·材料·电气·化工·环境·生物·药学·临床·小语种·旅游·中药」性价比高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理不建议来滇；长期须算清「留滇 vs 出走」（户籍净减15.96万、自然增长率-1.25‰、外出农民工638.8万）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>云南靠「绿电 + 有色 + 生物 + 数字 + 文旅」五引擎，别被「旅游/民族」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>冶金、材料、电气、化工、环境、生物六者覆盖云南最有确定性的岗位，优先冲。</li>
+      <li><b>贴「昆明 + 滇中」双核心。</b>昆明（生物医药/数字经济）+ 曲靖（硅光伏/电池）+ 文山（绿色铝）+ 玉溪（疫苗）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>昆明理工（冶金/材料/环境）、昆明医科（临床/药学）、云南农大（农/茶/食品）、云大（双一流/小语种）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>绿色铝是云南最被低估的王牌。</b>产能全国第2、规划第1、产值2002.8亿；冶金/材料在云南壁垒全国无对手，且分数友好。</li>
+      <li><b>生物医药要从「卖药」看到「疫苗+生物制造」。</b>沃森批签发48%、医科院EV71占75%、营收超3200亿；选药学/生物而非泛医学。</li>
+      <li><b>稀贵金属是隐蔽硬核。</b>锡铟锗全球第一、滇中集群唯一国家级；材料/冶金/化工在云南壁垒强。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/南亚东南亚法律/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产-2.9%、投资-7.7%；除非云大土木双一流或志在央企设计院/重大水电基建。</li>
+      <li><b>算清「留滇 vs 出走」。</b>户籍净减15.96万、外出农民工638.8万，长期人才外流压力；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：云南省统计局《云南省 2025 年国民经济和社会发展统计公报》（2026-03-31）、云南省发展改革委经济运行解读（2026-01-21）、云南省政府「开局起步『十五五』」现代化产业体系专场发布会（2026-07-02）、云南省「十五五」规划纲要、人民网云南/省工信厅生物医药数据、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估、软科 2024 中国最好学科排名。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"冶金工程（有色/绿色铝）",c:"工学",ch:"绿色铝/有色",t:"A",h:5,s:"昆明理工大学（冶金A-、全国第4）／云南大学",j:"有色金属冶炼、铝加工、稀贵新材料、工艺工程",
+  r:"电解铝产能全国第2、规划第1，绿色铝产值2002.8亿；锡铟锗全球第一；昆工冶金A-对接云锡/中铝/魏桥。",w:"锁绿色铝/稀贵金属方向，避泛冶金；昆工冶金是云南工科第一洼地。",city:"昆明 · 文山 · 曲靖 · 红河"},
+ {n:"材料科学与工程（铝/硅/稀贵）",c:"工学",ch:"铝/硅/稀贵",t:"A",h:5,s:"昆明理工大学（材料B、新能源材料国家一流）／云南大学（材料国家一流）",j:"铝材/硅片/稀贵材料研发、质检、工艺",
+  r:"绿电+制造核心是材料；绿色铝精深加工、硅光伏全产业链、稀贵金属新材料需求上行。",w:"锁轻量化铝材/半导体硅/稀贵金属方向，避泛材料。",city:"昆明 · 曲靖 · 文山 · 楚雄"},
+ {n:"电气工程及其自动化（绿色能源/电网）",c:"工学",ch:"绿色能源",t:"A",h:4,s:"云南大学（电气相关、双一流）／昆明理工大学",j:"电网、新能源电站、电气设备、储能",
+  r:"电力装机1.71亿千瓦、绿电占比91.2%，白鹤滩/乌东德水电外送全国第一；电气是长期刚需。",w:"电网方向需提前准备国网考试；绿电外送是云南国策。",city:"昆明 · 昭通 · 大理"},
+ {n:"化学工程与工艺（磷化工/电池材料）",c:"工学",ch:"磷化工/电池",t:"A",h:4,s:"昆明理工大学（化工）／云南大学（化学）／云南师范大学",j:"磷酸铁锂、磷基新材料、电池材料合成",
+  r:"镇雄132亿吨亚洲最大磷矿；新能源电池2025增加值+75.7%；德方纳米/云南杉杉/云南裕能落户。",w:"选新能源/磷基材料方向，避传统煤化工。",city:"曲靖 · 昭通 · 昆明"},
+ {n:"环境科学与工程（生态/双碳）",c:"工学",ch:"生态/双碳",t:"A",h:4,s:"昆明理工大学（环境B+、国家重点）／云南大学（生态A-）",j:"环保工程、碳管理、水处理、ESG",
+  r:"绿电占比91.2%、单位工业增加值能耗降5.4%；有色冶炼重金属治理、滇池/洱海修复长期需求；昆工环境全国前12%。",w:"双碳+绿电是长周期国策，环境+材料复合更吃香。",city:"昆明 · 大理 · 个旧"},
+ {n:"生物科学/生物技术（生物医药/生物制造）",c:"理学",ch:"生物医药",t:"A",h:4,s:"云南大学（生物学B、双一流）／昆明医科大学",j:"疫苗研发、生物制造、检测、科研",
+  r:"生物医药营收超3200亿、疫苗全国领先；生物制造（合成生物学/干细胞）多点突破；云大生物学B。",w:"本科多进检测/技术支持，研发需深造。",city:"昆明 · 玉溪 · 楚雄"},
+ {n:"计算机类（数字经济/软件/AI+）",c:"工学",ch:"数字经济",t:"B",h:4,s:"云南大学（计算机国家一流）／昆明理工大学（国家级一流）",j:"软件开发、数据分析、AI+、工业软件",
+  r:"规上互联网相关服务业+30.8%、软件+9.5%；昆明培育数字经济千亿级产业链。",w:"工程能力>文凭；贴绿电+制造数字化比泛互联网更有前景。",city:"昆明 · 曲靖"},
+ {n:"药学/药物制剂（疫苗/中药）",c:"医学",ch:"疫苗/中药",t:"B",h:4,s:"昆明医科大学（药学B-）／云南大学／云南中医药大学",j:"疫苗/药物研发、注册、QA/QC、临床",
+  r:"沃森13价肺炎疫苗占全国批签发48%、出口26国；医科院生物所EV71占75%；规上医药188户。",w:"疫苗方向需深造；中药资源（三七/天麻）是云南独门。",city:"昆明 · 玉溪 · 楚雄"},
+ {n:"新能源材料与器件（硅光伏/电池）",c:"工学",ch:"硅光伏/电池",t:"B",h:4,s:"昆明理工大学（新能源材料国家一流）／云南大学",j:"硅片/电池片工艺、电池材料、储能",
+  r:"硅光伏全产业链成形、新能源电池+75.7%；昆工新能源材料与器件国家一流。",w:"硅光伏遇价格寒冬、波动大，须选技术迭代/装备而非单纯制造。",city:"曲靖 · 楚雄 · 大理"},
+ {n:"食品科学与工程（高原特色/绿色食品）",c:"工学",ch:"绿色食品",t:"B",h:3,s:"云南农业大学（食品/农产加工）／昆明理工大学",j:"食品加工、天然提取物、质检、研发",
+  r:"花卉/咖啡/茶叶全国第一，但农产品加工比2.3:1低于全国；贝泰妮营收破50亿、万绿生物芦荟粉占60%。",w:"进名企技术岗（贝泰妮/云南白药）而非泛食品。",city:"昆明 · 普洱 · 保山 · 大理"},
+ {n:"农学/园艺/茶学（高原农业）",c:"农学",ch:"高原农业",t:"B",h:3,s:"云南农业大学（农学/茶学/园艺王牌）／西南林业大学",j:"花卉育种、茶园管理、咖啡品控、中药材种植",
+  r:"云南花卉/茶/咖啡/中药材种植规模全国第一，斗南鲜切花154.76亿枝；但种源对外依赖、需精深加工人才。",w:"锁育种/精深加工/品牌而非单纯种植。",city:"昆明 · 普洱 · 临沧 · 文山"},
+ {n:"自动化/机械（先进装备/电池装备）",c:"工学",ch:"先进装备",t:"B",h:3,s:"昆明理工大学（机械/自动化）／云南大学",j:"产线自动化、装备设计、机器人",
+  r:"新能源电池由材料向装备端延伸、宁德时代基地开工；绿色铝/硅光伏自动化产线需求上行。",w:"强电+控制背景比普机械更有智能化溢价。",city:"曲靖 · 昆明 · 玉溪"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"昆明医科大学（临床B-、ESI前1%）／云南大学",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化+健康需求刚性；昆医附一院全国百强、执业医通过率超92%、三甲就业率超58%。",w:"学制长（5+3），分数高。",city:"昆明 · 大理 · 曲靖"},
+ {n:"法学（南亚东南亚/跨境）",c:"法学",ch:"跨境法务",t:"C",h:4,s:"云南大学（法学、区域国别）／昆明理工大学",j:"公检法、涉外法务、合规、口岸法务",
+  r:"云南面向南亚东南亚辐射中心，跨境贸易/口岸经济/国际商事纠纷需求上行；云大法学在西南认可度高。",w:"须过法考；叠加小语种更有壁垒。",city:"昆明 · 红河 · 西双版纳"},
+ {n:"外国语言文学（南亚东南亚小语种）",c:"文学",ch:"跨境/口岸",t:"C",h:4,s:"云南大学（亚非语言文学、小语种强）／云南民族大学",j:"跨境贸易、外事、涉外法务、文旅",
+  r:"中老铁路黄金通道、磨憨/河口/瑞丽口岸经济；云大越南语/泰语/老挝语面向东盟就业稀缺。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"昆明 · 西双版纳 · 红河"},
+ {n:"旅游管理（文旅/跨境旅居）",c:"管理学",ch:"文旅/旅居",t:"C",h:3,s:"云南大学（旅游管理）／云南民族大学／大理大学",j:"文旅运营、康养、旅居策划、口岸服务",
+  r:"旅居超550万（+41.4%）、接待游客4.7亿；但5A景区仅10个、资源挖掘不足，需复合人才。",w:"避纯导游，走文旅+数字+康养复合。",city:"昆明 · 大理 · 丽江 · 西双版纳"},
+ {n:"统计学/数据科学（金融/AI底座）",c:"理学",ch:"金融/AI",t:"C",h:3,s:"云南大学（统计B-、全国前12%）／云南财经大学",j:"量化、数据分析、商业智能",
+  r:"金融、AI、政务大数据均依赖统计底座；云大统计学全国前12%。",w:"数学要求高，是金融与AI通用底座。",city:"昆明"},
+ {n:"教育学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"云南师范大学（教育学B）／昆明理工大学",j:"中小学教师、教研、心理咨询",
+  r:"云师大教育学B、覆盖全省60%基础教育师资，公费师范生考编优势。",w:"公费师范生包分配，考编优势大。",city:"昆明 · 曲靖 · 玉溪"},
+ {n:"园林/园艺（花卉方向）",c:"农学",ch:"花卉/文旅",t:"C",h:3,s:"云南农业大学（园艺王牌）／西南林业大学（园林）",j:"花卉育种、园林设计、花文旅运营",
+  r:"斗南鲜切花全国第一、占70%+；花文旅新业态（斗南4A景区游客1560万）。",w:"贴育种/景观/花文旅比纯园林施工更有前景。",city:"昆明 · 玉溪 · 大理"},
+ {n:"中药学/生药（中药材资源）",c:"医学",ch:"中药材",t:"C",h:3,s:"云南中医药大学（中药学）／昆明医科大学／云南大学",j:"中药研发、质检、种植、饮片",
+  r:"中药材127.37万吨（+14.0%）、十大云药道地药材全国最多；云南中医药/昆医中药特色突出。",w:"锁道地药材精深加工而非泛中药房。",city:"昆明 · 楚雄 · 文山"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"云南大学（土木双一流）／昆明理工大学",j:"设计院、施工、基建、智能建造",
+  r:"房地产-2.9%、固定资产投资-7.7%、商品房销售仅+0.9%，土建链承压。",w:"仅云大土木双一流或志在央企设计院/重大水电基建。",city:"昆明"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"云南财经大学／昆明理工大学",j:"企业职能管理、行政、咨询",
+  r:"制造业为主、服务业多为文旅消费，泛管理岗位稀缺、内卷；金融业增加值仅1559亿（+2.4%）。",w:"叠加行业+管理（能源/医院/药企），否则慎选。",city:"昆明"}
+];
+
+var CHAINS = [
+ {n:"绿色铝（水电铝，云南第一资源型引擎）",u:["铝土矿","绿电（水电）"],m:["电解铝（600千安）","铝合金","铝水"],d:["高端铝型材","汽车铝箔","电池铝箔","再生铝"],
+  mj:"冶金、材料、电气、环境",
+  f:"2025电解铝运行产能650万吨（全国第2、规划第1），绿色铝产值2002.8亿；文山破千亿、占全省半壁；魏桥/神火/中铝落户，目标铝水100%就地转化、铝材100%精深加工。"},
+ {n:"硅光伏（水电硅，世界光伏之都）",u:["工业硅","多晶硅"],m:["单晶硅棒","硅片（130微米金刚线）"],d:["电池片","组件","光伏应用"],
+  mj:"材料、新能源材料、电气、化工",
+  f:"单晶硅产能全国第3、多晶硅第4，建成全球最大单体高纯晶硅项目；曲靖/大理/楚雄全产业链成形；但2025遇价格寒冬、全而不强、增产不增效。"},
+ {n:"有色和稀贵金属（锡/铟/锗/铜/铅锌）",u:["矿产（锡/铜/铅锌/磷）"],m:["冶炼","压延"],d:["稀贵新材料（锡基焊料/铟靶材/锗光纤）","铂族金属"],
+  mj:"冶金、材料、化工、资源勘查",
+  f:"十种有色金属产量占全国11.4%，锡铟锗产量全球第一，滇中稀贵金属集群为行业内唯一国家级先进制造业集群；但九成以上集中在冶炼压延、精深加工不足。"},
+ {n:"磷化工/新能源电池（磷矿→电池蝶变）",u:["磷矿（镇雄132亿吨）"],m:["磷酸","磷酸铁锂正极材料"],d:["动力电池","储能","电池回收"],
+  mj:"化工、新能源材料、材料、电气",
+  f:"新能源电池2025年1—11月增加值+75.7%（全省最快）；德方纳米、云南杉杉（全球最大负极材料一体化基地）、云南裕能（最大磷酸铁锂正极基地）落户曲靖；宁德时代基地开工。"},
+ {n:"绿色能源（水电/绿电外送）",u:["水电（白鹤滩/乌东德）","风光"],m:["电网","西电东送"],d:["绿电+先进制造业","储能"],
+  mj:"电气、能源动力、自动化、环境",
+  f:"电力装机1.71亿千瓦、绿电占比91.2%；2025发电量4596亿千瓦时（水电3297亿、太阳能+33.7%）；西电东送累计超2万亿千瓦时、外送规模全国第一。"},
+ {n:"生物医药/疫苗（面向南亚东南亚基地）",u:["中药材（三七/天麻）","实验动物（灵长类）"],m:["疫苗（沃森/医科院生物所）","中药","生物制造"],d:["医疗","康养","出口"],
+  mj:"药学、生物、生医工、临床、中药",
+  f:"生物医药营收2024年3232亿；沃森13价肺炎疫苗占全国批签发48%、出口26国；医科院生物所EV71占75%；规上医药188户、产值430.78亿；昆明/玉溪高新区为国家级示范基地。"},
+ {n:"高原特色农业（花卉/茶/咖啡/中药材）",u:["种植（鲜切花/茶/咖啡/中药材）"],m:["精深加工（冻干粉/茶多酚/中药提取）"],d:["品牌","电商","文旅","出口"],
+  mj:"园艺、茶学、食品、农学、中药",
+  f:"鲜切花154.76亿枝（全国第一、占70%+）、斗南交易额134.84亿；咖啡17.07万吨（+13.6%）、种植面积占全国99%；中药材127.37万吨（+14.0%）；加工比2.3:1低于全国。"},
+ {n:"文旅/跨境文旅（旅居+口岸）",u:["景区/生态/民族文化"],m:["文旅服务","康养","数字游民"],d:["旅居地产","跨境贸易","口岸经济"],
+  mj:"旅游、小语种、园林、法学",
+  f:"2025旅居超550万（+41.4%）；前7月接待游客4.7亿（+12.7%）、入境494万（+43.1%）；中老铁路进出口货值266.8亿（+42.9%）；但全省仅10个5A景区（全国第16），挖掘不足。"}
+];
+
+var CITIES = [
+ {c:"昆明（省会核心）",i:"绿色铝加工、生物医药、数字经济、装备制造、文旅",l:"云南白药、中国医科院生物所、沃森、昆钢",m:"冶金、材料、生物、药学、计算机、临床"},
+ {c:"曲靖（老工业基地）",i:"绿色铝、硅光伏、新能源电池、煤化工",l:"隆基、晶澳、德方纳米、亿纬锂能",m:"材料、新能源、化工、机械"},
+ {c:"玉溪",i:"卷烟（红塔）、新能源电池材料、疫苗、绿色食品",l:"红塔、沃森生物、玉溪高新区",m:"药学、材料、化工、食品"},
+ {c:"楚雄",i:"绿色钛、绿色硅、生物医药（滇中药谷）、彝药",l:"宇泽新能源、楚雄高新区",m:"材料、生物、药学、化工"},
+ {c:"红河（含个旧）",i:"有色（锡都）、电子信息、口岸（河口）、烟草",l:"云锡、电子信息企业",m:"冶金、材料、电子、国贸"},
+ {c:"文山",i:"绿色铝谷、三七中药、锰、口岸（天保）",l:"云南绿色铝创新产业园、文山铝业",m:"冶金、材料、中药、药学"},
+ {c:"大理",i:"文旅（洱海）、绿色硅光伏、清洁能源、绿色食品",l:"隆基（大理）、文旅",m:"材料、旅游、电气、食品"},
+ {c:"保山",i:"绿色硅（隆基）、咖啡、沿边开放（腾冲）",l:"隆基、咖啡企业",m:"材料、食品、旅游"},
+ {c:"普洱/西双版纳",i:"普洱茶、橡胶、生物医药、文旅、口岸（磨憨）",l:"茶企、文旅、跨境",m:"园艺、食品、旅游、药学"},
+ {c:"昭通",i:"水电、绿色铝、绿色食品、物流",l:"水电铝、能源",m:"电气、冶金、材料、物流"},
+ {c:"丽江",i:"文旅、硅光伏（隆基）、清洁能源、高原农业",l:"隆基、文旅",m:"材料、旅游、电气"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

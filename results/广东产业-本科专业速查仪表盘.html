@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广东产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#0e7c86;
+  --brand-soft:#e3f0f1;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>广东产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年广东统计公报</b> · <b>10个万亿级产业集群（电子信息/汽车/新能源/先进材料…）</b> · <b>53个新赛道（十五五）</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">14.58万亿</div><div class="note">增长3.9%，全国倒数第二</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+3.0%</div><div class="note">利润-5.6%、高技术制造+6.2%</div></div>
+  <div class="stat"><div class="lab">电子信息</div><div class="val">占全国1/3</div><div class="note">连续34年全国第一</div></div>
+  <div class="stat"><div class="lab">低空经济</div><div class="val">无人机占九成</div><div class="note">1.5万家企业、2061万架次</div></div>
+  <div class="stat"><div class="lab">人工智能</div><div class="val">3000亿</div><div class="note">核心产业占全国约1/4</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-23.6%</div><div class="note">土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：芯片、汽车、无人机、低空、通信、材料、电气、临床、药学、广外、华工、深大、广工">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应广东无人机/eVTOL）、生物制造（对应广东生物医药）、半导体装备（对应广东集成电路）、储能/氢能（对应广东新能源）全部对得上广东产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。广东高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>广东有万亿产业/国家集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应广东独有赛道（临床/药学/外语/师范/设计/农食），分数友好但需选对方向。适合想留粤、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>中大/华工及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>中山大学（临床/计算机/AI）、华南理工（轻工/材料/车辆/计算机/电气双一流）、哈工大深圳（计算机/集成电路/航天）、南方科大（数学/物理/计算机）</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>暨南大学（新闻/金融/药学）、华南师范（心理/教育）、深圳大学（计算机/软件/光电）、广州医科（临床呼吸）、广东工业（控制/机械/微电子）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴广东产业链</td><td>广东外语外贸（外语/国贸）、华南农业（农食/兽医）、南方医科（临床）、汕头大学（临床/机械）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的市属校，锁特色专业</td><td>广州美术（设计）、广东财经（财经）、广州大学（土木/教育）、东莞理工（电子/机械）、佛山科技（机械）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在广东读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>电子信息/计算机/AI/车辆/电气/自动化/材料/机械<br><span style="color:var(--ink-3);font-size:12.5px">（大湾区硬科技）</span></td><td><b style="color:var(--green)">优先留粤</b></td><td>产业+高校双密集，华工/深大/广工/哈工大深圳全国顶尖或特色独一，深圳研发—量产闭环，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床/药学/外语/师范/设计/农食</td><td><b style="color:var(--green)">留粤或出省</b></td><td>中山医/广医/暨大/广外/广美/华南师范在华南认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统轻工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>建筑业 -6.2%、房地产 -23.6%、轻工 -0.5%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#0e7c86;border-left-color:var(--brand);margin-top:14px">
+      <b>广东独有优势：10 个万亿级集群 + 全国九成无人机 + AI 核心产业占全国 1/4 + 深圳研发—量产极速闭环 + 行业校壁垒。</b>广东高教梯度分明（中大/华工 985 双核 + 哈工大深圳/南科大/暨大/华师等双一流 + 一众行业特色校），但<b>外省/河北考生来粤读「电子信息·计算机·AI·车辆·电气·自动化·材料·临床·药学·外语·设计」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理·传统轻工不建议来粤。须注意：广东增速仅 3.9%（全国倒数第二）、房地产 -23.6%、固投 -17.3%、粤东西北与珠三角失衡明显。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>广东靠「电子信息 + 汽车 + 低空 + AI机器人 + 软件 + 先进材料」六引擎，别被「沿海富裕」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>电子信息、计算机、自动化、电气、车辆、材料、生医工七者覆盖广东最有确定性的岗位，优先冲。</li>
+      <li><b>贴「深圳 + 广州」双核心。</b>深圳（新能源/无人机/AI/通信）+ 广州（汽车/生物医药/软件）贡献最密集产业与院校重叠；佛山/东莞/珠海/惠州是特色极点。</li>
+      <li><b>行业特色校是最大信息差。</b>广东工业（控制/机械/微电子）、深圳大学（计算机/光电）、广外（外语/国贸）、华南农业（农食）、广州美术（设计）、南方医科（临床）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>低空经济是广东最被低估的全国冠军赛道。</b>1.5 万家企业、无人机占全国九成、2061 万架次飞行；航空/飞行器/自动化在广东壁垒全国无对手，且分数友好。</li>
+      <li><b>电子信息要从「整机」看到「芯屏端核」。</b>占全国 33% 是底座，但真正上行在集成电路（942 亿块、+152%）、光电、车规芯片；选微电子/光电而非纯组装。</li>
+      <li><b>AI 替代压力最先落在广东基础白领岗。</b>基础编程/设计/翻译/财务最危险；纯文纯管必须叠加硬技能（数据/芯片/国贸/法律科技）。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学须叠加行业技能，否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>建筑业 -6.2%、房地产 -23.6%、新开工 -21.4%；除非华工土木双一流或志在央企设计院/重大基建。</li>
+      <li><b>算清「留粤 vs 出走」。</b>广东增速 3.9% 全国倒数、房地产深度调整、粤东西北失衡；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：广东省统计局《2025 年广东省国民经济和社会发展统计公报》（2026-03-31）、广东省人民政府《广东省制造业与服务业协同发展白皮书》（2026-02）、广东省政府办公厅《加快培育发展新赛道引领现代化产业体系建设行动规划（2026—2035 年）》（2026-03-10）、广东省发改委「十四五」现代化产业体系新闻发布会（2026-02-06）、2026 年广东省两会及省政府工作报告、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。新能源汽车产量 2024 年与 2025 年差异为统计口径调整（生产地口径），已显式标注，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"电子信息类（微电子/集成电路/光电/通信）",c:"工学",ch:"新一代电子信息",t:"A",h:5,s:"电子科技大学（深圳）／南方科技大学／深圳大学／广东工业大学",j:"芯片设计、半导体制造/封测、光电、通信",
+  r:"电子信息占全国33%、连续34年第一；2025集成电路942.4亿块、比2020年+152%；广东强芯粤芯/增芯/华润微产能爬坡。",w:"本科多去制造/封测，深造（微电子/集成电路）更有利；深圳地缘+产业闭环最强。",city:"深圳 · 广州 · 东莞"},
+ {n:"计算机类（软件/人工智能）",c:"工学",ch:"软件与信息服务/AI",t:"A",h:5,s:"中山大学／华南理工／深圳大学／暨南大学",j:"软件开发、大模型算法、智驾算法、信创",
+  r:"数字产业收入超8万亿居全国第一；AI核心产业3000亿、占全国1/4；广州/深圳软件名城，腾讯/华为校招密集。",w:"工程能力大于文凭；深圳/广州实习即家门口大厂，地缘溢价极高。",city:"深圳 · 广州"},
+ {n:"自动化/测控技术与仪器（机器人/工业智能）",c:"工学",ch:"机器人/智驾",t:"A",h:4,s:"哈尔滨工业大学（深圳）／华南理工／广东工业大学／深圳大学",j:"控制系统、机器人、汽车电子、工业智能",
+  r:"工业机器人产量占全国四成以上、服务机器人占全国八成以上；深圳人形机器人产业链产值超2000亿。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"深圳 · 广州 · 佛山"},
+ {n:"电气工程及其自动化（电网/汽车三电/储能）",c:"工学",ch:"三电/电网",t:"A",h:4,s:"华南理工／广东工业大学／深圳大学",j:"电网、电气设备、新能源三电、储能",
+  r:"华工电气校招第一梯队；汽车三电（电池/电机/电控）、储能（亿纬/比亚迪）全需电气底座。",w:"电网方向需提前准备国网考试；三电/储能贴广东新能源电池产业。",city:"广州 · 深圳 · 惠州"},
+ {n:"车辆工程（智能网联新能源）",c:"工学",ch:"智能网联新能源汽车",t:"A",h:4,s:"华南理工／广东工业大学／哈尔滨工业大学（深圳）",j:"整车研发、三电系统、智能网联、自动驾驶",
+  r:"汽车制造+10.1%；深圳新能源汽车占全国22.3%、比亚迪全球纯电销冠；广深佛惠莞中国家先进制造业集群。",w:"锁新能源/智能网联方向，避传统燃油车研发；深圳地缘+比亚迪链最强。",city:"深圳 · 广州 · 肇庆"},
+ {n:"材料科学与工程（先进材料/半导体材料/轻量化）",c:"工学",ch:"先进材料",t:"A",h:4,s:"华南理工（材料A+）／中山大学／广东工业大学",j:"半导体材料、轻量化材料、新能源电池材料、复合材料",
+  r:"先进材料为万亿级集群；半导体材料、新能源电池材料（亿纬/比亚迪）、汽车轻量化需求上行。",w:"锁半导体/新能源/轻量化方向，避泛材料/建材。",city:"广州 · 惠州 · 东莞"},
+ {n:"生物医学工程（生物医药/医疗器械）",c:"工学",ch:"生物医药与健康",t:"A",h:4,s:"华南理工／南方医科／深圳大学／中山大学",j:"医疗器械、生物制剂、医工交叉",
+  r:"生物医药与健康为千亿级集群（广州迈向千亿）；广州呼吸国家重点实验室、深圳生物医药、珠海丽珠。",w:"医工交叉比纯生物更对产业口；广州/深圳产业密集。",city:"广州 · 深圳 · 珠海"},
+ {n:"机械设计制造及其自动化（智能制造/新能源装备）",c:"工学",ch:"智能制造",t:"B",h:4,s:"华南理工／广东工业大学／哈尔滨工业大学（深圳）",j:"汽车零部件、智能产线、高端装备",
+  r:"佛山全国最大工业机器人基地、智能产线升级；汽车/新能源装备全需机械底座。",w:"锁智能制造/新能源装备方向，避泛机加工。",city:"佛山 · 深圳 · 广州"},
+ {n:"人工智能（AI核心产业/大模型）",c:"工学",ch:"AI",t:"B",h:4,s:"中山大学／华南理工／南方科技大学／深圳大学",j:"大模型算法、机器视觉、具身智能",
+  r:"AI核心产业3000亿、占全国1/4、+40%；122个大模型备案；昇腾生态、具身智能训练场。",w:"数学要求高，深造路径清晰；警惕蹭AI的弱校专业。",city:"深圳 · 广州"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"半导体",t:"B",h:4,s:"华南理工／广东工业大学／南方科技大学／深圳大学",j:"芯片设计、功率半导体、车规芯片",
+  r:"集成电路942.4亿块、比2020年+152%；广东强芯第三极；粤芯/增芯/华润微。",w:"对数理要求高，深造路径清晰。",city:"深圳 · 广州 · 珠海"},
+ {n:"交通运输/物流工程（低空经济/港口/通道）",c:"工学",ch:"低空经济/港口",t:"B",h:3,s:"华南理工／中山大学",j:"低空运营、多式联运、供应链、港口枢纽",
+  r:"低空经济2061万架次、起降点3592个；广州/深圳/湛江港口；粤港澳大湾区机场群。",w:"贴低空+供应链比纯运输更有前景。",city:"深圳 · 广州 · 湛江"},
+ {n:"统计学/数据科学（金融/AI底座）",c:"理学",ch:"金融/AI",t:"B",h:3,s:"中山大学／暨南大学／华南师范",j:"量化、数据分析、商业智能",
+  r:"金融、AI、政务大数据均依赖统计底座；应用软件与量化需求上行。",w:"数学要求高，是金融与AI通用底座。",city:"广州 · 深圳"},
+ {n:"化学工程与工艺（绿色石化/新能源电池材料）",c:"工学",ch:"绿色石化",t:"B",h:3,s:"华南理工／广东工业大学／中山大学",j:"化工新材料、新能源电池材料、精细化工",
+  r:"惠州埃克森美孚/中海壳牌、茂名石化、新能源电池材料（亿纬/比亚迪）。",w:"选新能源/半导体材料方向，避传统煤化工。",city:"惠州 · 茂名 · 广州"},
+ {n:"航空航天类（通航/eVTOL/AG600）",c:"工学",ch:"低空经济/通航",t:"B",h:3,s:"哈尔滨工业大学（深圳）／中山大学",j:"无人机设计、通航制造、航空电子",
+  r:"珠海中航通飞AG600批量交付、广州亿航eVTOL商业运营、小鹏汇天飞行汽车；广东低空经济指数全国第一。",w:"体量小于汽车/电子，属特色小而美赛道，但广东独门。",city:"珠海 · 广州 · 深圳"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"中山大学（中山医）／南方医科／广州医科（呼吸）",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化+健康需求长期刚性；中山医华南医疗底盘、广医呼吸全国第一平台强。",w:"学制长（5+3本博）、分数高；广州/深圳三甲留粤比例高。",city:"广州 · 深圳"},
+ {n:"药学",c:"医学",ch:"生物医药",t:"C",h:4,s:"暨南大学（药学双一流）／中山大学／广州中医",j:"药物研发、注册、生产质量",
+  r:"暨大药学双一流、广州中医/中大药、丽珠/广药产业链；生物制造前瞻。",w:"进研发/注册而非泛药学销售更有前景。",city:"广州 · 珠海 · 深圳"},
+ {n:"外国语言文学",c:"文学",ch:"跨境电商/外贸",t:"C",h:3,s:"广东外语外贸大学（外国语言文学A类）",j:"跨境贸易、涉外法务、本地化",
+  r:"跨境电商进出口占全国四成、连续10年全国第一；广外外国语言文学A类、76个语种华南独一。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"广州 · 深圳"},
+ {n:"教育学/心理学",c:"教育学",ch:"教育",t:"C",h:3,s:"华南师范（心理学A+、教育学A）／广州大学",j:"中小学教师、教研、心理咨询",
+  r:"华南师范心理学A+、教育学A，珠三角教师编制定向招聘主力。",w:"公费师范生包分配，考编优势大。",city:"广州 · 佛山"},
+ {n:"设计学/数字媒体",c:"艺术",ch:"数字创意",t:"C",h:4,s:"广州美术学院（八大美院）／深圳大学／华南理工",j:"文创、工业设计、数字媒体",
+  r:"数字创意为万亿级赛道；广美八大美院、深大设计；佛山家电/中山灯饰/汕头玩具体量巨大。",w:"需专业功底/校考；作品集大于文凭。",city:"广州 · 深圳 · 佛山"},
+ {n:"食品科学与工程/农学",c:"工学",ch:"现代农业与食品",t:"C",h:3,s:"华南农业（作物学/兽医学双一流）／华南理工（食品A+）",j:"食品加工、技术岗、农食研发",
+  r:"现代农业与食品为万亿级集群；华南农业作物学/兽医学双一流；湛江水产/茂名荔枝/新会陈皮产业链。",w:"进名企技术岗/农食研发而非泛农业。",city:"广州 · 湛江 · 茂名"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"华南理工（土木/建筑双一流）",j:"设计院、施工、基建、智能建造",
+  r:"建筑业-6.2%、房地产投资-23.6%、新开工-21.4%，土建链深度承压。",w:"仅华工土木双一流或志在央企设计院/重大基建；否则慎选。",city:"广州 · 深圳"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"暨南大学／广东财经",j:"企业职能管理、行政、咨询",
+  r:"制造业+外贸为主，泛管理岗位稀缺、内卷严重；AI替代压力最先落在基础管理/财务/翻译岗。",w:"叠加行业+管理（车企/医院/芯片企业管理），否则慎选。",city:"广州 · 深圳"},
+ {n:"传统轻工/纺织类",c:"工学",ch:"现代轻工纺织",t:"D",h:2,s:"华南理工／深圳大学（设计向）",j:"智能化制造、品牌、产品设计",
+  r:"现代轻工纺织2025增加值-0.5%微降；普通纺织/服装制造岗位被自动化与外地转移挤压。",w:"须选智能化/品牌化/设计方向，避纯制造端。",city:"佛山 · 中山 · 汕头"}
+];
+
+var CHAINS = [
+ {n:"新一代电子信息（含半导体/集成电路/新型显示/智能终端）",u:["硅片/碳化硅衬底","PCB基材","面板玻璃","被动元件"],m:["芯片设计/制造/封测（粤芯/增芯/华润微）","新型显示（TCL华星/惠科）","智能手机/通信终端整机"],d:["消费电子","软件","跨境电商"],
+  mj:"电子信息、微电子、光电、通信、计算机",
+  f:"电子信息2024营收53434亿、占全国33%、连续34年第一；2025集成电路942.4亿块、比2020年+152%；计算机通信电子+7.1%；广东强芯工程产能爬坡。"},
+ {n:"智能网联新能源汽车",u:["锂/镍/钴资源","电池材料","车规级芯片"],m:["动力电池（比亚迪刀片/多合一电驱）","整车制造","智能座舱","智驾系统"],d:["充换电","智能网联","后市场"],
+  mj:"车辆、电气、自动化、计算机、材料",
+  f:"汽车制造+10.1%；深圳新能源汽车占全国22.3%、比亚迪销量460.2万辆登顶全球纯电销冠；广深佛惠莞中集群入选国家先进制造业集群。注：新能源汽车产量因统计口径调整2025年广东公报118.29万辆（详见报告标注）。"},
+ {n:"低空经济（无人机/eVTOL/通航）",u:["碳纤维/复材","飞控芯片","电机电调"],m:["消费级/工业级无人机（大疆）","eVTOL整机（亿航/小鹏汇天）","通航飞机（中航通飞AG600）"],d:["低空物流","文旅","应急救援","城市空中交通"],
+  mj:"航空宇航、飞行器设计、自动化、材料、电子信息",
+  f:"低空经济企业超1.5万家、无人机761.36万架（+39%，占全国九成）、飞行2061万架次、起降点3592个；深圳世界无人机之都、广州eVTOL、珠海通航；广东低空经济指数四项全国第一。"},
+ {n:"人工智能与机器人（AI核心产业+工业机器人/人形机器人）",u:["AI芯片（昇腾/寒武天）","算力","数据"],m:["大模型（122个备案）","工业机器人","人形机器人（优必选/乐聚）"],d:["智能制造","智慧医疗","具身智能应用"],
+  mj:"人工智能、计算机、机器人工程、自动化、统计学",
+  f:"AI核心产业3000亿、占全国约1/4、+40%；工业机器人产量占全国四成以上、服务机器人占全国八成以上；深圳人形机器人产业链产值超2000亿。"},
+ {n:"软件与信息服务（含数字创意/跨境电商）",u:["工业软件","AI大模型","开源生态"],m:["软信服务","数字创意（游戏/动漫/电竞）","平台经济"],d:["跨境电商","企业数字化","信创"],
+  mj:"软件工程、计算机、数字媒体、国贸、外语",
+  f:"软件与信息服务为万亿级集群；数字产业收入超8万亿居全国第一；跨境电商进出口占全国四成、连续10年全国第一；广州/深圳中国软件名城。"},
+ {n:"先进材料与绿色石化（含新能源电池材料）",u:["石化原料（乙烯/PX）","金属矿","化工新材料"],m:["先进材料（轻量化/半导体材料）","绿色石化（埃克森美孚/中海壳牌/巴斯夫）","新能源电池材料（亿纬/比亚迪）"],d:["汽车轻量化","电子","储能"],
+  mj:"材料、化工、冶金、高分子",
+  f:"先进材料为万亿级集群；2024绿色石化营收20154亿；惠州新能源电池产值破千亿；但非金属矿物制品（建材）-7.8%在下滑。"},
+ {n:"生物医药与健康",u:["原料药","生物制剂"],m:["创新药","高端医疗器械","基因检测"],d:["医疗服务","康养","细胞与基因治疗"],
+  mj:"生物医学工程、药学、临床、生科",
+  f:"生物医药与健康为千亿级集群（广州迈向千亿）；广州呼吸疾病国家重点实验室（钟南山）、深圳生物医药、珠海丽珠、东莞松山湖生物基地；AI制药前瞻布局。"},
+ {n:"智能家电与现代轻工纺织（含佛山家电/中山灯饰/汕头玩具/服装美妆）",u:["芯片/模组","钢材/塑料"],m:["智能家电（美的/格力）","灯饰（古镇）","玩具（汕头）","服装美妆（广州）"],d:["电商","跨境","品牌运营"],
+  mj:"工业设计、机械、电气、材料、视觉传达、国贸",
+  f:"智能家电、现代轻工纺织均为万亿级集群；佛山家电占全国超15%、陶瓷出口占全国60%；但现代轻工纺织2025增加值-0.5%微降，须选智能化/品牌化方向。"}
+];
+
+var CITIES = [
+ {c:"深圳（核心引擎）",i:"新能源汽车（全国第一城）、无人机、人形机器人、ICT/通信、AI",l:"比亚迪、华为、中兴、大疆、优必选、腾讯",m:"车辆、电子信息、计算机、AI、机器人、通信"},
+ {c:"广州（核心引擎）",i:"汽车（广汽/小鹏）、生物医药与健康、时尚美妆、软件、低空eVTOL",l:"广汽、小鹏、小马智行、文远知行、亿航智能、广药",m:"车辆、生物/生医工、软件、临床、设计"},
+ {c:"佛山",i:"智能家电（美的/格兰仕）、陶瓷（南国陶都）、工业机器人、家具",l:"美的、格兰仕、蒙娜丽莎、碧桂园",m:"机械、自动化、材料、电气"},
+ {c:"东莞",i:"智能手机（OPPO/vivo/华为，国家级集群）、潮玩、XR、电子信息",l:"OPPO、vivo、华为、生益科技",m:"电子信息、计算机、通信、设计"},
+ {c:"珠海",i:"打印耗材（世界打印耗材之都）、家电（格力）、生物医药、通航（AG600）、集成电路",l:"格力、纳思达、丽珠、中航通飞、奔图",m:"机械、电子信息、生科、航空"},
+ {c:"惠州",i:"超高清视频显示、新能源电池（千亿级）、绿色石化",l:"亿纬锂能、TCL、华星光电、埃克森美孚",m:"光电、材料、化工、电子"},
+ {c:"中山",i:"灯饰（古镇全球50%）、锁具、智能家电、低空经济",l:"木林森、华帝、TCL空调",m:"电气、机械、设计、自动化"},
+ {c:"江门",i:"摩托车（中国摩托车产业示范基地）、五金卫浴、新会陈皮、新型储能",l:"大长江、维达、李锦记、中集",m:"机械、材料、电气、化工"},
+ {c:"汕头",i:"玩具（中国玩具礼品之都）、内衣、美妆、化工",l:"奥飞娱乐、拉芳、潮汕商会链",m:"设计、材料、化工、国贸"},
+ {c:"湛江",i:"绿色石化（巴斯夫/中科炼化）、钢铁（宝钢）、水产/农业、造纸",l:"巴斯夫、宝钢、国联水产、恒兴",m:"化工、材料、食品、环境"},
+ {c:"肇庆",i:"新能源汽车（小鹏/宁德时代）、电子信息（风华高科）",l:"小鹏、宁德时代、风华高科",m:"车辆、电气、电子、材料"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安徽产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f1;
+  --card:#ffffff;
+  --ink:#20291c;
+  --ink-2:#4c5744;
+  --ink-3:#7d8873;
+  --line:#e2e8da;
+  --brand:#2a5a2a;
+  --brand-soft:#e7efe4;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(32,41,28,.05),0 4px 16px rgba(32,41,28,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(32,41,28,.06),0 8px 24px rgba(32,41,28,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f1f4ec;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f1f4ec;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f1f4ec;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbf8}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>安徽产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年安徽统计公报</b> · <b>「4433」万千亿产业体系（4个万亿级）</b> · <b>4个国家战略性新兴产业集群（全国第3）</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">5.3万亿</div><div class="note">+5.5%，全国第11位，跑赢全国</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+9.4%</div><div class="note">近11年新高，高技术制造+30.4%</div></div>
+  <div class="stat"><div class="lab">汽车产量</div><div class="val">368.6万辆</div><div class="note">全国第1，新能源179.4万辆全国第1，出口122.8万辆全国第1</div></div>
+  <div class="stat"><div class="lab">进出口</div><div class="val">10135.6亿</div><div class="note">首破万亿+17.3%，「新三样」出口+107.8%</div></div>
+  <div class="stat"><div class="lab">战新产值占比</div><div class="val">45.4%</div><div class="note">+11.5%，4个国家战新集群数量全国第3</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-24.5%</div><div class="note">固投-9.2%、建筑业-0.9%，土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：车辆、芯片、显示、光储、量子、机器人、安全、冶金、临床、中科大、合工大、安大、安理工">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>「低空经济与管理」对得上芜湖低空经济 3 个省级未来产业先导区，「生物制造」对得上合肥生物医药千亿集群，「半导体工艺与装备」对得上长鑫/晶合与滁州半导体设备集群，「储能/氢能」对得上先进光伏和新型储能 5000 亿级产业</b>。但新专业无往年录取数据、无毕业生验证、课程体系可能尚未成熟，务必核查培养方案与师资。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。安徽高校多按专业组投档（如合工大、安大、安徽理工等），更要逐一查清专业组包含的具体专业，避免被调剂到 D 档（土木、泛管理）。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>安徽有万亿级/国家集群支撑（汽车、集成电路、新型显示、光储、新材料），岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业（机器人、量子、AI底座、储能），增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应安徽独有或强刚需赛道（医学、安全A-、冶金、师范、财经、港口物流、食品），分数友好。适合想留皖、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资收缩拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略（含历史组）</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>中科大线附近及以上</td><td>学校优先 + 专业不将就，锁C9/双一流A类学科</td><td>中国科学技术大学（物理学A+、化学A+、计算机A-、统计学A-、量子信息科学独一份），或冲沪苏浙 985 的计算机/电子信息</td></tr>
+        <tr><td><b>中高分</b><br>211线上下</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>合肥工业大学（车辆、电气、机械、计算机、管理科学与工程A）、安徽大学（材料双一流、计算机、法学、电子信息）、安徽医科大学（临床）</td></tr>
+        <tr><td><b>中分</b><br>省属重点线</td><td>用行业校补分数差，紧贴安徽产业链</td><td>安徽理工大学（安全A-、爆破、矿业）、安徽工业大学（冶金、材料成型、资源循环）、安徽财经大学（会计、金融）、安徽建筑大学（智能建造/市政）、安徽工程大学（车辆、自动化、机器人）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属/地方院校，锁特色专业</td><td>安徽师范大学/安庆师范大学（师范）、安徽农业大学（食品、茶学、农学）、安徽中医药大学（中医、针灸推拿、中药）、蚌埠医科大学/皖南医学院（临床、医学检验、麻醉）、合肥大学（机械、计算机、软件、化工）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--ink-2);margin-top:6px"><b>历史组建议：</b>会计学/金融学/国际经济与贸易（安徽财经、安徽大学）、教育学与汉语言文学师范（安徽师大、安庆师大）、法学（安徽大学法学B、合工大知识产权）、中医学与针灸推拿（安徽中医药大学）、新闻传播与网络新媒体（安徽大学新闻学国家重点、为历史组稀缺的优质方向）。<b>避开</b>：纯理科院校的工科专业、无行业资源的泛管理。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在安徽读，还是出省读？（含外省/河北考生判断）</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>车辆/电气/微电子/光电/材料/自动化/机械/计算机<br><span style="color:var(--ink-3);font-size:12.5px">（车·芯·屏·光储·机器人硬科技）</span></td><td><b style="color:var(--green)">优先留皖（尤其合肥·芜湖）</b></td><td>产业+高校双密集：合肥新型显示全国第1、集成电路1514亿、光储出货全球第一；芜湖汽车链6872亿、机器人全国第6；分数低于沪苏浙同档 20–40 分</td></tr>
+        <tr><td>临床/口腔/师范/财经/中医/安全/冶金</td><td><b style="color:var(--green)">留皖</b></td><td>安徽医科、安徽师大、安徽财经、安徽理工、安徽工业在本省医疗/教育/财政/矿业/冶金系统认可度极高，出省性价比低</td></tr>
+        <tr><td>量子信息科学/物理学/化学/统计学</td><td><b style="color:var(--accent)">中科大优先，其次出省</b></td><td>中科大量子与基础理科为全国第一梯队；若分数不够中科大，建议出省去更强的基础理科强校，安徽无第二梯队支撑</td></tr>
+        <tr><td>土木/建筑/泛管理/传统周期品</td><td><b style="color:var(--red)">考虑他省或直接换赛道</b></td><td>房地产 -24.5%、建筑业 -0.9%、固投 -9.2%，安徽土建与泛管理承压明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#2a5a2a;border-left-color:var(--brand);margin-top:14px">
+      <b>安徽独有优势：汽车「产量+新能源+出口」三项全国第一 + 新型显示全国第一 + 晶合显示驱动代工全球第一 + 长鑫全球第四DRAM + 光储逆变器/变流器出货全球第一 + 量子企业数全国第一 + 中科大量子信息科学全国独一份。</b>但必须看清结构——<b>安徽 3 所双一流（中科大、合工大、安大）全部在合肥，「强省会 + 合肥独大」是基本盘</b>；合肥规上工业 +17.6%、芜湖 +9.9%，而淮北 -2.9%、淮南 +0.8%，地市分化极大。<b>外省/河北考生值不值得来皖？</b>值得来的三类：① 想读「车辆/微电子/光电/电气（光储）/材料/机器人」且分数够不上沪苏浙同档强校的——产业对口度全国顶级、分数低 20–40 分；② 想读量子/基础理科并冲击中科大的——全国独一份；③ 想读安全工程（安徽理工A-）、冶金与资源循环（安徽工业）这类行业特色专业的——省内就业壁垒强。不建议来的：土建/建筑/泛管理，以及「分数够不上合肥、又选了不对口专业」的组合。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>安徽靠「车·芯·屏·量子·光储 + 机器人 + 人工智能」七条链，别被「农业大省/劳务输出大省」的旧印象带偏。</li>
+      <li><b>A 档专业是压舱石。</b>车辆、集成电路/微电子、电气、计算机、光电、材料六者覆盖安徽最有确定性的岗位，优先冲。</li>
+      <li><b>贴「合肥 + 芜湖」双核。</b>合肥（新型显示/集成电路/光储/AI/量子/生物医药）+ 芜湖（汽车/机器人/低空）贡献最密集的产业与院校重叠；滁州（半导体材料）、马鞍山（冶金）、铜陵（铜基）、蚌埠（传感器）是特色极点。</li>
+      <li><b>行业特色校是最大信息差。</b>合肥工业大学（车辆/管理科学与工程A）、安徽理工大学（安全A-、爆破）、安徽工业大学（冶金、资源循环全国第二）、安徽工程大学（车辆与奇瑞共建）、安徽财经大学（财经）、安徽建筑大学（土建转型）——专业壁垒强、分数远低于同档综合校。</li>
+      <li><b>汽车是安徽最被低估也最硬的王牌。</b>三项全国第一 + 4000 多家零部件企业；车辆/电气/自动化/计算机（智驾）在安徽的产业纵深全国无对手，且分数友好。</li>
+      <li><b>「芯 + 屏」要看到全球级地位。</b>合肥新型显示全国第1、晶合显示驱动代工全球第一、长鑫全球第四DRAM；选微电子/光电/材料而非「泛电子信息」。</li>
+      <li><b>光储是安徽的隐形冠军。</b>阳光电源逆变器与储能变流器出货量全球第一，全省 30% 逆变器、20% 组件、50% 光伏玻璃；电气/储能/新能源材料是稳定出口。</li>
+      <li><b>量子只适合「能读研、能熬」的孩子。</b>全省量子企业超 100 家、全国第1，但产业仍在早期，本科对口岗位少；中科大量子信息科学是全国唯一成体系培养方向，适合目标明确者。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -24.5%、建筑业 -0.9%、固投 -9.2%；若非要报，走智能建造/市政水利/城市更新，或选合工大土木国家一流。</li>
+      <li><b>算清「留皖 vs 出走」。</b>全省出生率 4.83‰、死亡率 8.67‰、自然增长率为负，常住人口 6082 万；留皖就业要更依赖产业赛道本身（车/芯/屏/光储）而非人口红利；保研要早准备（安徽仅 3 所双一流且全在合肥）。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：安徽省统计局、国家统计局安徽调查总队《安徽省 2025 年国民经济和社会发展统计公报》（2026-03-19）、安徽省统计局《2025 年全省经济运行情况》新闻发布会（2026-01-23）、《安徽省国民经济和社会发展第十五个五年规划纲要》（2026-03-27 刊发）、安徽省发展改革委《培优育强县域制造业特色产业集群行动方案》（2025-07-01）、合肥市人民政府网「六大主导产业」、芜湖市发改委计划执行情况报告、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增 38 种、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值与集群数据跨源或有差异，已采信官方公报与政府门户口径，未做跨年估算；人口净减与自然增长率系推算值。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"车辆工程（智能网联新能源）",c:"工学",ch:"汽车",t:"A",h:5,s:"合肥工业大学（车辆国家重点+国家一流、「汽车四校」之一，业内称汽车界「黄埔军校」）／安徽工程大学（与奇瑞共建卓越工程师学院）／合肥大学（机械国家一流）／安徽工业大学",j:"整车研发、三电系统、智能座舱、智能驾驶、汽车零部件",
+  r:"汽车产量368.6万辆、新能源179.4万辆双双全国第1，出口122.8万辆全国第1，汽车制造业增加值+20.1%；7家整车厂+4000多家零部件企业；芜湖汽车链规上营收6872.5亿元、出口占全省82%。",w:"锁「新能源/智能网联/三电」方向，避传统燃油机研发；合工大车辆车企校招统治力强，安徽工程大学车辆是性价比洼地。",city:"合肥 · 芜湖 · 安庆"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"集成电路",t:"A",h:5,s:"中国科学技术大学（物理学A+、材料A-）／合肥工业大学（集成电路国家一流、微电子）／安徽大学（材料双一流建设学科、电子信息国家重点）／合肥师范学院",j:"芯片设计、存储芯片、显示驱动IC、车规芯片、封测",
+  r:"合肥集成电路重点企业超500家，2025年产业链产值1514亿元（9年增7.4倍）；长鑫存储全球第四DRAM、晶合显示驱动代工全球第一；全省存储芯片产量+1.3倍。",w:"数理要求高，本科多进制造/封测/设计支持岗，读研回报明显；长鑫、晶合、通富微电在合肥本地校招体量大。",city:"合肥 · 滁州"},
+ {n:"电气工程及其自动化（光储/三电/电网）",c:"工学",ch:"光储/三电",t:"A",h:5,s:"合肥工业大学（电气国家重点+国家一流、学科评估B）／安徽大学（电气国家一流）／安徽理工大学／安徽工业大学（自动化国家特色）",j:"光伏逆变器/储能变流器研发、储能系统集成、电网、汽车三电、电力电子",
+  r:"阳光电源光伏逆变器、储能变流器出货量全球第1；全省30%光伏逆变器、20%光伏组件、50%光伏玻璃产在安徽；可再生能源装机占比52.7%历史性超煤电。",w:"走电网需提前准备国网考试；走光储/三电看电力电子与嵌入式能力，阳光电源、国轩高科岗位密集。",city:"合肥 · 六安 · 芜湖"},
+ {n:"计算机类（人工智能/智能语音/软件）",c:"工学",ch:"人工智能",t:"A",h:5,s:"中国科学技术大学（计算机A-、软件工程A-、信息安全国家一流）／合肥工业大学（计算机国家一流、B+）／安徽大学（计算机国家一流、与科大讯飞深度合作）／安徽师范大学",j:"AI算法与大模型、语音与自然语言处理、智驾软件、工业软件、信创",
+  r:"合肥人工智能为国家战新集群，科大讯飞智能语音市占率全国第一，人工智能产业发展评价全国第五；智能算力超4.8万P；数字经济核心产业营收14318.5亿元（+14.3%）。",w:"工程能力>文凭，作品与实习决定上限；AI岗位高度集中在合肥（中国声谷）。",city:"合肥"},
+ {n:"光电信息科学与工程/电子信息类（新型显示）",c:"工学",ch:"新型显示",t:"A",h:4,s:"中国科学技术大学（光学、物理电子）／合肥工业大学（光电国家一流、电子科学与技术B-）／安徽大学（电子信息国家重点+国家一流）／安徽工程大学",j:"面板工艺与器件、近眼显示（XR）、显示驱动、光学设计",
+  r:"全省新型显示规上企业约700家、产值超2000亿元；合肥新型显示产业综合排名全国第1；液晶显示屏产量+13.6%；全球近10%显示面板在安徽生产。",w:"面板行业周期性明显，优先选上游材料/器件/装备与近眼显示（XR）方向。",city:"合肥 · 蚌埠"},
+ {n:"材料科学与工程（半导体/铜基/硅基/轻量化）",c:"工学",ch:"新材料",t:"A",h:4,s:"安徽大学（材料科学与工程为双一流建设学科、学科评估B）／合肥工业大学（材料B、无机非金属材料国家一流）／安徽工业大学（材料国家一流、与马钢共建实验室）／安徽理工大学",j:"铜基/硅基/半导体材料、汽车轻量化合金、光伏与电池材料",
+  r:"先进结构材料为4个国家战新集群之一；铜陵铜基新材料首位产业2025上半年产值929亿元；高温合金产量+22.6%；新材料为「4433」4个万亿级产业之一。",w:"锁「半导体/显示/铜基/电池材料」方向，避泛材料；安大材料是省内唯一材料类双一流学科。",city:"合肥 · 铜陵 · 马鞍山"},
+ {n:"自动化/机器人工程",c:"工学",ch:"机器人",t:"B",h:4,s:"合肥工业大学（自动化国家一流、控制科学与工程B-）／安徽工程大学（自动化国家特色、与奇瑞共建卓越工程师学院）／安徽工业大学（自动化国家特色）",j:"机器人本体研发、运动控制、系统集成、汽车焊装产线、具身智能",
+  r:"全省机器人全产业链企业超660家、工业机器人出口量全国第2、产量+35.3%；芜湖产业规模破400亿元、综合实力全国第6。",w:"控制+嵌入式+算法三件套缺一不可；芜湖岗位最密集但城市能级低于合肥，需权衡。",city:"芜湖 · 合肥 · 马鞍山"},
+ {n:"机械设计制造及其自动化（汽车装备/高端装备）",c:"工学",ch:"汽车装备",t:"B",h:4,s:"合肥工业大学（机械B+、国家重点+国家一流）／安徽工程大学（机械国家一流）／安徽理工大学（机械国家一流）／安徽工业大学",j:"汽车零部件、智能产线、机床与工程机械、农机装备",
+  r:"装备制造业增加值+18.1%、占规上工业46.6%（安徽第一大工业板块）；2024年装备制造规上企业6590户、营收1.21万亿元（中部第一、全国第六）；合力叉车连续34年全国产销第一。",w:"锁「汽车/新能源装备/机器人」方向，避泛机加工。",city:"合肥 · 芜湖 · 淮南"},
+ {n:"新能源科学与工程/储能科学与工程（光储赛道）",c:"工学",ch:"光储",t:"B",h:4,s:"中国科学技术大学（能源与动力国家一流、化学A+、钙钛矿电池研究世界领先）／合肥工业大学（新能源材料与器件国家特色+国家一流）／安徽理工大学",j:"电池片与组件工艺、储能系统集成、电池管理（BMS）、电站开发与运维",
+  r:"光储产业竞争力全国第三，「新三样」出口1018.3亿元（+107.8%）；合肥光伏逆变器、储能变流器出货量全球第1；六安主攻新型储能、滁州做光伏玻璃。",w:"光伏制造端价格战激烈、利润承压，优先选储能/电力电子/新材料方向；储能科学与工程为目录新专业，需核课程。",city:"合肥 · 六安 · 滁州"},
+ {n:"电子信息工程/通信工程（智能终端/车规电子）",c:"工学",ch:"智能终端",t:"B",h:3,s:"合肥工业大学（电子信息国家一流、信息与通信工程B-）／安徽大学（电子信息国家重点+国家一流、通信国家一流）／安徽理工大学／滁州学院（物联网国家一流）",j:"智能终端硬件、车载电子、通信与射频、嵌入式开发",
+  r:"计算机、通信和其他电子设备制造业增加值+40.9%（全省增速第一的工业大类）；微型计算机设备产量+20.6%；滁州半导体设备集群产值+84%。",w:"硬件方向周期长，需叠加嵌入式/FPGA/射频等硬技能。",city:"合肥 · 滁州"},
+ {n:"量子信息科学/物理学",c:"理学",ch:"量子科技",t:"B",h:4,s:"中国科学技术大学（物理学A+、量子信息科学本科为全国唯一成体系培养方向之一，依托合肥国家实验室）／安徽大学（物理学、光电方向）",j:"量子计算软硬件、量子通信、量子精密测量仪器、研究院所",
+  r:"全省量子产业链企业突破100家、数量全国第1（合肥93家）；合肥量子整体实力全球第二，全球前20强量子企业我国4家有3家在合肥；「九章三号」「祖冲之三号」刷新世界纪录。",w:"长周期、高门槛、强深造导向，本科直接对口岗位少，须规划读研；中科大分数极高（C9层次），不适合作为保底选项。",city:"合肥"},
+ {n:"统计学/数据科学（AI通用底座）",c:"理学",ch:"AI底座",t:"B",h:3,s:"中国科学技术大学（统计学A-、数学A）／安徽财经大学（经济统计学国家一流、应用经济学B-）／安徽大学（数学与应用数学国家一流）",j:"数据分析、算法工程、商业智能、量化与风控",
+  r:"人工智能产业发展评价全国第五、智能算力超4.8万P；数字经济核心产业营收14318.5亿元（+14.3%）；中科大统计学A-。",w:"数学与编程要求高，是AI与金融的通用底座；本科建议辅修计算机。",city:"合肥 · 蚌埠"},
+ {n:"临床医学/口腔医学",c:"医学",ch:"生命健康",t:"C",h:5,s:"安徽医科大学（临床国家一流、麻醉学国家特色）／蚌埠医科大学（临床国家一流、医学检验国家一流）／皖南医学院（临床、麻醉、口腔、法医国家一流）／中国科学技术大学（临床）",j:"三甲与地市医院、口腔专科、基层医疗、公共卫生",
+  r:"65岁及以上人口951万人、占15.64%，健康需求长期刚性；合肥生物医药产业链企业超千家；全省建成9家国家区域医疗中心。",w:"学制长（5+3一体化/本博）、分数高；蚌医、皖医分数友好、省内医院认可度高。",city:"合肥 · 蚌埠 · 芜湖"},
+ {n:"生物医学工程/药学",c:"医学",ch:"生命健康",t:"C",h:3,s:"中国科学技术大学（生物科学A）／安徽医科大学（生医工、药学、临床药学国家一流）／安徽中医药大学（中药学国家一流）／合肥工业大学（制药工程国家一流）",j:"医疗器械研发与注册、生物制药、医药流通、医学影像与检验",
+  r:"合肥生物医药产业链营收超千亿、集聚企业超千家；安科生物生长激素国内市占率第2；生物医药为「4433」超千亿产业之一。",w:"医工交叉比纯生物更对产业口；器械注册与质量法规是稳定就业切口。",city:"合肥"},
+ {n:"安全科学与工程/矿业工程",c:"工学",ch:"安全/资源",t:"C",h:3,s:"安徽理工大学（安全科学与工程A-、省属高校首个A类学科、弹药工程与爆炸技术国家一流）／安徽工业大学／安徽建筑大学",j:"矿山与化工安全、应急管理、爆破工程、安全评估",
+  r:"安徽理工大学安全科学与工程A-，为安徽省属高校首个A类学科；服务两淮能源基地，安全工程参与中老铁路等重大项目。",w:"行业体量小于汽车/电子，但对口率高、央企国企招聘稳定、分数友好，是性价比型冷门黄金赛道。",city:"淮南 · 淮北 · 合肥"},
+ {n:"冶金工程/材料成型及控制工程",c:"工学",ch:"新材料",t:"C",h:3,s:"安徽工业大学（冶金工程国家一流+博士点、材料成型国家一流、资源循环科学与工程全国第二）／安徽理工大学／铜陵学院",j:"钢铁与有色冶炼、材料加工、资源循环与再生",
+  r:"马鞍山马钢为华东钢铁重镇、铜陵有色为铜基新材料首位产业龙头；优质钢材为「4433」超3000亿产业之一；资源循环全国第二。",w:"传统冶金增长放缓，优先选「资源循环/绿色冶金/先进金属材料」方向；马钢、铜陵有色对口国企招聘稳定。",city:"马鞍山 · 铜陵"},
+ {n:"食品科学与工程/茶学/农学",c:"农学",ch:"绿色食品",t:"C",h:3,s:"安徽农业大学（食品、农学、茶学、林学均为国家一流）／合肥工业大学（食品国家一流、学科评估B）／安徽工程大学／安徽科技学院",j:"食品加工与质量控制、茶产业、种业与农技推广",
+  r:"绿色食品为「4433」4个超5000亿产业之一；粮食838.6亿斤连续9年稳在800亿斤以上；农林牧渔业总产值6388.3亿元（+3.9%）。",w:"进名企技术岗/检测机构/考公而非泛食品；合工大食品是「工科院校里的食品强校」，分数友好。",city:"合肥 · 阜阳 · 亳州"},
+ {n:"教育学/汉语言文学/数学（师范）",c:"教育学",ch:"教育",t:"C",h:3,s:"安徽师范大学（省属师范龙头、10个专业国家一流、马克思主义理论B）／安庆师范大学（汉语言文学等3个国家一流）／淮北师范大学／阜阳师范大学／合肥师范学院（小学教育国家一流）",j:"中小学教师、教研、教育管理、心理咨询",
+  r:"安徽师大为省属师范龙头；公费师范生/优师计划包分配；全省出生29.5万、出生率4.83‰，须关注教师编制招录节奏。",w:"公费师范生包分配，考编优势明显；长期须关注学龄人口变化。",city:"芜湖 · 安庆 · 淮北"},
+ {n:"会计学/金融学/国际经济与贸易（财经）",c:"管理学",ch:"财经外贸",t:"C",h:3,s:"安徽财经大学（应用经济学B-，经济学/金融/会计/统计/国贸均国家一流）／合肥工业大学（金融工程、会计学国家一流、工商管理B+）／安徽大学／安徽工业大学",j:"企业财务、审计、税务、银行与证券、跨境贸易",
+  r:"进出口首破万亿（+17.3%）；A股上市公司186家、市值26250.5亿元（+34.7%）；实际使用外资+23.9%，跨境与外贸岗位上行。",w:"须叠加证书（CPA/税务师/法考）或数据技能；纯泛财经内卷明显。",city:"蚌埠 · 合肥 · 马鞍山"},
+ {n:"交通运输/物流工程（芜湖港·江淮运河）",c:"工学",ch:"港口物流",t:"C",h:3,s:"合肥工业大学（交通运输、交通工程国家一流、智慧交通）／安徽工程大学（物流相关方向）",j:"港口与航运运营、多式联运、供应链管理、汽车滚装出口",
+  r:"进出口首破万亿、汽车出口122.8万辆全国第1；芜湖港集装箱超162万标箱、占全省过半；江淮运河全线通航；全省港口吞吐量7.3亿吨（+5.7%）。",w:"安徽本科层次交通运输类强势学科不多（合工大为首选），建议叠加供应链数据分析能力。",city:"芜湖 · 合肥"},
+ {n:"土木工程/建筑学/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"合肥工业大学（土木国家一流、学科评估B）／安徽建筑大学（绿色建筑与徽派建筑特色）",j:"设计院、施工、基建、智能建造",
+  r:"房地产开发投资3031.4亿元、-24.5%；建筑业增加值-0.9%、房屋施工面积减少13032.5万平方米；固投-9.2%（三产-14.7%）。",w:"仅志在央企设计院/重大基建（引江济淮二期、合武高铁），或走「智能建造/市政水利/城市更新」转型方向；否则慎选。",city:"合肥"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"合肥工业大学（管理科学与工程A类+双一流学科）／安徽财经大学",j:"企业职能管理、行政、咨询",
+  r:"安徽经济以制造业为主（二产占37.8%、装备制造占规上工业46.6%），泛管理岗位稀缺且内卷；民企单体规模偏小。",w:"叠加行业方向（工业工程/信息管理/供应链管理）走「理工+管理」复合路径，或冲名校光环用于选调考公；否则慎选。",city:"合肥"}
+];
+
+var CHAINS = [
+ {n:"智能网联新能源汽车（安徽第一引擎，全国三冠王）",u:["锂/钴/镍资源","正负极与电解液材料","车规级芯片","稀土永磁"],m:["动力电池（国轩高科）","电机电控（巨一科技）","整车制造","智能座舱","智驾系统"],d:["充换电","智能网联","后市场","汽车金融"],
+  mj:"车辆工程、电气工程、自动化、计算机（智驾）、材料（轻量化）",
+  f:"2025年汽车368.6万辆、新能源汽车179.4万辆双双跃居全国第1位，汽车出口122.8万辆（+28.7%）全国第1位；汽车制造业增加值+20.1%；7家整车厂+4000多家零部件和后市场企业；芜湖汽车链规上营收6872.5亿元、产量183万辆、出口135.1万辆占全省82%。"},
+ {n:"集成电路（芯：存储器+显示驱动+车规）",u:["硅片/半导体材料","设备"],m:["存储晶圆制造（长鑫存储）","晶圆代工（晶合集成）","封装测试（通富微电）","芯片设计"],d:["显示驱动","家电控制","汽车电子","AI算力"],
+  mj:"集成电路设计与集成系统、微电子、电子信息工程、材料（半导体）",
+  f:"合肥集聚重点企业超500家、从业超3.5万人；长鑫为全球第四DRAM制造企业、晶合为全球第九大晶圆代工（12英寸月产能超16万片、显示驱动代工全球第一）；2025年合肥产业链产值1514亿元、较2016年增长7.4倍；全省存储芯片产量+1.3倍。"},
+ {n:"新型显示（屏：全国排名第一的产业地标）",u:["玻璃基板","偏光片","发光材料","镀膜设备"],m:["TFT-LCD","AMOLED","Mini/Micro LED","硅基OLED","量子点","激光显示"],d:["车载显示","近眼显示（XR）","智能终端","电视"],
+  mj:"光电信息科学与工程、微电子、材料、测控技术与仪器",
+  f:"全省新型显示规上企业约700家、产值超2000亿元；合肥集聚上下游企业超200家、产业综合排名全国第1，实现「从沙子到整机」全链条布局；液晶显示屏产量+13.6%；全球近10%显示面板在安徽生产。"},
+ {n:"先进光伏与新型储能（光储：全球出货第一）",u:["硅料","石英砂","光伏玻璃"],m:["电池片（TOPCon/HJT/钙钛矿）","组件","逆变器","储能电池","储能变流器"],d:["电站运营","源网荷储","户用与工商业储能"],
+  mj:"新能源科学与工程、储能科学与工程、电气工程、材料（光伏/电化学）",
+  f:"合肥集聚阳光电源、晶澳、晶科、协鑫等企业超400家；光伏逆变器、储能变流器出货量全球第1；全省30%光伏逆变器、20%光伏组件、50%光伏玻璃在安徽生产；光储产业竞争力全国第三；「新三样」出口1018.3亿元（+107.8%）。"},
+ {n:"量子科技（未来产业·全国第一）",u:["量子芯片","稀释制冷机","单光子探测器"],m:["量子计算整机（超导/光量子）","量子通信设备","量子精密测量仪器"],d:["政务安全（量子城域网）","金融","气象","医疗","云网"],
+  mj:"量子信息科学、物理学、光电信息、微电子、计算机",
+  f:"全省量子产业链企业突破100家、数量全国第1（合肥93家）；合肥量子整体实力全球第二，全球前20强量子企业我国4家有3家在合肥；「九章三号」（255光子）、「祖冲之三号」（105比特）刷新世界纪录；量子城域网覆盖1147公里光纤。"},
+ {n:"人工智能与智能语音（中国声谷）",u:["智能算力（超4.8万P）","AI芯片","数据要素"],m:["智能语音与大模型（科大讯飞）","工业软件","机器视觉","具身智能"],d:["智慧教育","智慧医疗","智慧城市","智能座舱"],
+  mj:"计算机科学与技术、人工智能、软件工程、统计学",
+  f:"合肥人工智能集群为国家战略性新兴产业集群；科大讯飞智能语音市场占有率全国第一；人工智能产业发展评价全国第五；信息传输软件和信息技术服务业增加值1596.4亿元（+6.7%）；数字经济核心产业营收14318.5亿元（+14.3%）。"},
+ {n:"机器人与高端装备制造（全国第一方阵）",u:["减速器","伺服电机","控制器","传感器"],m:["工业机器人本体（埃夫特）","人形机器人","数控机床","叉车","色选机"],d:["汽车焊装产线","物流仓储","农业与医疗应用"],
+  mj:"机器人工程、自动化、机械设计制造及其自动化、测控技术与仪器",
+  f:"全省机器人全产业链企业超660家、工业机器人出口量全国第2、产量+35.3%；芜湖为全国首个国家级机器人产业集聚试点、产业规模突破400亿元、综合实力全国第6；合肥色选机占全球70%市场份额；合力叉车连续34年全国产销第一。"},
+ {n:"新材料（先进结构材料·铜基·硅基·冶金）",u:["铜矿","铁矿","石英砂","稀土"],m:["铜基新材料","优质钢材","陶铝/镁基新材料","半导体与显示材料","高温合金"],d:["汽车轻量化","半导体封装","光伏","航空航天"],
+  mj:"材料科学与工程、冶金工程、材料成型及控制工程、资源循环",
+  f:"先进结构材料为4个国家战新集群之一；铜陵铜基新材料首位产业2025上半年规上企业144户、产值929亿元（+7.8%）；马钢为华东钢铁重镇；高温合金产量+22.6%；合肥新材料集聚「四上」企业260余家。"}
+];
+
+var CITIES = [
+ {c:"合肥（省会·3所双一流全在此）",i:"新能源汽车、集成电路、新型显示、先进光储、人工智能、量子科技、生物医药、智能家电",l:"长鑫存储、晶合集成、京东方、阳光电源、科大讯飞、蔚来、国盾量子",m:"微电子、光电、车辆、电气、计算机、材料、物理"},
+ {c:"芜湖（省域副中心·第二极）",i:"汽车首位产业、机器人、低空经济、第三代半导体、现代农机",l:"奇瑞集团、埃夫特、墨甲机器人、芜湖港",m:"车辆、机械、自动化、机器人工程、交通运输"},
+ {c:"滁州",i:"半导体设备及材料、智能家电、先进光伏（石英砂/光伏玻璃）、汽车零部件",l:"博晶科技、华瑞微、隆基/福莱特系",m:"微电子、材料、光电、机械"},
+ {c:"马鞍山",i:"钢铁冶金、剪折弯机床（博望）、动力电池材料、轨道交通",l:"马钢、皖维、中钢矿院",m:"冶金工程、材料成型、机械、材料"},
+ {c:"铜陵",i:"铜基新材料（首位产业）、化工新材料、绿色建材、半导体",l:"铜陵有色、海螺水泥",m:"材料、冶金、化工、资源循环"},
+ {c:"安庆",i:"汽车及零部件、化工及新材料（两大主导产业）、纺织服装、商业航天",l:"江淮（安庆基地）、石化系",m:"车辆、化工、材料、纺织"},
+ {c:"蚌埠",i:"新型显示、智能传感器（MEMS）、生物化工、新能源、商业航天",l:"蚌埠玻璃工业设计研究院、壹石通、九州云箭",m:"光电、微电子、化工、材料、测控"},
+ {c:"阜阳",i:"光电器件（颍上）、新能源汽车零部件（阜南）、机器人核心零部件、绿色食品",l:"普赢智能等",m:"光电、机械、材料、食品"},
+ {c:"六安",i:"新型储能、光伏、汽车零部件（金安区）",l:"储能与光伏企业",m:"储能、电气、材料"},
+ {c:"宣城",i:"新能源、汽车零部件（「2+3+4」体系）、PCB（广德）、密封件（宁国）",l:"广德PCB集群、宁国密封件集群",m:"材料、化工、机械、车辆"},
+ {c:"皖北四市（淮南/淮北/亳州/宿州）",i:"淮南：新能源汽车后市场；淮北：煤电与陶铝新材料；亳州：中医药与白酒；宿州：绿色食品与云计算",l:"淮南矿业、淮北矿业、亳州中医药企业",m:"车辆、材料、中医、中药、食品"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c.indexOf(fCat)<0) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

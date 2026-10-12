@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>辽宁产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#1a4370;
+  --brand-soft:#e7eef5;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>辽宁产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年辽宁统计公报</b> · <b>4个万亿级产业基地（先进装备制造/石化精细化工/冶金新材料/优质特色消费品）</b> · <b>4个国家先进制造业集群</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">3.32万亿</div><div class="note">增长3.7%，全国第17（被重庆反超）</div></div>
+  <div class="stat"><div class="lab">规上工业利润</div><div class="val">+45.3%</div><div class="note">量缩利增，营收-3.2%</div></div>
+  <div class="stat"><div class="lab">民用钢质船舶</div><div class="val">+74.6%</div><div class="note">大连世界级船舶海工基地</div></div>
+  <div class="stat"><div class="lab">软件业务收入</div><div class="val">2499亿</div><div class="note">+11.2%，沈大双核</div></div>
+  <div class="stat"><div class="lab">固定资产投资</div><div class="val">-19.0%</div><div class="note">房地产-32.3%、土建承压</div></div>
+  <div class="stat"><div class="lab">人口净流入</div><div class="val">+4.5万</div><div class="note">自然增长-6.88‰，首现回流</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">地市产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：机床、工业母机、船舶、石化、航空、软件、电气、临床、法学、东财、大工、东大、沈工大、大外">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应沈阳通航/无人机）、生物制造（对应本溪生物医药）、半导体装备（对应沈阳 IC 装备）、储能/氢能（对应清洁能源强省）全部对得上辽宁产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。辽宁高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>辽宁有国家集群/万亿基地支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应辽宁独有赛道（临床/法学/会计/食品/外语/药学）或行业壁垒校，分数友好。适合想留辽、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>大工/东大及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>大连理工（机械/化工/船舶/计算机双一流）、东北大学（控制/计算机/冶金），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>中国医大（临床）、东北财经（会计/金融）、大连海事（航海/海商法）、沈阳航空航天（航空）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴辽宁产业链</td><td>沈阳工业大学（电气/机械）、大连交通（轨道/计算机）、辽宁科技大学（冶金）、沈阳化工（化工）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>大连外国语（外语）、辽宁大学（法学/经管）、沈阳师范（师范）、渤海大学（食品）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在辽宁读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>机械/电气/自动化/计算机/船舶/材料/航空航天/化工<br><span style="color:var(--ink-3);font-size:12.5px">（工业母机+船舶+石化+航空硬科技）</span></td><td><b style="color:var(--green)">优先留辽</b></td><td>产业+高校双密集，大工/东大全国顶尖或特色独一，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床/法学/会计/食品/外语/药学/师范</td><td><b style="color:var(--green)">留辽或出省</b></td><td>中国医大/东财/辽大/大外/沈药在东北认可度极高，冲名校财经可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-32.3%、固投-19%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a4370;border-left-color:var(--brand);margin-top:14px">
+      <b>辽宁独有优势：4 个国家先进制造业集群（全国第六、东北第一）+ 机床之乡 + 轴承之都 + 世界级船舶海工 + 完整绿色石化链 + 沈大软件双核 + 行业校壁垒。</b>辽宁高教梯度分明（大工/东大 985 双核 + 一众行业特色校），但<b>全省仅 4 所双一流</b>（大工、东大、大连海事、辽大）；<b>外省/河北考生来辽读「机械·电气·自动化·计算机·船舶·材料·航空航天·化工·临床·法学·会计·外语·药学」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理不建议来辽；长期须算清「留辽 vs 出走」，但 2025 年已现省际净流入 4.5 万的人口回流信号。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>辽宁靠「工业母机 + 绿色石化 + 船舶海工 + 航空 + 冶金新材料 + 软件」六引擎，别被「老工业基地衰退」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>机械、电气、自动化、计算机、船舶、材料六者覆盖辽宁最有确定性的岗位，优先冲。</li>
+      <li><b>贴「沈阳 + 大连」双核心。</b>沈阳（航空/工业母机/机器人/IC/汽车）+ 大连（石化/船舶/软件/轴承）贡献最密集产业与院校重叠；鞍山/盘锦/本溪/辽阳是特色极点。</li>
+      <li><b>行业特色校是最大信息差。</b>沈阳工业大学（电气/机械）、大连交通（轨道/计算机）、沈阳航空航天（航空）、东北财经（会计）、大连海事（航海/海商法）、辽宁工程技术（采矿安全）、沈阳药科（药剂）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>工业母机是辽宁最被低估的王牌。</b>沈大国家集群、占全省 85%+，机床之乡底蕴；机械/自动化/测控在辽宁壁垒全国无对手，且分数友好。</li>
+      <li><b>船舶与海洋工程逆势狂飙。</b>2025 民用钢质船舶 +74.6%，大连建设世界级高技术船舶与高端海工基地；大工船舶为国家一流，别只盯「土木/港航」。</li>
+      <li><b>绿色石化是辽宁体量最大的工业板块。</b>大盘集群 6351 亿、占全省近 70%；化工（大工 A）对应恒力/华锦阿美，岗位稳定但须选「绿色/精细」方向。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -32.3%、固投 -19%，除非大工土木双一流或志在央企设计院/重大基建。</li>
+      <li><b>算清「留辽 vs 出走」，但关注回流信号。</b>人口自然增长率 -6.88‰，但 2025 年省际净流入 4.5 万；选专业时规划深造路径与就业地，双一流稀缺（仅 4 所）意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：辽宁省统计局 / 国家统计局辽宁调查总队《2025 年辽宁省国民经济和社会发展统计公报》（2026-03-31）、辽宁省委《关于制定辽宁省国民经济和社会发展第十五个五年规划的建议》（2025-11-25）、辽宁省工信厅「看辽宁如何集链成群」及国家先进制造业集群发布、辽宁省数据局软件产业答复、大连市商务局服务外包数据、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"机械设计制造及其自动化（工业母机/高端数控）",c:"工学",ch:"工业母机",t:"A",h:5,s:"东北大学（机械B+、控制A）／大连理工大学（机械A、力学A-）／沈阳工业大学",j:"数控机床研发、重大装备、智能制造产线",
+  r:"沈大工业母机国家集群、两地占全省85%+；沈阳机床五轴、高档数控国家工程研究中心。",w:"锁工业母机/数控/智能制造方向，避泛机加工；大工/东大壁垒全国无对手。",city:"沈阳 · 大连"},
+ {n:"电气工程及其自动化（电机/电网）",c:"工学",ch:"电机/电网",t:"A",h:4,s:"沈阳工业大学（电机与电器王牌）／大连理工大学（电气国家一流）／东北大学",j:"电网、电气设备、电机、能源",
+  r:"沈工大电机与电器国家重点、国网签约强；船舶/航空/冶金全需电气底座。",w:"电网方向需准备国网考试；沈工大电气是洼地。",city:"沈阳 · 大连"},
+ {n:"自动化/测控技术与仪器（控制/机器人/工业智能）",c:"工学",ch:"机器人/控制",t:"A",h:5,s:"东北大学（控制A、机器人全国首批）／大连理工大学（自动化国家一流）／沈阳工业大学",j:"控制系统、机器人、工业智能、汽车电子",
+  r:"东大控制A类、机器人国家集群；全省智能工厂300+座、数字化车间1300+个。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"沈阳 · 大连"},
+ {n:"计算机类（软件/工业软件/智驾）",c:"工学",ch:"软件/智驾",t:"A",h:5,s:"东北大学（计算机A-、软件A-）／大连理工大学（计算机B+、软件国家一流）／大连交通大学",j:"软件开发、工业软件、智驾算法、信创",
+  r:"2024全省软件2499亿+11.2%；沈阳国际软件园1691家、大连软件园1000+家；东软/信华信校招强。",w:"工程能力>文凭；东大软件/计算机在东北校招极强。",city:"沈阳 · 大连"},
+ {n:"船舶与海洋工程",c:"工学",ch:"船舶海工",t:"A",h:4,s:"大连理工大学（船舶国家一流）／大连海事大学（船舶电子电气/航海）／大连交通大学",j:"船舶设计、海工装备、动力系统、航运",
+  r:"大连建设世界级高技术船舶与高端海工基地；2025民用钢质船舶+74.6%、变压器+39.2%。",w:"行业周期性强但辽宁壁垒独一；大工船舶为国家一流。",city:"大连 · 葫芦岛"},
+ {n:"材料科学与工程（冶金新材料/轻量化）",c:"工学",ch:"冶金新材料",t:"A",h:4,s:"东北大学（材料A-、冶金B+）／大连理工大学（材料B+）／辽宁科技大学",j:"特钢、镁合金、复材、轻量化材料",
+  r:"2025冶金工业+8.3%（黑色矿采选+14.1%）；鞍钢/本钢绿色智能改造、海城菱镁新材料。",w:"锁冶金新材料/复材/半导体材料方向，避泛材料。",city:"鞍山 · 本溪 · 沈阳"},
+ {n:"航空航天类（航空发动机/飞机）",c:"工学",ch:"航空装备",t:"B",h:4,s:"沈阳航空航天大学（航空宇航王牌）／大连理工大学（航空宇航）／东北大学",j:"飞机设计、航空发动机、机载设备、通航",
+  r:"沈阳航空国家集群、国内唯一新能源电动飞机量产能力；沈飞/黎明/606所；航发设备投资+61.2%。",w:"军工底色强、须政审/体检；沈航行业认可度极高。",city:"沈阳"},
+ {n:"集成电路设计与集成系统/微电子（IC装备）",c:"工学",ch:"IC装备",t:"B",h:4,s:"大连理工大学（集成电路/微电子）／东北大学（电子科学）／沈阳工业大学",j:"半导体设备、芯片设计、精密加工",
+  r:"拓荆科技/沈阳芯源/富创精密为龙头；沈阳集成电路集群约140亿元；省里专项支持。",w:"对数理要求高，深造路径清晰。",city:"沈阳 · 大连"},
+ {n:"化学工程与工艺（绿色石化/精细化工）",c:"工学",ch:"绿色石化",t:"B",h:4,s:"大连理工大学（化工A）／辽宁石油化工大学／沈阳化工大学",j:"炼化、精细化工、新材料合成",
+  r:"大盘绿色石化集群2023产值6351亿、占全省近70%；大连绿色石化2025达4000亿+；恒力/华锦阿美龙头。",w:"选绿色石化/精细化工/新材料方向，避传统煤化工。",city:"大连 · 盘锦 · 抚顺"},
+ {n:"软件工程（沈大软件/工业软件）",c:"工学",ch:"软件",t:"B",h:4,s:"东北大学（软件A-）／大连理工大学（软件国家一流）／大连交通大学",j:"软件开发、工业软件、外包升级、信创",
+  r:"2024全省软件2499亿+11.2%；大连2025服务外包32.25亿美元；工业软件攻关CAE卡脖子。",w:"外包向技术密集型/解决方案升级，须叠加工业知识。",city:"沈阳 · 大连"},
+ {n:"交通运输/物流工程（港口航运/多式联运）",c:"工学",ch:"航运",t:"B",h:3,s:"大连海事大学（交通运输工程双一流、航海/轮机顶尖）／大连交通大学（轨道交通）",j:"港口运营、航运管理、供应链、多式联运",
+  r:"大连港/营口港、沈阳中欧班列集结中心；大连海事为行业唯一211。",w:"贴航运+供应链金融更有前景。",city:"大连 · 营口 · 沈阳"},
+ {n:"机器人工程（沈阳机器人国家集群）",c:"工学",ch:"智能制造",t:"B",h:3,s:"东北大学（机器人/工业智能全国首批）／大连理工大学／沈阳工业大学",j:"工业机器人、智能制造、系统集成",
+  r:"沈阳机器人及智能制造国家集群、新松机器人；智能工厂300+座。",w:"与自动化高度重叠，选东大控制底座更稳。",city:"沈阳"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"中国医科大学（临床B+、儿科强）／大连医科大学／锦州医科大学",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化（60岁以上占32.58%）+健康需求长期刚性；中国医大多所高水平附属医院，留辽三甲比例高。",w:"学制长（5+3本博）、分数高；须做好深造规划。",city:"沈阳 · 大连"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:4,s:"辽宁大学（应用经济学双一流、法学强）／大连海事大学（海商法独一）／东北财经",j:"公检法、律所、企业法务、合规",
+  r:"辽大应用经济双一流、法学底蕴深厚；公检法/国企法务在辽认可度高；海商法为大连海事独一赛道。",w:"须过法考，考公优势明显。",city:"沈阳 · 大连"},
+ {n:"会计学/财务管理",c:"管理学",ch:"财经",t:"C",h:4,s:"东北财经大学（会计/金融王牌）／辽宁大学／沈阳工业大学",j:"企业财务、审计、税务、金融",
+  r:"东财应用经济A-、工商管理A-、统计A-；银行/证券/事务所在东北认可度超部分211。",w:"须考证（CPA等）；东财在东北财经圈壁垒强。",city:"大连 · 沈阳"},
+ {n:"食品科学与工程（粮食精深加工）",c:"工学",ch:"粮食加工",t:"C",h:3,s:"沈阳农业大学（食品/农业工程）／大连工业大学（食品强）／渤海大学",j:"粮油加工、技术岗、质检、食品研发",
+  r:"粮食2577.8万吨（主产省增速第一）、农副食品加工+4.6%；盘锦/营口粮油精深加工龙头。",w:"进名企技术岗而非泛食品。",city:"盘锦 · 营口 · 沈阳"},
+ {n:"外国语言文学",c:"文学",ch:"跨境",t:"C",h:3,s:"大连外国语大学（外语强校）／辽宁大学／东北财经",j:"跨境贸易、外事、软件外包管理、涉外法务",
+  r:"大连软件外包32.25亿美元、日韩/欧美业务密集；东北亚经贸合作拉动涉外岗位。",w:"须叠加贸易/国贸/IT管理，避纯语言内卷。",city:"大连 · 沈阳"},
+ {n:"药学/生物医学工程",c:"医学",ch:"生物医药",t:"C",h:3,s:"中国医科大学／沈阳药科大学（药剂全国前五）／大连医科大学",j:"药物研发、医疗器械、药监、临床",
+  r:"本溪生物医药集群、沈阳医药；中国医大/沈阳药科研发与药监系统优势；老龄化拉动器械。",w:"医工交叉比纯生物更对产业口。",city:"沈阳 · 本溪"},
+ {n:"能源与动力工程（清洁能源/储能/氢能）",c:"工学",ch:"清洁能源",t:"C",h:3,s:"大连理工大学（能源动力国家一流）／东北大学／沈阳化工",j:"能源装备、储能、氢能、热力",
+  r:"十五五布局清洁能源强省、氢能/先进储能未来产业；2025清洁能源发电占规上工业发电43.6%。",w:"贴储能/氢能/清洁能源方向，避传统火电。",city:"沈阳 · 大连"},
+ {n:"测绘/安全工程（采矿安全）",c:"工学",ch:"矿山安全",t:"C",h:3,s:"辽宁工程技术大学（采矿/安全王牌）／东北大学（采矿B+）",j:"矿山安全、测绘、应急管理",
+  r:"辽宁矿产资源丰富（铁矿/菱镁/黄金），十五五支持建世界级菱镁基地和国家级铁矿基地；安全刚需。",w:"行业集中辽西/矿山，须接受地域与行业属性。",city:"阜新 · 鞍山 · 本溪"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"大连理工大学（土木A-、国家一流）／沈阳建筑大学",j:"设计院、施工、基建、智能建造",
+  r:"房地产-32.3%、固投-19%、建筑业承压，土建链深度调整。",w:"仅大工土木双一流或志在央企设计院/重大基建。",city:"沈阳 · 大连"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"东北财经／辽宁大学",j:"企业职能管理、行政、咨询",
+  r:"制造业为主，泛管理岗位稀缺、内卷严重；民营企业单体偏小。",w:"叠加行业+管理（能源/医院/车企管理），否则慎选。",city:"沈阳 · 大连"}
+];
+
+var CHAINS = [
+ {n:"工业母机（高端数控机床/机床之乡）",u:["高档数控系统","关键功能部件（丝杠/轴承/导轨）"],m:["五轴加工中心","重型机床","精密机床"],d:["航空航天/汽车/船舶制造应用"],
+  mj:"机械、自动化、测控、材料",
+  f:"沈大工业母机国家集群、两地占全省85%+；沈阳机床五轴、高档数控国家工程研究中心；大连2025工业母机产值约200亿元。"},
+ {n:"绿色石化与精细化工（大连—盘锦两极）",u:["原油（油田/俄油/海上进口）"],m:["炼化一体化","烯烃/芳烃","基础化工"],d:["合成材料","精细化工","新材料"],
+  mj:"化工、材料、环境",
+  f:"大盘绿色石化集群2023主导产值6351亿元、占全省近70%；大连绿色石化2025达4000亿+；恒力/华锦阿美（沙特阿美）龙头。"},
+ {n:"船舶与海洋工程（大连世界级基地）",u:["船用钢材","动力系统","轴承"],m:["高技术船舶","海洋工程装备","特种船"],d:["航运","维修","后市场"],
+  mj:"船舶、机械、电气、材料",
+  f:"大连建设世界级高技术船舶与高端海工基地；2025民用钢质船舶+74.6%、变压器+39.2%；大连船舶重工为龙头。"},
+ {n:"航空装备（沈阳航空集群）",u:["航空发动机","高温合金","复材"],m:["飞机/发动机整机","机载设备"],d:["维修","通航","无人机"],
+  mj:"航空航天、材料、机械、自动化",
+  f:"沈阳航空国家集群、国内唯一新能源电动飞机量产能力；沈飞/黎明/606所；2025航发设备投资+61.2%。"},
+ {n:"冶金新材料（鞍钢/本钢/菱镁）",u:["铁矿","菱镁矿"],m:["特钢","钢材深加工","镁合金"],d:["汽车","船舶","装备","建材"],
+  mj:"冶金、材料、材料成型",
+  f:"2025冶金工业+8.3%（黑色矿采选+14.1%、有色冶炼+8.1%）；鞍钢/本钢绿色智能改造；海城菱镁新材料基地。"},
+ {n:"机器人及智能制造（沈阳机器人国家集群）",u:["减速器","伺服","控制器"],m:["工业机器人","智能制造装备"],d:["产线集成","运维"],
+  mj:"机器人、自动化、机械、计算机",
+  f:"沈阳机器人及智能制造为国家先进制造业集群；新松机器人为龙头；智能工厂300+座、数字化车间1300+个。"},
+ {n:"软件与信息技术服务（沈大双核）",u:["工业软件","AI大模型"],m:["软件外包","行业解决方案","信创"],d:["数字内容","企业数字化"],
+  mj:"软件、计算机、人工智能、统计",
+  f:"2024全省软件2499亿+11.2%、利润163亿；沈阳国际软件园1691家、大连软件园1000+家；东软软件百强第21。"},
+ {n:"粮食与农产品精深加工（主产省增速第一）",u:["粳稻/玉米/大豆"],m:["农副食品加工","粮油","饲料"],d:["商超","电商","餐饮"],
+  mj:"食品、生物工程、农业工程",
+  f:"2025粮食2577.8万吨+3.1%（主产省增速第一）；农副食品加工+4.6%；盘锦/营口粮油精深加工龙头。"}
+];
+
+var CITIES = [
+ {c:"沈阳（核心引擎）",i:"航空装备、工业母机、机器人、汽车及零部件、IC装备、软件",l:"沈飞、黎明航发、沈阳机床、新松、华晨宝马、拓荆科技、东软",m:"航空航天、机械、自动化、计算机、软件、微电子"},
+ {c:"大连",i:"绿色石化、高技术船舶与海工、软件外包、轴承、汽车及零部件",l:"恒力石化、大连船舶重工、瓦轴、英特尔、东软、大众一汽发动机",m:"化工、船舶、软件、机械、电气、材料"},
+ {c:"鞍山",i:"钢铁及深加工、菱镁新材料、装备制造",l:"鞍钢、海城菱镁",m:"冶金、材料、机械"},
+ {c:"抚顺",i:"石油及精细化工、冶金材料深加工、装备制造",l:"抚顺石化、抚顺特钢",m:"化工、材料、机械"},
+ {c:"本溪",i:"钢铁深加工、生物医药、文化旅游",l:"本钢、本溪生物医药集群",m:"冶金、生医工、药学"},
+ {c:"锦州",i:"石化及精细化工、光伏及新能源、汽车零部件",l:"锦州石化、光伏企业",m:"化工、新能源、材料"},
+ {c:"营口",i:"石油化工、钢铁深加工、铝、粮食食品、镁质材料",l:"营口石化、铝加工、粮油",m:"化工、冶金、食品、材料"},
+ {c:"盘锦",i:"石化及精细化工、粮食集散与精深加工、半导体材料、氢能",l:"华锦阿美、盘锦石化、粮油",m:"化工、食品、材料、能源"},
+ {c:"辽阳",i:"芳烃及精细化工、工业铝材、汽车零部件",l:"辽阳石化、奥克、辽阳瓦轴",m:"化工、材料、机械"},
+ {c:"丹东",i:"汽车及零部件、仪器仪表、IC芯片、医药健康",l:"丹东仪器仪表、汽车部件",m:"机械、测控、微电子、生科"},
+ {c:"葫芦岛",i:"石油化工、有色金属、机械造船",l:"葫芦岛石化、船舶",m:"化工、冶金、船舶、机械"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

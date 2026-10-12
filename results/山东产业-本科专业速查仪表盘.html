@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山东产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#0b6ea8;
+  --brand-soft:#e6f0f6;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>山东产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年山东统计公报</b> · <b>全国唯一41个工业大类全覆盖</b> · <b>海洋经济全国第二（1.9万亿）</b> · <b>港口吞吐量连续4年全国第一</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">10.32万亿</div><div class="note">增长5.5%，全国第3、北方首破10万亿</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+7.6%</div><div class="note">高于全国1.7pct、装备制造+11.4%</div></div>
+  <div class="stat"><div class="lab">海洋生产总值</div><div class="val">1.9万亿</div><div class="note">全国第二、占GDP18.4%</div></div>
+  <div class="stat"><div class="lab">港口吞吐量</div><div class="val">21.91亿吨</div><div class="note">连续4年全国第一</div></div>
+  <div class="stat"><div class="lab">工业大类</div><div class="val">41个全覆盖</div><div class="note">18个制造业大类营收全国前5</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-14.7%</div><div class="note">固投-8.6%、老龄化25.70%</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">7条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：船舶、海工、海洋、机械、电气、计算机、材料、化工、港口、临床、法学、石油、食品、海大、山大、石大、青科大">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应烟台东方航天港/青岛低空）、生物制造（对应山东生物医药/海洋生物医药）、半导体装备（对应济南/青岛集成电路）、储能/氢能（对应山东新能源）全部对得上山东产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。山东高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>山东有万亿产业/国家集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应山东独有赛道（海洋/石油/食品/农科）或本地强校王牌，分数友好但需选对方向。适合想留鲁、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>山大线及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>山东大学、中国海洋大学、中国石油大学（华东）、哈工大（威海），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>山东科技（机械/自动化/矿业）、青岛科技（橡胶/高分子）、山东理工（车辆/农机）、青岛大学（医学/材料）、山东师范（师范）、烟台大学（法学）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴山东产业链</td><td>山东建筑（土木/建筑）、山东交通（港航/土木）、济南大学（材料/化工）、齐鲁工大（轻工/食品）、山东财经（财经）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>滨州医学院/潍坊医学院（临床/口腔）、青岛农大（食品/农）、曲阜师大（师范）、山东中医药（中医）、山东工商（财经）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在山东读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>机械/电气/船舶海工/计算机/材料/自动化/电子<br><span style="color:var(--ink-3);font-size:12.5px">（装备+海工+信息+材料硬科技）</span></td><td><b style="color:var(--green)">优先留鲁</b></td><td>产业+高校双密集，山大/海大/石大/哈工威全国顶尖或特色独一，行业校分数低于京沪苏浙</td></tr>
+        <tr><td>海洋科学/水产/石油/临床/法学/食品/农学/外语/师范/会计</td><td><b style="color:var(--green)">留鲁或出省</b></td><td>中国海大（海洋双A+）、石大（石油A+）、山大（临床/法学）行业认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统化工周期品</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-14.7%、固投-8.6%、PPI-2.5%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#0b6ea8;border-left-color:var(--brand);margin-top:14px">
+      <b>山东独有优势：41 个工业大类全覆盖（全国唯一）+ 海洋经济全国第二 + 港口吞吐量连续 4 年全国第一 + 高端装备/化工/新材料基本盘 + 行业校壁垒。</b>山东高教层次分明（3 所 985/211 + 哈工威 + 一众行业特色校），但<b>外省/河北考生来鲁读「船舶海工·海洋科学·机械装备·计算机·材料·电气·临床·法学·石油·食品」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理·传统周期品不建议来鲁；长期须算清「留鲁 vs 出走」（常住人口净减 30.7 万、自然增长率 -3.05‰）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>山东靠「装备 + 海工 + 化工新材料 + 信息技术 + 海洋 + 港口」六引擎，别被「考公/师范」标签误导去挤泛管理。</li>
+      <li><b>A 档专业是压舱石。</b>机械、电气、船舶海工、计算机、材料、自动化六者覆盖山东最有确定性的岗位，优先冲。</li>
+      <li><b>船舶与海洋工程是被严重低估的冷门黄金赛道。</b>中集来福士占全球 20%+、山东产全国 80% 深海平台；中国海大/石大（华东）船舶专业壁垒全国无对手、分数友好。</li>
+      <li><b>行业特色校是最大信息差。</b>青岛科大（橡胶黄埔）、山科（机械/自动化/矿业）、山理工（车辆/农机）、山建（土木）、山东交通（港航）、山财（财经）、烟大（法学）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>海洋科学/水产是「独门金矿」。</b>中国海大双 A+ 全国唯一，山东海洋经济 1.9 万亿全国第二，这条链其他省复制不了；偏科研需深造。</li>
+      <li><b>化工新材料要从「传统」看到「高端」。</b>化工占全国 1/5 是底盘，但真正上行在高端化工（超 55%）、橡胶（青科大）、碳纤维（威海）、铝（滨州）。</li>
+      <li><b>信息技术贴「济青双核 + 沿海/胶济两线」。</b>济南高端软件/半导体、青岛集成电路/虚拟现实、烟台封测、潍坊元宇宙；AI 终端 4000 亿目标给软件/微电子明确增量。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -14.7%、固投 -8.6%、PPI -2.5%；除非山建大/青理工特色专业或志在跨海桥隧/港口央企基建。</li>
+      <li><b>算清「留鲁 vs 出走」。</b>常住人口净减 30.7 万、自然增长率 -3.05‰、60 岁以上占 25.70%，长期人才外流压力；选专业时规划深造路径与就业地，3 所 985/211 意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：山东省统计局、国家统计局山东调查总队《2025 年山东省国民经济和社会发展统计公报》（2026-03-03）、山东省人民政府「2025 年全省经济社会运行情况」发布会（2026-01-23）、山东省发改委海洋经济「成绩单」（2026-03-16）、山东省工信厅「十四五」先进制造业强省发布会及 2024/2025 省级先进制造业集群名单、山东省人民政府「十五五」规划纲要解读（2026-04）、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"机械设计制造及其自动化（车辆/装备）",c:"工学",ch:"高端装备",t:"A",h:5,s:"山东大学（机械双一流）／哈尔滨工业大学（威海）／山东科技（机械B-）／山东理工（车辆农机）／中国石油大学（华东）",j:"商用车/动车/工程机械研发、智能制造、产线自动化",
+  r:"装备制造业+11.4%、汽车+16.5%、铁路船舶+13.4%；全国35%商用车、50%动车组产自山东。",w:"锁车辆/新能源装备/智能制造方向，避泛机加工；山科、山理工是洼地。",city:"济南 · 青岛 · 潍坊 · 烟台"},
+ {n:"电气工程及其自动化（电网/装备电气）",c:"工学",ch:"动力/电网",t:"A",h:4,s:"山东大学（电气强）／中国石油大学（华东）（电气国家一流）／山东科技",j:"电网、电气设备、新能源三电、储能",
+  r:"装备制造业+11.4%全需电气底座；山大电气省内最强、能源央企校招稳定。",w:"电网方向需提前准备国网考试。",city:"济南 · 青岛 · 东营"},
+ {n:"船舶与海洋工程（海工装备冷门黄金）",c:"工学",ch:"海工装备",t:"A",h:5,s:"中国海洋大学（船舶国家一流、海洋双A+）／中国石油大学（华东）／哈工大（威海）／山东交通学院",j:"海工平台设计、船舶制造、海上风电、海洋油气服务",
+  r:"中集来福士半潜平台占国内80%+、全球20%+；山东产全国80%深海钻井平台；烟台海工集聚50+企业。",w:"全国能对口培养的省极少，山东第一梯队；分数洼地、信息差极大。",city:"烟台 · 青岛 · 威海"},
+ {n:"计算机类（软件/人工智能/海洋信息化）",c:"工学",ch:"信息技术",t:"A",h:5,s:"山东大学（计算机强）／中国海洋大学（计算机国家一流）／青岛大学／山东科技／哈工大（威海）",j:"软件开发、工业软件、AI、智驾算法、海洋大数据",
+  r:"规上电子信息企业超1500家、软件企业1000余家；2026年AI终端营收目标4000亿。",w:"工程能力>文凭；山大/海大/青大信息产业校招强。",city:"济南 · 青岛 · 潍坊"},
+ {n:"材料科学与工程（先进材料/橡胶/铝）",c:"工学",ch:"新材料/化工",t:"A",h:4,s:"山东大学（材料强）／青岛科技（高分子/橡胶全国顶尖）／中国石油大学（华东）／山东理工／滨州学院（铝）",j:"轻量化材料、半导体材料、高分子（橡胶）、复合材料",
+  r:"化工占全国1/5、高端化工占全行业超55%；青科大橡胶黄埔承包全国70%轮胎研发。",w:"锁橡胶/轻量化/半导体/碳纤维方向，避泛材料。",city:"青岛 · 淄博 · 威海 · 滨州 · 东营"},
+ {n:"自动化/测控技术与仪器（智能制造）",c:"工学",ch:"智能制造",t:"A",h:4,s:"山东大学（自动化强）／山东科技（自动化王牌）／中国石油大学（华东）（测控/自动化国家一流）",j:"控制系统、工业自动化、机器人、测控",
+  r:"装备制造业+11.4%、工业技改+5.3%；规上工业数字化转型覆盖率95.1%。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"济南 · 青岛 · 泰安"},
+ {n:"电子信息类（集成电路/光电/智能终端）",c:"工学",ch:"信息技术",t:"B",h:4,s:"山东大学（微电子）／中国海洋大学／青岛大学／济南青岛集成电路集群相关校",j:"芯片设计、封测、光电、智能终端",
+  r:"规上电子信息企业超1500家；济南/青岛集成电路、青岛虚拟现实、烟台先进封测。",w:"本科多去制造/封测，深造（微电子/集成电路）更有利。",city:"济南 · 青岛 · 烟台 · 潍坊"},
+ {n:"海洋科学/水产（海洋经济独门）",c:"理学",ch:"海洋经济",t:"B",h:5,s:"中国海洋大学（海洋科学/水产双A+，全国唯一）",j:"海洋科研、水产育种、海洋监测、海洋管理",
+  r:"海洋生产总值1.9万亿全国第二、占GDP18.4%；国字号海洋平台50个、住鲁海洋院士25人。",w:"偏科研需深造；属地壁垒全国无对手，是独门金矿。",city:"青岛 · 烟台 · 威海"},
+ {n:"化学工程与工艺（高端化工/石化）",c:"工学",ch:"高端化工",t:"B",h:4,s:"中国石油大学（华东）（化工A类）／青岛科技（化工B+）／山东大学／山东理工",j:"炼化一体化、精细化工、高分子、化工新材料",
+  r:"化工占全国1/5、高端化工超55%；万华、齐鲁石化、东营高端绿色橡胶支撑。",w:"选高端化工/新能源材料方向，避传统煤化工。",city:"东营 · 淄博 · 青岛 · 烟台"},
+ {n:"交通运输/物流工程（港口/航运/陆海通道）",c:"工学",ch:"港口物流",t:"B",h:4,s:"中国海洋大学（港口航道国家一流）／山东交通学院（港航/土木）／山东大学",j:"港口运营、多式联运、供应链、航运管理",
+  r:"港口吞吐量21.91亿吨连续4年全国第一、集装箱4816.8万标箱；涉海进出口+29.7%。",w:"贴港口+供应链金融比纯运输更有前景。",city:"青岛 · 日照 · 烟台"},
+ {n:"生物工程/生物医学工程（海洋生物医药）",c:"工学",ch:"生物医药",t:"B",h:4,s:"中国海洋大学（生医工/药学）／山东大学（药学）／烟台大学／滨州医学院",j:"生物制剂、医疗器械、海洋药物、医工交叉",
+  r:"生物医药规模约占全国1/10；齐鲁制药、威高、荣昌、青岛海洋1类新药多集群。",w:"医工交叉比纯生物更对产业口。",city:"青岛 · 烟台 · 菏泽 · 济南"},
+ {n:"新能源科学与工程/储能（新型电池/氢能）",c:"工学",ch:"新型电池/氢能",t:"B",h:4,s:"中国石油大学（华东）（储能/新能源）／山东大学／青岛大学（新能源材料）",j:"储能、电池材料、氢能、新能源装备",
+  r:"新能源汽车110.5万辆+50.3%、锂离子电池+103.1%；东营/枣庄/济宁聚焦新型电池。",w:"对数理/化学要求高，深造路径清晰。",city:"东营 · 枣庄 · 济宁 · 青岛"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"山东大学（临床8年制、双一流）／青岛大学（临床B+）／山东第一医科大学／潍坊医学院／滨州医学院／山东中医药",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化25.70%健康需求长期刚性；山大齐鲁、青大等平台强、留鲁三甲比例高。",w:"学制长（5+3本博）、分数高。",city:"济南 · 青岛 · 潍坊 · 滨州 · 泰安"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:4,s:"山东大学（法学A类）／烟台大学（法学省内前列）",j:"公检法、律所、企业法务、合规",
+  r:"山大法学A类、烟大法学省内前列；公检法/律所/国企法务认可度高。",w:"须过法考，考公优势明显。",city:"济南 · 烟台"},
+ {n:"石油工程（行业特色独门）",c:"工学",ch:"石化上游",t:"C",h:4,s:"中国石油大学（华东）（石油与天然气工程A+、国家一流）",j:"油气勘探开发、储运、海洋油气",
+  r:"石大（华东）石油与天然气工程A+、地质资源A+，行业龙头；胜利油田属地支撑。",w:"行业周期性强，须接受去油田/能源央企就业地。",city:"青岛 · 东营"},
+ {n:"食品科学与工程",c:"工学",ch:"健康食品",t:"C",h:3,s:"中国海洋大学（食品国家一流）／青岛农业大学／山东农业大学",j:"食品加工、技术岗、质检",
+  r:"山东食品占全国11%居全国首位；临沂健康食品、菏泽功能性营养制品集群。",w:"进名企技术岗而非泛食品。",city:"青岛 · 临沂 · 菏泽 · 烟台"},
+ {n:"农学类（农学/园艺/植物保护）",c:"农学",ch:"农业/种业",t:"C",h:3,s:"山东农业大学（农学/园艺/植保B档）／青岛农业大学",j:"种业、农技、植保、农业科研",
+  r:"山东农业大省、粮食连续5年超1100亿斤；山农涉农学科省内断层领先。",w:"服务种业翻身仗+国人厨房，国家背书、属地就业稳。",city:"泰安 · 青岛 · 潍坊"},
+ {n:"外国语言文学/国际经济与贸易",c:"文学",ch:"跨境贸易",t:"C",h:3,s:"山东财经（国贸/财经）／中国海洋大学（外语/金融）",j:"跨境贸易、外事、涉外法务、供应链管理",
+  r:"港口21.91亿吨、涉海进出口+29.7%、临沂跨境电商活跃；涉外需求上行。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"青岛 · 济南 · 临沂"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"山东师范（师范龙头）／曲阜师范（考研率高）",j:"中小学教师、教研、心理咨询",
+  r:"山师大教育学/马克思主义B+、曲阜师大数学/教育B-，中小学教师主要输送校。",w:"公费师范生包分配，考编优势大。",city:"济南 · 曲阜"},
+ {n:"会计学/财务管理",c:"管理学",ch:"财经",t:"C",h:3,s:"山东财经（财经龙头）／青岛大学",j:"企业财务、审计、税务",
+  r:"山财应用经济B+、工商管理B+，省内唯一财经强校、本地银行认可高。",w:"须考证（CPA等）。",city:"济南 · 青岛"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"山东建筑（土木/建筑王牌）／青岛理工（土木/建筑）",j:"设计院、施工、基建、智能建造",
+  r:"房地产-14.7%、销售额-13.4%、新开工收缩；固投-8.6%整体承压。",w:"仅山建大/青理工特色或志在跨海桥隧/港口央企基建。",city:"济南 · 青岛 · 日照"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"山东财经／山东大学",j:"企业职能管理、行政、咨询",
+  r:"制造业为主，泛管理岗位稀缺、内卷严重。",w:"叠加行业+管理（能源/医院/车企管理），否则慎选。",city:"济南 · 青岛"}
+];
+
+var CHAINS = [
+ {n:"高端装备/轨道交通/动力装备（山东基本盘）",u:["钢铁/铝材","关键零部件","数控系统"],m:["商用车（中国重汽）","动车组（中车四方）","发动机（潍柴）","工程机械"],d:["运维","后市场","出海"],
+  mj:"机械、车辆、电气、自动化、测控",
+  f:"全国35%商用车、50%动车组产自山东；装备制造业+11.4%（铁路船舶+13.4%、汽车+16.5%）；潍坊动力装备为国家级集群。"},
+ {n:"船舶与海洋工程装备（冷门黄金）",u:["船用钢板","发动机","配套设备"],m:["半潜式钻井平台","特种船舶","海上风电装备","深远海养殖工船"],d:["海洋油气服务","海上发射","运营"],
+  mj:"船舶与海洋工程、机械、材料、自动化",
+  f:"中集来福士半潜平台占国内80%+、全球20%+；山东产全国80%深海钻井平台；烟台50+家规上海工企业、配套200余家。"},
+ {n:"海洋经济（渔业+海工+港口+海洋生物医药）",u:["种苗/养殖","港口基建"],m:["深远海养殖","海工装备","港口物流","海洋药物"],d:["冷链","医养","文旅","国际贸易"],
+  mj:"海洋科学、水产、港口航道、生医工、药学",
+  f:"海洋生产总值1.9万亿全国第二、占GDP18.4%；港口吞吐量21.91亿吨连续4年全国第一；海洋工程装备/海洋生物医药新兴+7.2%；涉海进出口+29.7%。"},
+ {n:"高端化工/新材料（传统底盘升级）",u:["原油","煤炭","盐矿"],m:["炼化一体化","精细化工","高分子（橡胶）","铝/碳纤维"],d:["汽车轻量化","新能源","医药中间体"],
+  mj:"化工、材料、高分子",
+  f:"化工占全国1/5、食品占11%均居全国首位；高端化工占全行业超55%；青科大橡胶黄埔承包全国70%轮胎研发；威海碳纤维、滨州铝为特色集群。"},
+ {n:"新一代信息技术/智能终端/集成电路",u:["半导体材料","特色工艺"],m:["集成电路（济南/青岛）","智能终端（青岛）","虚拟现实（青岛）","先进封测（烟台/淄博）"],d:["软件","AI","工业互联网"],
+  mj:"电子信息、计算机、微电子、软件、人工智能",
+  f:"规上电子信息企业超1500家、软件企业1000余家；2026年AI终端营收目标4000亿；济青双核引领、沿海/胶济两线联动。"},
+ {n:"生物医药/海洋生物医药",u:["原料药","生物制剂"],m:["创新药（齐鲁/荣昌）","医疗器械（威高）","海洋药物（蓝色药库）"],d:["医疗服务","康养"],
+  mj:"药学、生医工、临床、生物科学",
+  f:"生物医药规模约占全国1/10；菏泽/济南/烟台/日照多集群；青岛免疫抗肿瘤海洋1类新药梯次推进。"},
+ {n:"港口物流/外贸（陆海大通道）",u:["多式联运枢纽"],m:["集装箱/班列/航运"],d:["跨境贸易","供应链金融","电商"],
+  mj:"交通运输、物流、国贸、外语",
+  f:"沿海港口21.91亿吨连续4年全国第一；集装箱4816.8万标箱+7.0%；涉海进出口+29.7%；临沂商城电商活跃。"}
+];
+
+var CITIES = [
+ {c:"青岛",i:"智能家电、轨道交通装备、航运物流、集成电路、虚拟现实、港口",l:"海尔、海信、中车四方、青岛港、歌尔",m:"计算机、电子信息、机械、自动化、港口航道"},
+ {c:"济南",i:"高端软件、特色半导体、高性能计算机、量子科技、生物医药",l:"浪潮、齐鲁制药、中国重汽",m:"计算机、软件、微电子、临床、量子相关"},
+ {c:"烟台",i:"海工装备（中集来福士）、东方航天港、高端石化、先进结构材料、电子信息",l:"中集来福士、万华化学、东方航天港",m:"船舶与海洋工程、材料、航空航天、化工"},
+ {c:"潍坊",i:"高端动力装备（潍柴）、智能农机、生物基新材料",l:"潍柴、雷沃、晨鸣",m:"机械、车辆、农业工程、材料"},
+ {c:"淄博",i:"精细化工及聚合物新材料、医药、冶金",l:"齐鲁石化、新华制药",m:"化工、材料、药学"},
+ {c:"威海",i:"碳纤维及复合材料、打印机（惠普）、医疗器械、海洋生物",l:"光威复材、惠普、威高",m:"材料、机械、生医工"},
+ {c:"东营",i:"高端绿色橡胶、石化装备、新能源（新型电池）",l:"玲珑/赛轮、中石化胜利油田",m:"高分子材料（橡胶）、化工、新能源"},
+ {c:"济宁",i:"装备制造、半导体、煤化工、生物医药",l:"山推、鲁抗",m:"机械、微电子、化工、药学"},
+ {c:"临沂",i:"高端工程装备、健康食品、智慧物流、电商",l:"临工、临沂商城",m:"机械、食品、物流、电商"},
+ {c:"日照",i:"先进钢铁制造、港口、电子信息、海洋生物医药",l:"日照钢铁、日照港",m:"冶金、材料、港口、电子信息"},
+ {c:"德州",i:"高端体育装备、集成电路关键材料",l:"泰山体育、有研半导体",m:"材料、集成电路、体育工程"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

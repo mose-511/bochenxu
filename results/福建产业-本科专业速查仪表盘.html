@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>福建产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f2f6f6;
+  --card:#ffffff;
+  --ink:#1c2a2b;
+  --ink-2:#47585a;
+  --ink-3:#7b8b8d;
+  --line:#dfe8e8;
+  --brand:#0e5c63;
+  --brand-soft:#e6f1f2;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,42,43,.05),0 4px 16px rgba(28,42,43,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,42,43,.06),0 8px 24px rgba(28,42,43,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f4f4;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f4f4;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f4f4;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>福建产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年福建统计公报</b> · <b>「555X」产业集群（5个万亿级：电子信息/现代化工/先进装备制造/现代纺织鞋服/新能源）</b> · <b>宁德时代动力电池全球市占39.2%</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">6.02万亿</div><div class="note">增长5.0%，全国第8；人均全国第4</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+6.5%</div><div class="note">高技术+14.6%、电子+16.9%</div></div>
+  <div class="stat"><div class="lab">动力电池</div><div class="val">39.2%</div><div class="note">宁德时代全球市占，连续9年第一</div></div>
+  <div class="stat"><div class="lab">电子信息营收</div><div class="val">1.09万亿</div><div class="note">全国第7，行业增加值+16.9%</div></div>
+  <div class="stat"><div class="lab">海洋经济</div><div class="val">1.3万亿+</div><div class="note">全国第3，占全省GDP 22%</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-30.0%</div><div class="note">出口-6.7%，土建与外贸承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="经济学">经济学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：电池、宁德、显示、鞋服、海洋、茶、化工、电气、计算机、临床、会计、福大、厦大">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应福建千亿级低空经济集群）、储能/氢能（对应新型电池与氢能百亿集群）、半导体装备（对应集成电路集群）全部对得上福建产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。福建高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>福建有万亿集群/国家级链主支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应战新/千亿集群方向，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应福建独有赛道（电池链、鞋服品牌、海洋、茶），分数友好但需选对方向。适合想留闽、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受外贸收缩/地产调整拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>厦门大学及以上</td><td>学校优先 + 专业不将就，锁定双一流学科</td><td>厦门大学（化学/海洋/统计/经济/会计双一流），或冲省外顶尖 985</td></tr>
+        <tr><td><b>中高分</b><br>福州大学线上下</td><td>选「行业王牌」优于「综合排名略高但专业弱」</td><td>福州大学（电气/材料/电子/计算机/化学）、福建医科大学（临床）、福建师范大学（师范）</td></tr>
+        <tr><td><b>中分</b><br>省重点线</td><td>贴产业链选特色校</td><td>华侨大学（机械/工商）、集美大学（船舶/水产）、福建农林大学（茶学/食品/园艺）、福建理工大学（材料）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>行业背景校 + 锁特色专业</td><td>闽江学院（纺织）、厦门理工学院（电子/机械）、闽南师范大学（师范/中文）、泉州师范（服装）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--ink-2);margin-top:8px"><b>历史组建议：</b>会计/财经（厦大、华侨大学）、师范与中文（福建师范大学）、新闻传播（厦大广告国家重点）、旅游管理（华侨大学）、法学（厦大法学A-）是历史组友好方向；纯外贸类须叠加跨境电商或小语种技能。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在福建读，还是出省读？（含外省/河北考生判断）</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>材料/电气/电子信息/计算机/化工/机械<br><span style="color:var(--ink-3);font-size:12.5px">（电池+电子+化工硬制造）</span></td><td><b style="color:var(--green)">优先留闽</b></td><td>CATL/天马/三安/安踏链主密集，福大工科与产业咬合紧，分数低于同档华东 20–40 分</td></tr>
+        <tr><td>海洋/茶学/食品/水产/纺织/旅游</td><td><b style="color:var(--green)">留闽优势明显</b></td><td>全国独有赛道（海洋第3、茶第一、鞋服品牌半壁江山），外省无对等产业土壤</td></tr>
+        <tr><td>临床/师范/会计</td><td><b style="color:var(--accent)">留闽或出省均可</b></td><td>福建医大、福师大省内认可度高；冲更大平台可出省</td></tr>
+        <tr><td>土木/纯外贸/泛管理</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产投资-30%、出口-6.7%，相关岗位省内收缩更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#0e5c63;border-left-color:var(--brand);margin-top:14px">
+      <b>外省/河北考生值不值得来福建？</b>分三档：①<b>值得专程来</b>——厦门大学（海洋科学全国第二、化学/统计/会计顶尖，保研率28.26%）、福州大学（唯一工科211，电气/材料/化工对接CATL与万亿集群）；②<b>可选</b>——集美大学（航海/水产/船舶）、福建农林大学（茶学全国稀缺）、华侨大学（侨校平台）；③<b>不必专程来</b>——普通省属校综合类专业，省外认可度有限。需接受：双一流稀缺、保研竞争集中；气候湿热饮食偏鲜；岗位集中在福厦泉宁四市，CATL在宁德、安踏在晋江，接受产业地级市是拿高性价比offer的前提。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定链主，再定专业。</b>福建的确定性在宁德时代、天马/三安、安踏/特步、古雷/泉港石化、圣农五大链主，专业往链主岗位倒推，别被「侨乡/旅游省」标签带偏。</li>
+      <li><b>「电池三角」是第一填法。</b>材料学、电气学、化学工程与工艺学任何一门深入CATL产业链，都是全省本科就业确定性最高的组合，福大为最优入口。</li>
+      <li><b>电子信息盯「屏与光」。</b>营收破万亿、全国第7且+16.9%全省最快；天马AMOLED、三安LED芯片扩产，选显示/光电方向优于纯通信。</li>
+      <li><b>海洋与茶学是外省复制不了的护城河。</b>海洋1.3万亿全国第3、茶全链1800亿全国第一，厦大海洋A+、农林大茶学全国头部，稀缺专业就业垄断性强。</li>
+      <li><b>晋江品牌集群=市场化就业富矿。</b>安踏802亿、特步141亿、361°111亿三强年年在闽校招，市场营销/设计/纺织+数据分析的复合人才最缺。</li>
+      <li><b>计算机选「产业数字化」而非纯互联网。</b>福建数字化企业占比全国第2但缺一线大厂，把软件能力绑定制鞋、电子、茶等实体行业更值钱。</li>
+      <li><b>警惕外贸依赖型方向。</b>出口-6.7%、对美-22.1%是真实承压；想学经贸必须叠加跨境电商/供应链/小语种，纯国贸慎选。</li>
+      <li><b>土建链全面回避。</b>房地产投资-30%、新开工-32%、建筑业投资-22.7%，仅福大土木（省一流学科、路桥方向）或央国企基建就业值得考虑。</li>
+      <li><b>用「双一流稀缺」反推规划。</b>全省仅2所双一流，省内保研名额集中，从大一开始刷绩点+竞赛；分数够厦大/福大就不纠结，不够就靠行业校王牌专业补位。</li>
+      <li><b>算清「留闽 vs 回冀」。</b>福建人口自然增长率-1.52‰、山区三明2025年GDP增速-4.3%全省唯一负增长，岗位集中在福厦泉宁四市；规划深造路径与就业地要前置。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：福建省统计局《2025 年福建省国民经济和社会发展统计公报》（2026-03-19）、福建省「十五五」规划纲要及省政府新闻发布会（2026-05）、福建投资促进网产业集群名录（2026）、省工信厅 2025 年度中小企业特色产业集群名单（2025-07）、省海洋与渔业局发布（2026）、「十五五」「海上福建」建设规划（2026-07）、宁德市人民政府发布（2026-04）、安踏/特步/361° 2025 年年报（2026-03）、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单与软科 2025 中国最好学科排名。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。基于 2025 年统计公报与十五五规划 · 供 2027 届考生家长参考。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"材料科学与工程（电池材料/金属新材料）",c:"工学",ch:"锂电新能源",t:"A",h:5,s:"福州大学（材料、化学双一流）／厦门大学（材料国家重点）／福建理工大学",j:"电池材料研发、电芯工艺、金属材料、化工新材料",
+  r:"宁德时代动力电池全球市占39.2%连9年第一，正负极隔膜全链在闽；宁德四大集群产值超5300亿。",w:"锁电池/金属新材料方向，避泛材料；进CATL产业链材料岗是本科最短路径。",city:"宁德 · 福州 · 厦门"},
+ {n:"电气工程及其自动化（电池系统/电网/船舶电气）",c:"工学",ch:"锂电/电动船舶",t:"A",h:5,s:"福州大学（电气王牌、省内工科211）／华侨大学／福建理工大学",j:"电池管理系统、电力电子、电网、船舶电气",
+  r:"新能源列万亿级集群；电动船舶核心装备市占率超40%全国第一方阵；CATL电气岗需求全省最大。",w:"电网方向需准备国网考试；电池方向优先选电力电子课程强的培养方案。",city:"宁德 · 福州 · 厦门"},
+ {n:"电子信息类（新型显示/光电/通信）",c:"工学",ch:"电子信息",t:"A",h:5,s:"福州大学（电子科学与技术省一流）／厦门大学／厦门理工学院",j:"显示面板工艺、LED/IC、通信设备、智能硬件",
+  r:"电子信息营收10854亿全国第7、行业增加值+16.9%全省最快；天马AMOLED、三安LED、京东方、锐捷矩阵。",w:"本科多进面板/终端制造，深造走研发更优；新型显示是省级「强屏」战略。",city:"厦门 · 福州 · 莆田"},
+ {n:"计算机类（软件/人工智能/数字经济）",c:"工学",ch:"数字经济",t:"A",h:5,s:"福州大学（计算机国家一流）／厦门大学／福建师范大学",j:"软件开发、AI应用、企业数字化、跨境电商技术",
+  r:"数字经济增加值3.4万亿；关键业务环节数字化企业占比73.1%全国第2；鼓楼AI集群68家企业。",w:"薪资低于一线互联网，建议叠加鞋服供应链/电子制造等行业知识。",city:"福州 · 厦门"},
+ {n:"机械设计制造及其自动化（锂电装备/电动船舶）",c:"工学",ch:"先进装备制造",t:"A",h:4,s:"福州大学／华侨大学（机械省一流学科群）／集美大学（机械+船舶）",j:"智能制造装备、船舶机械、产线自动化、汽车零部件",
+  r:"装备制造营收12514.4亿+7.7%；电动船舶全国第一方阵；海工装备增加值+16.9%。",w:"锁新能源装备/船舶方向，避传统泛机械；厦门航空维修可作特色出口。",city:"宁德 · 厦门 · 福州"},
+ {n:"化学工程与工艺（石化新材料/电子化学品）",c:"工学",ch:"现代化工",t:"A",h:4,s:"福州大学（化学双一流、化工强）／厦门大学（化工国家一流）／福建理工大学",j:"炼化工艺、化工新材料、精细化工、电子化学品",
+  r:"石化营收4986.8亿+8.6%；古雷/泉港泉惠两基地一专区扩张；乙烯+19.6%；少油多化路线。",w:"一线倒班需心理准备，往新材料/半导体化学品偏移；古雷泉港岗位集中。",city:"泉州 · 漳州 · 福州"},
+ {n:"储能科学与工程/新能源科学与工程",c:"工学",ch:"储能/氢能",t:"B",h:4,s:"福州大学（储能/新能源方向）／厦门大学（能源化学、储能）",j:"储能系统集成、电池测试、氢能、电站运维",
+  r:"宁德时代储能出货121GWh全球市占30.4%连5年第一；未来产业列新型电池、氢能；太阳能装机+37.8%。",w:"新设专业无历年录取数据，优先选依托强化学科的高校。",city:"宁德 · 厦门"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"半导体",t:"B",h:4,s:"福州大学（微电子）／厦门大学（集成电路设计与集成系统）",j:"芯片设计、化合物半导体、封测、EDA应用",
+  r:"集成电路和光电集群产值超2000亿；瑞芯微AIoT芯片、三安化合物半导体；省强屏强芯战略。",w:"注意产量端-15.4%周期波动，选设计端比制造更稳；数理门槛高。",city:"厦门 · 福州 · 泉州"},
+ {n:"车辆工程（新能源汽车方向）",c:"工学",ch:"新能源汽车",t:"B",h:3,s:"福州大学（车辆）／福耀科技大学（车辆工程、2025年首招）",j:"新能源整车、三电系统、电池包结构",
+  r:"全省新能源汽车产量4.41万辆+78.1%、零售+27.0%；上汽宁德基地放量；可衔接CATL。",w:"福建整车规模仅27.59万辆，按电池企业车辆岗定位，或作跳板读研去省外车企。",city:"宁德 · 福州"},
+ {n:"人工智能/数据科学与大数据技术",c:"工学",ch:"AI与机器人",t:"B",h:4,s:"福州大学／厦门大学（人工智能、统计双一流）",j:"AI应用开发、数据工程、智能制造算法",
+  r:"AI与机器人列千亿级集群首位；福州人工智能计算中心纳入全国算力体系；安踏推出AI设计大模型。",w:"产业培育期岗位密度不及软件，需数学功底扎实。",city:"福州 · 厦门"},
+ {n:"生物医药类（生物工程/制药工程）",c:"工学",ch:"生物医药",t:"B",h:3,s:"福建医科大学／福州大学（生物工程）／厦门大学（药学）",j:"生物制药、医疗器械、质量注册",
+  r:"生物医药列555X千亿级集群；厦门生物医药港；全省医院758家、卫技人员34.75万。",w:"省内产业仍在培育期，本科多生产/质检岗，建议本硕连读。",city:"厦门 · 福州"},
+ {n:"船舶与海洋工程（电动船舶/海工装备）",c:"工学",ch:"电动船舶/海工",t:"B",h:3,s:"集美大学（船舶与海洋工程省一流学科群）／福州大学",j:"船舶设计、海洋装备、海上风电",
+  r:"电动船舶核心装备市占率超40%全国第一方阵；全球最大26兆瓦级海风机组下线；海工装备+16.9%。",w:"细分赛道全国布局有限，锁定绿色船舶/海上风电差异化定位。",city:"宁德 · 厦门 · 福州"},
+ {n:"海洋科学/水产养殖学",c:"理学",ch:"海洋经济",t:"C",h:4,s:"厦门大学（海洋科学A+全国第二）／集美大学（水产）／福建农林大学",j:"水产种业、深远海养殖、海洋生物技术、海关检验",
+  r:"海洋生产总值1.3万亿全国第3；水产品出口438.1亿连续13年全国第一；大黄鱼占全国80%+份额。",w:"厦大分数高；水产一线岗位多在沿海县市，愿下基层者回报稳定。",city:"宁德 · 福州 · 厦门"},
+ {n:"茶学/园艺",c:"农学",ch:"茶产业",t:"C",h:3,s:"福建农林大学（茶学、园艺全国头部）",j:"茶叶审评与加工、品牌茶企技术岗、茶文旅",
+  r:"茶产业全产业链产值1800亿全国第一；毛茶产量全国第二；安溪铁观音、武夷岩茶两大名片。",w:"专业面窄但全国独一档，适配愿意深耕消费品行业的考生。",city:"南平 · 泉州 · 福州"},
+ {n:"食品科学与工程",c:"工学",ch:"绿色食品",t:"C",h:3,s:"福建农林大学（食品省一流学科）／集美大学／福州大学",j:"食品加工技术、品控、供应链",
+  r:"绿色食品列五千亿级集群；圣农自研圣泽901种源打破外资垄断；水产加工出口13连冠。",w:"优先名企技术岗（圣农、安井等），避泛食品。",city:"南平 · 宁德 · 福州"},
+ {n:"纺织工程/服装设计与工程",c:"工学",ch:"纺织鞋服",t:"C",h:3,s:"闽江学院（纺织科学与工程省一流学科）／泉州师范学院",j:"面料研发、版型工艺、品牌商品企划",
+  r:"纺织鞋服营收7007亿；安踏年研发22亿、行业首个AI设计大模型；惠安校服占全国1/3份额。",w:"制造端向研发+品牌迁移，纯生产岗收缩，建议叠加设计与数据技能。",city:"泉州 · 福州 · 莆田"},
+ {n:"会计学/财务管理",c:"管理学",ch:"财经",t:"C",h:4,s:"厦门大学（会计国家重点、全国顶尖）／福州大学／华侨大学",j:"企业财务、审计、投行券商福建区业务",
+  r:"民营经济九成市场主体催生海量财务岗；厦大工商管理学全国前3%；闽企A股176家+港股鞋服品牌密集。",w:"厦大会计分数接近头部985；普通院校财会需CPA+行业聚焦。",city:"厦门 · 福州 · 泉州"},
+ {n:"临床医学/口腔医学",c:"医学",ch:"大健康",t:"C",h:4,s:"福建医科大学（临床省一流学科）／福建中医药大学／厦门大学医学部",j:"三甲/地市医院、公共卫生",
+  r:"全省医院758家、卫生技术人员34.75万；老龄化刚性需求，留闽三甲路径清晰。",w:"学制长、分数高；口腔在闽就业溢价明显。",city:"福州 · 厦门"},
+ {n:"师范类/中国语言文学",c:"教育学",ch:"教育",t:"C",h:3,s:"福建师范大学（文科龙头）／闽南师范大学",j:"中小学教师、教研、考编",
+  r:"福师大马克思主义理论、中国语言文学、体育学为省一流/软科一流学科；福建基础教育发达。",w:"编制竞争加剧，公费师范生路径确定性最高。",city:"福州 · 漳州"},
+ {n:"旅游管理/酒店管理",c:"管理学",ch:"文旅",t:"C",h:3,s:"华侨大学（旅游管理全国知名、面向侨台）／福建师范大学",j:"文旅运营、酒店管理、研学产品",
+  r:"世界遗产5处（武夷山/土楼/泰宁丹霞/鼓浪屿/泉州古城）；茶文旅年接待约4200万人次。",w:"行业复苏但起薪一般，建议叠加外语/数字化运营能力。",city:"南平 · 厦门 · 平潭"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"福州大学（土木省一流学科、路桥特色）",j:"设计院、施工、基建、智能建造",
+  r:"房地产开发投资-30.0%、新开工-32.0%、建筑业投资-22.7%，土建链深度承压。",w:"仅福大土木或志在央国企重大基建可考虑，否则慎选。",city:"福州"},
+ {n:"国际经济与贸易（纯外贸）/泛管理",c:"经济学",ch:"外贸/泛管理",t:"D",h:2,s:"厦门大学（国际经济与贸易国家重点）",j:"外贸业务、跨境电商、企业职能管理",
+  r:"2025年出口-6.7%、对美-22.1%、对东盟-18.0%；民企以制造为主，泛管理岗位密度低。",w:"叠加跨境电商实操（网络零售+14.2%）或小语种才可救；纯方向慎选。",city:"厦门 · 福州"}
+];
+
+var CHAINS = [
+ {n:"锂电新能源/动力电池（福建第一王牌）",u:["正极/负极材料","电解液/隔膜","锂资源"],m:["电芯制造（宁德时代/ATL）","PACK与储能系统"],d:["新能源汽车（上汽宁德）","储能电站","电池回收"],
+  mj:"材料、电气、化学、机械、储能",
+  f:"宁德时代2025动力电池全球市占39.2%（连续9年第一）、储能121GWh市占30.4%（连续5年第一）、营收4237.02亿；宁德锂电产值超3000亿、四大主导集群超5300亿；全球最大聚合物锂电池基地。"},
+ {n:"电子信息（新型显示+光电+智能终端）",u:["LED外延芯片（三安光电）","IC设计（瑞芯微）"],m:["面板（厦门天马AMOLED/福州京东方）","显示器电视（冠捷/友达）","PC（戴尔）"],d:["网络设备（锐捷/星网锐捷）","消费电子","智能终端"],
+  mj:"电子信息、光电、微电子、计算机",
+  f:"2025规上电子信息制造业增加值+13.6%、营收10854亿全国第7；12家百亿企业；行业+16.9%为全省第一引擎；集成电路产量-15.4%制造端有波动。"},
+ {n:"现代纺织鞋服（晋江品牌集群）",u:["锦纶-6化纤（连江可门一滴油到一件衣）","鞋材面料"],m:["品牌鞋服制造（安踏/特步/361°）","莆田智造定制"],d:["品牌零售与电商（安踏电商占35.8%）","体育营销","出海（拟购PUMA股权）"],
+  mj:"纺织、服装、市场营销、电子商务、设计",
+  f:"全省纺织鞋服营收7007亿；安踏802.19亿+13.3%全球前三、特步141.51亿、361°111.46亿；全球每5双鞋1双晋江；惠安校服占全国1/3。"},
+ {n:"现代化工/石化新材料（两基地一专区）",u:["炼化一体化（古雷/泉港泉惠）"],m:["乙烯（307.29万吨+19.6%）","化工新材料（申远锦纶/万华福建）"],d:["纺织鞋服原料","电子化学品","涂料（三棵树）"],
+  mj:"化工、材料化学、制药、环境",
+  f:"石化营收4986.8亿+8.6%、规上企业1123家、9家百亿企业；少油多化向化工新材料与精细化学品升级。"},
+ {n:"先进装备制造（含电动船舶/海工）",u:["精密铸锻件","电机电器（宏发电声）"],m:["工程机械与大中型客车（金龙）","汽车（东南奇瑞/上汽宁德/福建奔驰）","船舶修造"],d:["电动船舶","海工装备","航空维修（厦门全国基地）"],
+  mj:"机械、电气、船舶与海洋工程、自动化",
+  f:"营收12514.4亿+7.7%、增加值+12.9%；电动船舶核心装备市占率超40%全国前列；海洋工程装备增加值+16.9%。"},
+ {n:"海洋经济（渔业+港口+远洋）",u:["水产种业","深远海养殖装备"],m:["远洋捕捞（60.56万吨+15.2%）","水产品精深加工"],d:["出口（438.1亿连续13年全国第一）","冷链物流","滨海文旅"],
+  mj:"海洋科学、水产养殖、食品、物流、国贸",
+  f:"海洋生产总值超1.3万亿全国第3、占全省GDP22%；水产品总产量965万吨全国第3；大黄鱼占全国80%+份额；福州国家远洋渔业基地通关运行。"},
+ {n:"茶产业与特色现代农业",u:["生态茶园种植（毛茶产量全国第二）"],m:["精制加工与拼配（乌龙/红/白/茉莉花茶发源地）"],d:["品牌茶企","新茶饮供应链","茶文旅（年接待约4200万人次）"],
+  mj:"茶学、园艺、食品、市场营销、旅游",
+  f:"茶产业全产业链产值1800亿全国第一；安溪铁观音、武夷岩茶两大名片；茶文旅项目总投资超300亿。"},
+ {n:"数字经济/人工智能（3.4万亿底座）",u:["算力（福州人工智能计算中心）","数据要素"],m:["软件信息服务","AI应用（鼓楼集群68家企业）"],d:["制造业智改数转（九牧黑灯工厂）","跨境电商（网络零售+14.2%）"],
+  mj:"计算机、人工智能、软件、数据科学",
+  f:"数字经济增加值3.4万亿（2020年2.03万亿）；关键业务环节数字化企业占比73.1%全国第2；数字中国峰会永久举办地、前8届落地超3000个项目投资超2万亿。"}
+];
+
+var CITIES = [
+ {c:"福州",i:"数字经济、电子信息制造、化工新材料（江阴/可门）、远洋渔业基地",l:"福州京东方、瑞芯微、福昕软件、锐捷网络、申远新材料",m:"计算机、电子信息、软件、化工、海洋"},
+ {c:"厦门",i:"电子信息（新型显示/LED/IC设计）、航空维修、生物医药",l:"厦门天马、戴尔、三安光电、友达光电、宏发电声、金龙客车",m:"电子信息、光电、微电子、机械、生物"},
+ {c:"泉州",i:"纺织鞋服品牌集群、石化（泉港/泉惠）、校服、水暖建材",l:"安踏、特步、361°、中化泉州、联合石化、九牧集团",m:"纺织服装、市场营销、化工、工业设计"},
+ {c:"宁德",i:"锂电新能源、新能源汽车、不锈钢新材料、铜材料（四大集群超5300亿）",l:"宁德时代、新能源科技、上汽宁德、青拓集团",m:"材料、电气、化学、机械"},
+ {c:"漳州",i:"古雷石化基地、食品加工、智能数控电子",l:"福海创、古雷石化、万华化学（福建）",m:"化工、食品、电子"},
+ {c:"莆田",i:"鞋服制造、化工新材料（秀屿）、黄金珠宝、涂料",l:"三棵树涂料、秀屿化工新材料集群、荔城黄金珠宝集群",m:"纺织、化工、材料、电商"},
+ {c:"南平",i:"白羽肉鸡、竹产业、茶产业（武夷岩茶）",l:"圣农集团（自研圣泽901白羽鸡种源）",m:"食品、林业工程、茶学"},
+ {c:"三明",i:"钢铁、氟新材料、生物医药、沙县小吃",l:"三钢集团（占规上工业半壁江山）",m:"冶金、化工、生物、旅游"},
+ {c:"龙岩",i:"有色金属（上杭金铜精深加工集群）、机械装备",l:"紫金矿业（上杭起家）、金铜加工企业",m:"冶金、材料、机械、采矿"},
+ {c:"平潭",i:"对台融合、海洋旅游、北斗规模应用试点",l:"平潭综合实验区平台企业",m:"旅游、国贸、信息"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

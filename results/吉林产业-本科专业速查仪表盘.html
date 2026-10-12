@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吉林产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#1a4d6e;
+  --brand-soft:#e3edf3;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>吉林产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年吉林统计公报</b> · <b>十五五「2266」产业体系（万亿级农业+旅游/五千亿级汽车及零部件）</b> · <b>光电/碳纤维/轨交/医药城/冰雪独有赛道</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">1.50万亿</div><div class="note">增长5.0%，全国第26</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+7.8%</div><div class="note">高技术制造+13.0%、装备制造+13.3%</div></div>
+  <div class="stat"><div class="lab">一汽产销</div><div class="val">330万辆</div><div class="note">红旗新能源+71.4%</div></div>
+  <div class="stat"><div class="lab">碳纤维</div><div class="val">全球第一</div><div class="note">吉林化纤产销量5.6万吨</div></div>
+  <div class="stat"><div class="lab">光电信息</div><div class="val">破900亿</div><div class="note">吉林一号全球最大遥感星座</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-25.6%</div><div class="note">土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：车辆、汽车、光电、碳纤维、芯片、电气、临床、法学、朝鲜语、冰雪、人参、吉大、长理、东电、东北师大">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应吉林低空经济）、生物制造（对应通化医药/人参）、半导体装备（对应中国光电城）、储能/氢能（对应绿电绿氢）全部对得上吉林产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。吉林高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>吉林有万亿/千亿产业或全国冠军链支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应吉林独有赛道（光电/碳纤维/人参/冰雪/朝鲜语/法学），分数友好但需选对方向。适合想留吉、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>吉林大学及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>吉林大学（车辆/化学/法学/计算机/材料双一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>东北师大（师范/统计）、长春理工（光学）、东北电力（电气）、延边大学（朝鲜语）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴吉林产业链</td><td>长春工业（机械/车辆/材料）、吉林化工学院（化工）、吉林农大（食品/中药）、北华（医学）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>吉林财经（财经）、吉林师大（师范）、通化/白城/延边地方校</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在吉林读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>车辆/电气/光电/计算机/材料/轨交/机械<br><span style="color:var(--ink-3);font-size:12.5px">（汽车+光电+碳纤维硬科技）</span></td><td><b style="color:var(--green)">优先留吉</b></td><td>产业+高校双密集，吉大车辆/长理光学/东电电气全国顶尖或特色独一，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床/法学/食品/生医工/师范/外语/中药/旅游</td><td><b style="color:var(--green)">留吉或出省</b></td><td>吉大/东师/延大/长理在东北认可度极高，冲名校财经可出省</td></tr>
+        <tr><td>土木/泛管理/传统周期品</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-25.6%、固投-13.1%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a4d6e;border-left-color:var(--brand);margin-top:14px">
+      <b>吉林独有优势：一汽汽车全产业链 + 长光卫星全球最大遥感星座 + 吉林化纤碳纤维全球第一 + 中国光电城 + 通化医药城/人参城 + 冰雪文旅万亿目标 + 行业校壁垒。</b>吉林高教梯度分明（吉大 985/东北师大·延大 211 三所双一流 + 长春理工/东北电力等特色校），但<b>全省仅 3 所双一流</b>；<b>外省/河北考生来吉读「车辆·电气·光电·计算机·材料·轨交·临床·法学·中药·外语·旅游」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理·传统周期品不建议来吉；长期须算清「留吉 vs 出走」（人口净减 20.62 万、自然增长率 -6.37‰）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>吉林靠「汽车 + 光电 + 碳纤维 + 轨交 + 农业加工 + 医药 + 冰雪」七引擎，别被「老工业基地/粮仓」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>车辆、电气、光电、计算机、材料、轨交六者覆盖吉林最有确定性的岗位，优先冲。</li>
+      <li><b>贴「长春 + 吉林市 + 通化」三核心。</b>长春（汽车/光电/轨交）、吉林市（化工/碳纤维/冰雪）、通化（医药/人参）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>长春理工（光学「小清华」）、东北电力（电气/国网）、吉林农大（食品/中药）、吉林化工学院（化工）、延边大学（朝鲜语）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>光电信息是吉林最被低估的王牌。</b>长光卫星全球最大亚米级遥感星座、营收破 10 亿、光电产值破 900 亿；长春理工光学工程 A- 壁垒全国无对手，且分数友好。</li>
+      <li><b>碳纤维是「黑色黄金」隐形冠军。</b>吉林化纤产销全球第一、风电碳板市占 95%；材料（高分子/碳纤维）在吉林是嵌入全球供应链顶端，信息差极大。</li>
+      <li><b>汽车要押「新能源/智能网联」，不押传统燃油。</b>一汽新能源占比仅 13.5%、合资依赖 71.5%；锁红旗/解放新能源研发与三电方向才有前景。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/贸易），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -25.6%、新开工 -34.8%、建筑业 -7.0%；除非吉大土木双一流或志在央企设计院/重大基建。</li>
+      <li><b>算清「留吉 vs 出走」。</b>人口净减 20.62 万、自然增长率 -6.37‰，长期人才外流压力；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：吉林省统计局《2025 年吉林省国民经济和社会发展统计公报》（2026-04-27）、吉林省人民政府「开局起步十五五」系列发布会（2026-05-12/13）、2025 吉林工业十大新闻、吉林日报/中国吉林网「向光向芯向未来」、吉林省文旅厅雪季数据、通化市医药健康产业十五五规划、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"车辆工程（智能网联新能源）",c:"工学",ch:"汽车及零部件",t:"A",h:5,s:"吉林大学（汽车黄埔）／长春工业大学／东北电力",j:"整车研发、三电系统、智能网联、自动驾驶",
+  r:"一汽330万辆、红旗自主新能源36.6万辆+71.4%；吉大车辆保研率超30%。",w:"锁新能源/智能网联方向，避传统燃油车研发；吉大车辆是省内第一档。",city:"长春 · 吉林市"},
+ {n:"电气工程及其自动化（电网/汽车三电/新能源）",c:"工学",ch:"三电/电网/绿电",t:"A",h:4,s:"东北电力大学（电气强、国网签约率高）／吉林大学",j:"电网、电气设备、新能源三电、储能",
+  r:"东北电力电气为省级双一流、国网校招第一梯队；新能源装机破2500万千瓦超火电。",w:"电网方向需提前准备国网考试；东电在电力系统分数友好。",city:"长春 · 吉林市 · 白城"},
+ {n:"光电信息科学与工程/光学工程",c:"工学",ch:"中国光电城",t:"A",h:5,s:"长春理工大学（光学工程A-、光学小清华）／吉林大学",j:"光学设计、遥感数据、光电设备、半导体光学",
+  r:"长光卫星吉林一号全球最大亚米级商业遥感星座、营收破10亿；长春光电破900亿、十五五目标1600亿。",w:"长理光学是吉林最被低估的全国冠军专业，分数友好、壁垒强。",city:"长春"},
+ {n:"计算机类（软件/人工智能/智驾）",c:"工学",ch:"软信/智驾/卫星数据",t:"A",h:5,s:"吉林大学（计算机A-）／长春理工大学／东北电力",j:"软件开发、工业软件、智驾算法、遥感数据应用",
+  r:"信息传输软件增加值+9.4%；智驾与卫星数据全需软件；吉大计算机保研率高。",w:"工程能力>文凭；长理性价比强。",city:"长春"},
+ {n:"材料科学与工程（碳纤维/先进材料）",c:"工学",ch:"碳纤维/化工新材料",t:"A",h:4,s:"吉林大学（材料双一流）／长春工业大学／吉林化工学院",j:"碳纤维复材、轻量化材料、半导体材料、工艺工程",
+  r:"吉林化纤碳纤维产销全球第一、风电碳板市占95%；吉大材料双一流。",w:"锁碳纤维/高分子/半导体方向，避泛材料；吉林碳纤维嵌入全球供应链顶端。",city:"吉林市 · 长春"},
+ {n:"交通运输/轨道交通（中车长客）",c:"工学",ch:"轨道交通装备",t:"A",h:4,s:"吉林大学（交通工程国家一流）／长春工业大学",j:"轨交设计、运维、车辆工程、智能交通",
+  r:"动车组684辆+22.8%、城市轨道车辆1117辆+42.8%；中车长客CR450/氢能列车。",w:"贴中车长客产业链比泛交通更有前景；长春是轨交就业核心。",city:"长春"},
+ {n:"机械设计制造及其自动化（汽车装备/智能制造）",c:"工学",ch:"汽车装备",t:"B",h:4,s:"吉林大学（机械A-）／长春工业大学／东北电力",j:"汽车零部件、智能产线、高端装备",
+  r:"装备制造+13.3%、一汽/中车产线全需机械底座。",w:"锁汽车/轨交装备方向，避泛机加工。",city:"长春 · 吉林市"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"光电芯片",t:"B",h:4,s:"吉林大学（微电子国家一流）／长春理工大学",j:"芯片设计、光电芯片、车规芯片",
+  r:"芯光智谷300亿投资、长光系52家企业；吉林光电/半导体材料需求上行。",w:"数理要求高，深造路径清晰。",city:"长春"},
+ {n:"新能源科学与工程/储能",c:"工学",ch:"绿电/绿氢储能",t:"B",h:4,s:"东北电力大学（新能源/电气）／吉林大学",j:"风光运维、储能、绿氢化工、电网",
+  r:"新能源装机破2500万千瓦超火电成第一电源；大安全球最大绿氨投产；零碳园区建设。",w:"贴绿电+储能+氢能比纯传统电力更有前景。",city:"白城 · 松原 · 长春"},
+ {n:"化学工程与工艺（石化/化工新材料）",c:"工学",ch:"石化新材料",t:"B",h:3,s:"吉林大学／吉林化工学院（化工强）",j:"石化工艺、化工新材料、精细化工",
+  r:"吉化190万吨乙烯、乙烯+53.0%；下游高端材料/有机化工升级。",w:"选新能源/半导体材料/减油增化方向，避传统煤化工。",city:"吉林市 · 松原"},
+ {n:"生物医学工程（通化医药城）",c:"工学",ch:"生物医药",t:"B",h:3,s:"吉林大学／长春理工大学／北华大学",j:"医疗器械、生物制剂、医工交叉",
+  r:"通化医药健康545亿、国家战略性新兴产业集群；东宝胰岛素/修正/万通。",w:"医工交叉比纯生物更对产业口。",city:"通化 · 长春"},
+ {n:"统计学/数据科学（卫星数据/AI底座）",c:"理学",ch:"卫星数据/AI",t:"B",h:3,s:"东北师范大学（统计学A）／吉林大学／吉林财经",j:"遥感数据分析、量化、商业智能",
+  r:"长光卫星数据服务占营收超五成；金融、AI、政务大数据均依赖统计。",w:"数学要求高，是光电数据与AI通用底座。",city:"长春 · 吉林市"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"吉林大学（临床强、东北医疗高地）／延边大学（临床B+）／北华大学",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化65岁以上占20.50%长期刚性；吉大附属三甲平台强、留吉三甲比例高。",w:"学制长（5+3本博）、分数高。",city:"长春 · 延吉 · 吉林市"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:4,s:"吉林大学（法学A类、法学重镇）",j:"公检法、律所、企业法务、合规",
+  r:"吉大法学A类全国顶尖，公检法/律所/国企法务认可度高。",w:"须过法考，考公优势明显。",city:"长春"},
+ {n:"食品科学与工程（农产品精深加工）",c:"工学",ch:"农业加工",t:"C",h:3,s:"吉林农业大学（食品/农工强）／吉林大学",j:"食品加工、技术岗、质检",
+  r:"粮食全国第4、玉米深加工/赖氨酸全球30%；万亿级农业目标。",w:"进名企技术岗而非泛食品。",city:"长春 · 白城 · 四平"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"东北师范大学（师范顶尖、公费师范）／吉林师范大学",j:"中小学教师、教研、心理咨询",
+  r:"东北师大教育学A、马克思主义理论A+、公费师范生包分配。",w:"公费师范生入编优势大。",city:"长春 · 四平"},
+ {n:"外国语言文学（朝鲜语/俄语）",c:"文学",ch:"跨境/口岸",t:"C",h:3,s:"延边大学（朝鲜语全国第一）",j:"对朝韩贸易、跨境文旅、外事",
+  r:"延大外国语言文学双一流、朝鲜语全国第一；珲春口岸/对朝韩贸易。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"延吉 · 珲春"},
+ {n:"旅游管理/酒店管理（冰雪文旅）",c:"管理学",ch:"冰雪文旅",t:"C",h:3,s:"吉林大学（旅游）／东北师范大学",j:"景区运营、冰雪度假、康养文旅、跨境旅游",
+  r:"全省游客4.68亿+20.8%、万亿级旅游目标；北大湖/松花湖双百万雪场。",w:"贴冰雪+康养+跨境而非纯景区，实习>文凭。",city:"吉林市 · 延边 · 长白山"},
+ {n:"中药学/药学（人参/医药城）",c:"医学",ch:"人参/医药",t:"C",h:3,s:"吉林农业大学（中药/生科）／延边大学（药学B）／长春中医药",j:"中药研发、人参精深加工、质检、康养",
+  r:"通化人参综合产值518.6亿、2030全省破2000亿；修正/东宝/敖东。",w:"进医药城名企研发/加工岗，而非泛药学。",city:"通化 · 长春"},
+ {n:"会计学/财务管理",c:"管理学",ch:"财经",t:"C",h:3,s:"吉林财经大学（财经强）／吉林大学",j:"企业财务、审计、税务",
+  r:"吉林财经/吉大会计本地银行/商贸认可度高；央企财务岗稳定。",w:"须考证（CPA等）。",city:"长春"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"吉林大学（土木双一流）／长春建筑大学",j:"设计院、施工、基建、智能建造",
+  r:"房地产-25.6%、新开工-34.8%、建筑业-7.0%，土建链承压。",w:"仅吉大土木双一流或志在央企设计院/重大基建。",city:"长春"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"吉林财经大学／吉林大学",j:"企业职能管理、行政、咨询",
+  r:"制造业+资源型为主，泛管理岗位稀缺、内卷严重；外资-63.1%。",w:"叠加行业+管理（汽车/医药/能源管理），否则慎选。",city:"长春"}
+];
+
+var CHAINS = [
+ {n:"汽车及零部件（吉林第一支柱，转型中）",u:["锂/镍资源","电池材料","车规芯片"],m:["动力电池","整车制造（红旗/解放/一汽大众）","智能座舱","智驾系统"],d:["充换电","后市场","出口"],
+  mj:"车辆、电气、自动化、计算机、材料",
+  f:"一汽2025整车产销330.2万辆、营收5415.5亿；红旗46万辆+11.7%、自主新能源36.6万辆+71.4%；但长春产量146.2万辆-2.9%、一汽全国新能源占比仅13.5%（合资依赖71.5%），规划补链动力电池/车规芯片、招引比亚迪/小米。"},
+ {n:"轨道交通装备（中车长客，全国顶尖）",u:["车体材料","牵引/制动系统"],m:["动车组","地铁/市域列车","磁浮列车","氢能列车"],d:["运维","轨交后市场"],
+  mj:"交通、车辆（轨道）、电气、机械、自动化",
+  f:"2025动车组684辆+22.8%、城市轨道车辆1117辆+42.8%；CR450动车组、全国首列氢能文旅列车氢春号下线；中车长客完善产品谱系。"},
+ {n:"碳纤维及化工新材料（隐形全球冠军）",u:["原丝/丙烯腈"],m:["碳化","复材（风电碳板/拉挤板）"],d:["风电叶片","航空","高铁","汽车轻量化"],
+  mj:"材料（高分子/碳纤维）、化工",
+  f:"吉林化纤产能7.4万吨、销量5.6万吨、产销全球第一；风电叶片碳板国内市占率95%；销量+70%；吉化120万吨乙烯投产、总产能190万吨/年。"},
+ {n:"光电信息（中国光电城）",u:["光学材料","芯片"],m:["整星研制（长光卫星）","光学镜头/传感器","光电设备"],d:["遥感数据服务","卫星应用"],
+  mj:"光电、光学工程、微电子、计算机、通信",
+  f:"吉林一号144-161颗在轨、全球最大亚米级商业遥感星座；长光卫星2025营收破10亿、数据服务占比超五成；长春光电产值破900亿、十五五目标1600亿；长春光机所孵化52家长光系企业。"},
+ {n:"新能源与绿氢储能（绿电当家）",u:["风光资源"],m:["绿电","电解水制氢","绿氨/绿醇"],d:["氢燃料电池","储能","绿氢化工"],
+  mj:"新能源、电气、化学（电化学）",
+  f:"新能源装机破2500万千瓦超火电成第一电源；大安风光制绿氢合成氨一体化示范项目（全球最大单体绿氨）投产；松原/辽源/四平入围首批国家级零碳园区。"},
+ {n:"现代农业与农产品精深加工（万亿级目标）",u:["玉米/水稻/大豆种植"],m:["玉米深加工（赖氨酸/淀粉糖）","稻米加工","畜产品加工"],d:["食品","饲料","生物制品"],
+  mj:"食品、生物工程、农业工程、动物科学",
+  f:"粮食4358万吨全国第4；白城梅花赖氨酸年产能130万吨、约占全球30%；玉米深加工全国领先；粮头食尾农头工尾政策推动。"},
+ {n:"生物医药与人参中药材（通化双城）",u:["人参/中药材种植","原料药"],m:["创新药（胰岛素/单抗）","中成药","人参精深加工"],d:["医疗","康养","化妆品"],
+  mj:"药学、中药、生医工、临床、生科",
+  f:"通化医药健康产业545亿+11.5%、中国医药城；通化人参综合产值518.6亿（占全省半壁）、目标2030全省破2000亿；修正/东宝/万通/敖东集聚；东宝重组人胰岛素国产突破。"},
+ {n:"冰雪文旅（万亿级旅游核心引擎）",u:["雪场/景区基建"],m:["滑雪度假（北大湖/松花湖）","冰雪装备","文旅服务"],d:["康养","研学","跨境旅游"],
+  mj:"旅游、酒店、体育（冰雪）、设计、外语",
+  f:"全省游客4.68亿+20.8%；吉林市2025-26雪季国内游客4219.76万+23.87%、花费549.7亿；北大湖120万/6.52亿、松花湖109.7万/4.98亿；连续11年中国冰雪旅游十佳城市。"}
+];
+
+var CITIES = [
+ {c:"长春市（核心引擎）",i:"汽车及零部件、轨道交通装备、光电信息、生物医药、农产品加工",l:"一汽（红旗/解放）、中车长客、长光卫星、吉林大学",m:"车辆、光学、计算机、电气、交通、临床"},
+ {c:"吉林市",i:"石化（吉化）、碳纤维（吉林化纤/碳谷）、装备制造、冰雪、冶金",l:"吉林石化、吉林化纤、建龙钢铁",m:"化工、材料（碳纤维）、机械、旅游"},
+ {c:"四平市",i:"农机装备、换热器、农产品加工、专用车",l:"四平农机、换热器企业、专用车",m:"机械、农业工程、食品"},
+ {c:"辽源市",i:"袜业+现代纺织、医药、装备制造、新能源（电池材料）",l:"辽源纺织、电池材料企业",m:"纺织、材料、机械、医药"},
+ {c:"通化市",i:"医药健康（中国医药城）、人参（中国人参城）、钢铁、文旅",l:"修正、东宝、万通、敖东",m:"药学、中药、临床、生科"},
+ {c:"白山市",i:"硅藻土、矿泉水、人参、林特、生态旅游",l:"硅藻土/矿泉水企业、文旅",m:"材料、中药、旅游、食品"},
+ {c:"延边州",i:"沿边口岸（珲春/图们江）、林特、医药、文旅",l:"珲春口岸、延吉文旅",m:"外语（朝鲜语）、贸易、旅游、医药"},
+ {c:"松原市",i:"石油（吉林油田）、农业、化工、新能源",l:"吉林油田、化肥/化工",m:"化工、石油、农业、新能源"},
+ {c:"白城市",i:"风电（陆上风光三峡）、农业、绿氢/绿氨、新能源装备",l:"吉林梅花（赖氨酸）、大安绿氨、风电",m:"新能源、化工、材料、农业"},
+ {c:"梅河口（先行区）",i:"医药健康、食品加工、旅游",l:"医药/食品企业",m:"药学、食品、生科"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

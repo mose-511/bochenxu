@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>甘肃产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#1a5e7a;
+  --brand-soft:#e6eef3;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>甘肃产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年甘肃统计公报</b> · <b>金白兰武有色金属/河西新能源国家级先进制造业集群</b> · <b>庆阳东数西算11.4万P</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">1.37万亿</div><div class="note">增长5.8%，全国第27</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+9.5%</div><div class="note">连续4年高于全国</div></div>
+  <div class="stat"><div class="lab">新能源装机</div><div class="val">破8000万千瓦</div><div class="note">占全省64.6%</div></div>
+  <div class="stat"><div class="lab">金川镍产量</div><div class="val">全球第二</div><div class="note">钴全球第四、铜国内第三</div></div>
+  <div class="stat"><div class="lab">庆阳算力</div><div class="val">11.4万P</div><div class="note">全国算力园区榜首</div></div>
+  <div class="stat"><div class="lab">旅游花费</div><div class="val">4036亿元</div><div class="note">+16.9%，游客5.02亿</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">7条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：镍钴、材料、风光电、新能源、算力、电池、中医、草学、兰大、兰理工、兰交、金川、敦煌">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应庆阳/酒泉低空经济）、生物制造（对应中医药/生物制药）、半导体装备（对应天水集成电路）、储能/氢能（对应河西新能源）全部对得上甘肃产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。甘肃高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>甘肃有国家集群/全球龙头支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应甘肃独有赛道（镍钴/中医药/草学/丝路文旅/绿算），分数友好但需选对方向。适合想留甘、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>兰州大学及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>兰州大学（草学/生态/化学/核/计算机双一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>兰理工（材料/机械/化工）、兰交（交通运输/电气/土木）、甘中医（中医）、甘政法（法学）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴甘肃产业链</td><td>兰理工（新能源/电气）、兰交（自动化/计算机）、甘农大（种业）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>西北师大（师范）、甘中医（中医）、兰财经（财经）、兰州城市学院</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在甘肃读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>材料/电气/新能源/计算机/自动化/化工/机械<br><span style="color:var(--ink-3);font-size:12.5px">（镍钴+风光电+绿算硬科技）</span></td><td><b style="color:var(--green)">优先留甘</b></td><td>产业+高校双密集，兰理工/兰交/兰大全国特色独一，分数低于京沪苏浙</td></tr>
+        <tr><td>临床/中医/草学/法学/师范/设计/外语/种业</td><td><b style="color:var(--green)">留甘或出省</b></td><td>兰大/甘中医/西北师大/甘政法在西北认可度极高，冲名校财经可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-18.5%、民间投资-5.6%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a5e7a;border-left-color:var(--brand);margin-top:14px">
+      <b>甘肃独有优势：镍钴战略金属全球领先 + 风光电装机占 64.6% + 庆阳绿算全国榜首 + 中医药千亿链 + 丝路文旅 4000 亿 + 兰大 985 双核。</b>甘肃高教梯度分明（兰大 985 双核 + 一众行业特色校），但<b>全省仅 1 所双一流</b>（兰大）；<b>外省/河北考生来甘读「材料·新能源·电气·计算机·核技术·临床·中医·草学·法学·师范」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理不建议来甘；长期须算清「留甘 vs 出走」（常住人口自然增长率 -2.29‰、年省外输转劳动力 229.5 万人）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>甘肃靠「镍钴新材料 + 风光电 + 绿算 + 中医药 + 丝路文旅」五引擎，别被「西北落后」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>材料、电气、新能源、计算机、自动化、化工六者覆盖甘肃最有确定性的岗位，优先冲。</li>
+      <li><b>贴「兰白经济圈 + 河西走廊」双核心。</b>兰白（石化/有色/生物医药/算力）+ 河西（酒泉风光电/金昌镍钴/嘉峪关钢铁）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>兰理工（材料/机械/化工）、兰交（交通运输/电气/土木）、甘中医（中医）、甘政法（法学）、甘农大（种业）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>镍钴 + 新能源是一体两面，别割裂看。</b>金川 60% 钴用于新能源电池，金昌电池材料产业园把有色与新能源打通；选材料/新能源都吃得到这口红利。</li>
+      <li><b>绿算弯道超车，计算机别只盯一线。</b>庆阳 11.4 万 P 全国榜首、企业超 500 户，甘肃本地 AI/算力岗位正在爆发，分数却远低于京沪。</li>
+      <li><b>中医药是「农业+制造」交叉金矿。</b>当归/黄芪全国前列、全产业链破千亿，中药学+数据技能=被低估的复合方向。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -18.5%、新开工 -12.2%；除非兰交大铁路/桥梁双一流方向或志在央企基建。</li>
+      <li><b>算清「留甘 vs 出走」。</b>人口自然增长率 -2.29‰、年省外输转 229.5 万人，长期人才外流压力；选专业时规划深造路径与就业地，兰大保研率 28%+ 意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：甘肃省统计局《2025 年全省经济运行情况》《2025 年甘肃省国民经济和社会发展统计公报》（2026）、甘肃省人民政府《甘肃省现代化产业体系建设「十五五」规划》（甘政办发〔2026〕48 号）、金川集团官方资料、酒泉市 2025 年统计公报、甘肃省商务厅生物制药产业链图谱、甘肃省中医药产业新闻发布会（2025-08）、庆阳「东数西算」数据中心集群公开报道、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"材料科学与工程（镍钴/电池材料）",c:"工学",ch:"战略金属",t:"A",h:5,s:"兰州理工大学（材料B-、绑定金川）／兰州大学（材料双一流）",j:"有色金属新材料、高温合金、电池材料、核电材料",
+  r:"金川镍全球第二、钴第四、铜国内第三；金白兰武集群2030年目标7000亿元。",w:"锁镍钴/电池/高温合金方向，避泛材料；兰理工材料是洼地。",city:"金昌 · 兰州 · 白银"},
+ {n:"电气工程及其自动化（电网/新能源）",c:"工学",ch:"风光电/电网",t:"A",h:4,s:"兰州理工大学（电气强）／兰州交通大学（电气国家一流）",j:"电网、新能源场站、电气设备、储能",
+  r:"新能源装机占64.6%、电力热力+18.5%；国网/甘电投校招刚性。",w:"电网方向需提前准备国网考试。",city:"兰州 · 酒泉 · 嘉峪关"},
+ {n:"新能源科学与工程（风光电/储能）",c:"工学",ch:"风光电",t:"A",h:5,s:"兰州理工大学／兰州交通大学（新能源）／兰州大学",j:"风光场站、储能系统、绿氢、源网荷储",
+  r:"酒泉全国最大陆上风电装备基地、全省新能源装机占64.6%、绿氢占全省72%。",w:"贴储能/氢能/并网比纯运维更有前景。",city:"酒泉 · 张掖 · 金昌"},
+ {n:"计算机类（算力/人工智能）",c:"工学",ch:"东数西算",t:"A",h:4,s:"兰州大学（计算机国家一流）／兰州交通大学（计算机国家一流）",j:"软件开发、AI算法、算力运维、数据工程",
+  r:"庆阳智算11.4万P全国榜首、落地数字企业超500户；2030年全省算力30万P。",w:"工程能力>文凭；庆阳/兰州算力岗分数低于京沪同档。",city:"庆阳 · 兰州"},
+ {n:"自动化/测控技术与仪器（新能源装备）",c:"工学",ch:"新能源装备",t:"A",h:4,s:"兰州理工大学（机械电子）／兰州交通大学（自动化国家重点）",j:"控制系统、新能源装备、工业自动化、机器人",
+  r:"风电装备+18.5%、金川5G+智慧园区与智慧冶炼。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"酒泉 · 金昌 · 兰州"},
+ {n:"化学工程与工艺（石化/化工新材料）",c:"工学",ch:"绿色石化",t:"A",h:4,s:"兰州大学（化工）／兰州理工大学（化工）／兰州石化职业技术大学",j:"化工新材料、精细化工、电池材料、可降解材料",
+  r:"兰白千万吨级炼化+百万吨级化工新材料基地；化学原料制品+8.2%。",w:"选化工新材料/电池材料方向，避传统煤化工。",city:"兰州 · 兰州新区 · 白银"},
+ {n:"机械设计制造及其自动化（新能源装备）",c:"工学",ch:"新能源装备",t:"B",h:4,s:"兰州理工大学（机械B-）／兰州交通大学（机械B-）",j:"风电装备、石化装备、矿山装备、高端制造",
+  r:"酒泉风电装备+18.5%、年产主机2600台；兰石钻采全球领先。",w:"锁新能源/石化装备方向，避泛机加工。",city:"酒泉 · 兰州 · 嘉峪关"},
+ {n:"电子信息类（集成电路/半导体材料）",c:"工学",ch:"半导体",t:"B",h:4,s:"兰州大学／兰州交通大学（电子科学技术国家一流）",j:"集成电路、半导体材料、通信电子",
+  r:"天水为全省电子信息制造重心（华天科技）；半导体新材料基地以天水/金昌/武威为重点。",w:"对数理要求高，深造路径清晰。",city:"天水 · 金昌 · 兰州"},
+ {n:"核工程与核技术（钍基熔盐堆）",c:"工学",ch:"核产业",t:"B",h:3,s:"兰州大学（核科学与技术B+）",j:"核工程、辐射防护、核材料、同位素",
+  r:"中科院近物所钍基熔盐堆第四代核技术示范、中核体系；甘肃核燃料循环核心区。",w:"行业壁垒高、须深造，但全国稀缺、对口度高。",city:"兰州 · 酒泉"},
+ {n:"生物医学工程（重离子医疗）",c:"工学",ch:"高端医疗",t:"B",h:3,s:"兰州大学／兰州理工大学／甘肃中医药大学",j:"医疗器械、重离子治疗装备、医工交叉",
+  r:"武威医用重离子加速器产业化、3D打印骨科植入器材研发；十五五「药械并重」。",w:"医工交叉比纯生物更对产业口。",city:"武威 · 兰州"},
+ {n:"生物制药/药学（疫苗/中药）",c:"医学",ch:"生物医药",t:"B",h:3,s:"兰州大学（生物/药学）／甘肃中医药大学",j:"疫苗研发、生物制品、中药现代化、质检",
+  r:"兰州生物所三价轮状病毒疫苗、衡力肉毒毒素市占70%+、非洲猪瘟疫苗填补空白。",w:"研发端须深造；生产/质检/注册岗本科即可。",city:"兰州 · 定西"},
+ {n:"交通运输/物流工程（一带一路通道）",c:"工学",ch:"丝路通道",t:"B",h:3,s:"兰州交通大学（交通运输B+、铁路摇篮）／兰州财经",j:"多式联运、供应链、枢纽运营、跨境物流",
+  r:"对一带一路进出口占70.7%、中欧班列/陆海新通道节点。",w:"贴通道+供应链比纯运输更有前景。",city:"兰州 · 武威"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"兰州大学（临床强）／甘肃中医药大学",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化+健康需求长期刚性；兰大/省人民医院平台强、留甘三甲比例高。",w:"学制长（5+3本博）、分数高。",city:"兰州 · 天水"},
+ {n:"中医学/中药学",c:"医学",ch:"中医药",t:"C",h:4,s:"甘肃中医药大学（中医/中药）／兰州大学",j:"中医院、中药研发、药企、康养",
+  r:"千年药乡当归/黄芪/党参全国前列，2025中医药全产业链破千亿。",w:"中药现代化+AI是趋势，可叠加数据技能。",city:"定西 · 兰州"},
+ {n:"草学/生态学",c:"农学",ch:"寒旱农业",t:"C",h:5,s:"兰州大学（草学A+全国第一、生态A+）／甘肃农业大学",j:"草业、生态修复、寒旱农业、环保",
+  r:"草学全国第一、服务甘肃牧区（占全省42%）与祁连山生态屏障。",w:"兰大该学科保研率超35%，全国顶尖但偏科研。",city:"兰州 · 武威"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:3,s:"甘肃政法大学（法学中国一流）／兰州大学",j:"公检法、律所、企业法务、合规",
+  r:"甘政法法学中国一流学科、兰大法学B+；公检法/法务认可度高。",w:"须过法考，考公优势明显。",city:"兰州"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"西北师范大学（师范全省第一）",j:"中小学教师、教研、心理咨询",
+  r:"西北师大教育学B+、汉语言B+，甘肃中小学教师50%来自该校。",w:"公费师范生包分配，考编优势大。",city:"兰州 · 天水"},
+ {n:"设计学/数字媒体（丝路文旅）",c:"艺术",ch:"丝路文旅",t:"C",h:3,s:"兰州大学（视觉/数字媒体）／西北师大（设计）",j:"文创、数字媒体、文旅设计、展示",
+  r:"2025旅游花费4036亿+16.9%，敦煌文博+数字敦煌+文创需求上行。",w:"需作品集，叠加大文旅产业更有前景。",city:"敦煌 · 兰州"},
+ {n:"外国语言文学（一带一路）",c:"文学",ch:"跨境",t:"C",h:3,s:"兰州大学（外语）／西北师范大学",j:"跨境贸易、外事、涉外法务",
+  r:"对一带一路进出口占70.7%、丝路涉外/跨境岗位需求上行。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"兰州"},
+ {n:"种子科学与工程/农学（制种）",c:"农学",ch:"寒旱农业",t:"C",h:3,s:"甘肃农业大学（草业/种子全国顶尖）／兰州大学",j:"制种、寒旱农业、农技、种业企业",
+  r:"玉米制种规模、马铃薯原原种产量稳居全国第一，全国最大对外瓜菜花卉制种基地。",w:"甘肃寒旱农业全国独一，种业赛道被低估。",city:"张掖 · 兰州"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"兰州交通大学（铁路/桥梁B、行业校招）",j:"铁路/桥梁/隧道、设计院、基建",
+  r:"房地产-18.5%、新开工-12.2%、建筑业-0.1%，土建链承压。",w:"仅兰交大铁路桥梁双一流方向或志在央企基建。",city:"兰州 · 嘉峪关"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"兰州财经（会计）",j:"企业职能管理、行政、咨询",
+  r:"资源型工业为主，泛管理岗位稀缺、内卷；民间投资-5.6%。",w:"叠加行业+管理（能源/医院/矿企），否则慎选。",city:"兰州"}
+];
+
+var CHAINS = [
+ {n:"镍钴铜战略金属与新材料（金川/金白兰武集群）",u:["镍/铜/钴矿采选","铂族金属","稀贵金属"],m:["电解镍/电钴","高纯金属","高温合金","铜箔","镍基合金"],d:["新能源电池材料","航空航天/核电材料","电子铜带"],
+  mj:"材料、冶金、化工、新能源",
+  f:"金川镍全球第二、钴第四、铜国内第三、铂族亚洲第一；年产能电镍19万吨、电钴7000吨；20%镍、60%钴用于新能源电池材料。金白兰武集群2030年目标7000亿元。"},
+ {n:"风光电新能源及新能源装备（酒泉/河西）",u:["硅料/硅片","风电叶片材料","储能电芯"],m:["风机主机（金风）","叶片/塔筒（日月重工）","光伏组件","逆变器","储能系统"],d:["风光大基地并网","源网荷储","绿氢/绿氨","外送特高压"],
+  mj:"新能源、电气、材料、自动化",
+  f:"全省新能源装机破8000万千瓦、占64.6%；酒泉新能源装机3532万千瓦（全国地级市第二），具备年产主机2600台、叶片2450套，全国最大陆上风电装备制造基地；绿氢占全省72%。"},
+ {n:"绿色石化化工（兰州石化/兰白）",u:["原油（长庆/玉门）","煤炭"],m:["乙烯/丙烯","特种橡胶","聚烯烃","化工新材料"],d:["减油增化","高端专用化学品","可降解材料"],
+  mj:"化工、材料、应用化学",
+  f:"兰州石化建兰白千万吨级炼化+百万吨级化工新材料基地，争创国家先进制造业集群；化学原料制品+8.2%，「减油增化增特」是主线。"},
+ {n:"生物医药与中医药（兰州生物所/陇药）",u:["中药材（当归/黄芪/党参）","培养基"],m:["疫苗（轮状/口蹄疫/非洲猪瘟）","A型肉毒毒素","中药饮片/配方颗粒","化学药"],d:["医疗服务","康养","中医药文旅"],
+  mj:"生物制药、药学、中药学、生医工",
+  f:"中药材种植550万亩、标准化率近70%，当归/黄芪/党参占全国前列；2025中医药全产业链破千亿；衡力肉毒毒素市占超70%、非洲猪瘟疫苗填补空白。"},
+ {n:"庆阳东数西算/绿色算力（数字经济）",u:["绿电","数据中心基建","服务器/芯片"],m:["智算集群（11.4万P）","算力调度","大模型训练"],d:["AI应用","数据要素","低空经济","智能驾驶"],
+  mj:"计算机、人工智能、软件、通信",
+  f:"庆阳数据中心集群智算11.4万P，全国算力园区20强榜首，落地数字企业超500户；规划2030年全省算力30万P。"},
+ {n:"丝路文旅（敦煌/莫高窟/丝绸之路）",u:["文化遗产（莫高窟）","景区基建"],m:["演艺（丝路花雨/又见敦煌）","研学","数字敦煌"],d:["住宿餐饮","文创","跨境旅游"],
+  mj:"设计、数字媒体、外语、旅游管理",
+  f:"2025接待国内游客5.02亿人次+11.3%、旅游花费4036亿元+16.9%；第八届敦煌文博会；「交响丝路 如意甘肃」品牌。"},
+ {n:"航空航天与核产业（510所/钍基熔盐堆）",u:["火箭/卫星配套","核燃料"],m:["商业火箭配套（酒嘉）","商业卫星总装（兰州）","钍基熔盐堆","医用重离子加速器"],d:["卫星数据服务","核能综合利用","高端医疗装备"],
+  mj:"航空航天、核工程、生医工、材料",
+  f:"「西箭东星」布局（酒嘉商业火箭配套、兰州商业卫星）；兰州空间技术物理研究所（510所）、中科院近物所钍基熔盐堆、武威医用重离子加速器。"}
+];
+
+var CITIES = [
+ {c:"兰州（核心）",i:"绿色石化、装备制造（兰石）、生物医药、数据信息、航空航天（510所）",l:"兰州石化、兰石集团、兰州生物所、航天五〇一所",m:"化工、机械、生科、计算机、核/航天"},
+ {c:"兰州新区",i:"先进制造、绿色化工、大数据、新能源装备、电工电气",l:"兰石、新区企业集群",m:"化工、材料、计算机、电气"},
+ {c:"白银",i:"有色（白银有色）、化工、稀土功能材料、电池新材料",l:"白银有色、稀土企业",m:"冶金、材料、化工"},
+ {c:"酒泉",i:"风光电大基地、新能源装备制造、敦煌文旅、航天",l:"金风科技、日月重工、正泰、酒泉卫星发射中心",m:"新能源、电气、机械、设计"},
+ {c:"嘉峪关",i:"钢铁（酒钢）、有色冶金精深加工、新能源装备、文旅",l:"酒钢集团",m:"冶金、材料、机械"},
+ {c:"金昌",i:"镍钴铜新材料（金川集团）、电池材料、精细化工",l:"金川集团",m:"材料、冶金、化工、新能源"},
+ {c:"天水",i:"装备制造、集成电路/电子信息、花牛苹果、文旅",l:"华天科技、天水装备企业",m:"电子信息、机械、集成电路"},
+ {c:"庆阳",i:"能源化工、东数西算/绿色算力、低空经济、文旅",l:"中国移动/电信庆阳数据中心、金山云",m:"计算机、人工智能、通信"},
+ {c:"张掖",i:"综合能源、新材料、农畜精深加工、文旅",l:"能源与新材料企业",m:"电气、材料、食品、设计"},
+ {c:"武威",i:"新能源装备、碳基材料、重离子+医疗、乳业",l:"重离子医院、装备企业",m:"生医工、材料、电气"},
+ {c:"定西",i:"中医药（陇药）、马铃薯加工、新能源、种子",l:"陇西中医药循环园、佛慈",m:"中药、生物、食品、农学"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>2026 大学生选调攻略 · 按省规划建议</title>
+<style>
+:root {
+  --c-primary:#1e5b8a; --c-accent:#c0392b; --c-bg:#fafaf7;
+  --c-card:#ffffff; --c-text:#2c3e50; --c-muted:#7f8c8d;
+  --c-border:#e8e0d4; --c-soft:#f6f1e7; --c-success:#27ae60;
+  --c-warn:#e67e22; --c-danger:#c0392b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--c-bg); color:var(--c-text);
+  line-height:1.7; padding:0; font-size:15px;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 80px}
+
+/* Hero */
+.hero{
+  background:linear-gradient(135deg,#1e5b8a 0%,#2c7cb0 60%,#3a91c8 100%);
+  color:white; padding:38px 32px 36px; margin:24px 0 28px;
+  border-radius:18px; box-shadow:0 10px 30px rgba(30,91,138,0.25);
+  position:relative; overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;top:-50px;right:-50px;width:220px;height:220px;
+  background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 70%);border-radius:50%;
+}
+.hero h1{font-size:30px;font-weight:700;margin-bottom:8px;letter-spacing:1px}
+.hero .sub{font-size:14px;opacity:0.92;margin-bottom:18px}
+.hero .stamp{
+  display:inline-block;background:rgba(255,255,255,0.18);
+  padding:5px 12px;border-radius:20px;font-size:12px;letter-spacing:1px;
+}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:36px}
+.stat{
+  background:var(--c-card);padding:20px 22px;border-radius:14px;
+  border:1px solid var(--c-border); text-align:center;
+  box-shadow:0 2px 10px rgba(0,0,0,0.04);
+}
+.stat .num{font-size:30px;font-weight:700;color:var(--c-primary);display:block;line-height:1.1}
+.stat .lab{font-size:13px;color:var(--c-muted);margin-top:6px}
+
+/* Sections */
+.section{margin-bottom:42px}
+.section-h{
+  font-size:22px;font-weight:700;color:var(--c-primary);
+  padding-bottom:10px;border-bottom:3px solid var(--c-primary);
+  margin-bottom:22px;letter-spacing:1px;
+}
+
+/* Timeline */
+.timeline{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px;
+}
+.tl-item{
+  background:var(--c-card);padding:14px 8px;border-radius:10px;
+  border:1px solid var(--c-border);text-align:center;font-size:13px;
+}
+.tl-m{font-weight:700;color:var(--c-primary);font-size:14px;margin-bottom:4px}
+.tl-c{color:var(--c-text)}
+.tl-l{font-size:11px;color:var(--c-muted);margin-top:4px}
+
+/* Region */
+.region{margin-bottom:48px}
+.region-h{
+  font-size:20px;color:var(--c-accent);
+  padding-left:14px;border-left:5px solid var(--c-accent);
+  margin-bottom:14px;letter-spacing:1px;
+}
+.prov-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.nav-link{
+  display:inline-block;padding:5px 12px;background:var(--c-soft);
+  color:var(--c-primary);text-decoration:none;border-radius:14px;
+  font-size:13px;border:1px solid transparent;transition:all .15s;
+}
+.nav-link:hover{background:var(--c-primary);color:white;transform:translateY(-1px)}
+
+/* Province card */
+.prov-card{
+  background:var(--c-card);border-radius:14px;padding:22px 24px;margin-bottom:22px;
+  border:1px solid var(--c-border);box-shadow:0 2px 12px rgba(0,0,0,0.04);
+  scroll-margin-top:20px;
+}
+.prov-head{display:flex;align-items:baseline;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.prov-head h3{font-size:22px;color:var(--c-primary);letter-spacing:1px}
+.prov-meta{font-size:13px;color:var(--c-muted);background:var(--c-soft);padding:3px 10px;border-radius:10px}
+.prov-tip{
+  background:linear-gradient(90deg,#fff7e6,#fdf6e3);
+  border-left:4px solid var(--c-warn);padding:11px 16px;border-radius:0 8px 8px 0;
+  margin-bottom:16px;font-size:14px;
+}
+.prov-tip strong{color:var(--c-warn)}
+
+/* Table */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--c-border)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:780px}
+th{
+  background:var(--c-primary);color:white;text-align:left;
+  padding:10px 11px;font-weight:600;white-space:nowrap;
+}
+td{padding:10px 11px;border-top:1px solid var(--c-border);vertical-align:top}
+tr:nth-child(even) td{background:#fdfcf8}
+.ct{font-weight:600;color:var(--c-primary);white-space:nowrap}
+.cond{min-width:280px;line-height:1.6}
+.lk a{color:var(--c-primary);text-decoration:none;font-weight:600}
+.lk a:hover{text-decoration:underline}
+small{color:var(--c-muted)}
+
+/* Badge */
+.badge{
+  display:inline-block;padding:3px 9px;border-radius:11px;font-size:12px;
+  color:white;font-weight:600;white-space:nowrap;margin-bottom:2px;
+}
+.b-hard{background:var(--c-danger)}
+.b-soft{background:var(--c-warn)}
+.b-none{background:var(--c-success)}
+
+/* Footer */
+.footer{
+  text-align:center;color:var(--c-muted);font-size:13px;padding:30px 0 10px;
+  border-top:1px solid var(--c-border);margin-top:50px;
+}
+
+/* Responsive */
+@media (max-width:768px){
+  .hero h1{font-size:22px}
+  .hero{padding:24px 18px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .timeline{grid-template-columns:repeat(4,1fr)}
+  .prov-card{padding:16px}
+  .section-h{font-size:18px}
+}
+@media (max-width:480px){
+  .timeline{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:1fr 1fr}
+}
+
+/* Print */
+@media print{
+  body{background:white}
+  .hero,.prov-card{break-inside:avoid}
+  .nav-link,.prov-nav{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>📘 2026 大学生选调攻略 · 按省规划</h1>
+    <div class="sub">覆盖 31 省级行政区 + 兵团 · 57 条招录公告 · 招录总规模约 26,298 人</div>
+    <span class="stamp">生成时间 · 北京时间 generate_selection_guide.py 同步</span>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><span class="num">32</span><div class="lab">覆盖省/区/兵团</div></div>
+    <div class="stat"><span class="num">57</span><div class="lab">招录通道数</div></div>
+    <div class="stat"><span class="num">~26,298</span><div class="lab">公告招录总人数</div></div>
+    <div class="stat"><span class="num">9月-3月</span><div class="lab">报名时间跨度</div></div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-h">⏱️ 全国报名时间轴</h2>
+    <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-m">2025-09</div>
+      <div class="tl-c">9条公告</div>
+      <div class="tl-l">🟢 公告初期</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-m">2025-10</div>
+      <div class="tl-c">20条公告</div>
+      <div class="tl-l">🔵 报名高峰</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-m">2025-11</div>
+      <div class="tl-c">10条公告</div>
+      <div class="tl-l">🔵 报名高峰</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-m">2025-12</div>
+      <div class="tl-c">6条公告</div>
+      <div class="tl-l">🟡 笔试期</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-m">2026-01</div>
+      <div class="tl-c">11条公告</div>
+      <div class="tl-l">🟠 报名收尾</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-m">2026-03</div>
+      <div class="tl-c">1条公告</div>
+      <div class="tl-l">🟣 笔试集中期</div>
+    </div></div>
+    <p style="font-size:13px;color:var(--c-muted);margin-top:12px">
+      💡 <strong>关键节奏：</strong>2025-09~11 为公告密集发布期（定向选调为主）→ 2025-12~2026-01 为第一批笔试期 → 2026-02~03 为常规选调与省考同步期。错过定向就只能拼常规。
+    </p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-h">📚 三类选调一次性搞懂</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+      <div style="background:var(--c-card);padding:18px;border-radius:12px;border:1px solid var(--c-border)">
+        <h4 style="color:var(--c-primary);margin-bottom:8px">🎯 定向选调</h4>
+        <p style="font-size:13px;color:var(--c-muted);line-height:1.7">
+          面向指定重点高校（多为双一流/985/211），门槛"四选一"为主（党员/学干/校奖/参军）。
+          <br><strong>特点：</strong>起点高（多省直/市直机关）、竞争激烈、公告早、招录早。
+        </p>
+      </div>
+      <div style="background:var(--c-card);padding:18px;border-radius:12px;border:1px solid var(--c-border)">
+        <h4 style="color:var(--c-primary);margin-bottom:8px">🌳 常规选调（普通选调）</h4>
+        <p style="font-size:13px;color:var(--c-muted);line-height:1.7">
+          面向更广泛的全日制应届高校，门槛比定向略严，多为"党员+学干"双硬性。
+          <br><strong>特点：</strong>多去基层乡镇/街道，笔试多随省考同步。
+        </p>
+      </div>
+      <div style="background:var(--c-card);padding:18px;border-radius:12px;border:1px solid var(--c-border)">
+        <h4 style="color:var(--c-warn);margin-bottom:8px">⚖️ 专项选调</h4>
+        <p style="font-size:13px;color:var(--c-muted);line-height:1.7">
+          含<strong>政法专项</strong>（要求法学/公安学/计算机）、<strong>法检专项</strong>（过法考+法学专业）、<strong>引进生</strong>（北大等指定高校硕博）等。
+          <br><strong>特点：</strong>专业要求强、笔试考题不同。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-h">🗺️ 分省攻略（按区域导航）</h2>
+    
+    <section class="region" id="region-华北">
+      <h2 class="region-h">🗺️ 华北</h2>
+      <nav class="prov-nav"><a href="#p-北京" class="nav-link">北京</a><a href="#p-天津" class="nav-link">天津</a><a href="#p-河北" class="nav-link">河北</a><a href="#p-山西" class="nav-link">山西</a><a href="#p-内蒙古" class="nav-link">内蒙古</a></nav>
+      
+    <article class="prov-card" id="p-北京">
+      <header class="prov-head">
+        <h3>北京</h3>
+        <span class="prov-meta">1 个招录通道 · 顶配门槛</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>凭党员+学生干部+校级以上荣誉最稳；北清人航开等头部985 通过率高；省级机关和核心区岗位竞争激烈，对学校层次高度敏感。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-09-12</td>
+          <td>2025年9月22日9:00 至 9月26日18:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>529</small></td>
+          <td>2025-10-19</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)；或校级以上三好/优干/校级一等以上奖学金；或参军。本科及以上全日制应届；本≤24/硕≤27/博≤30周(截至25-09)。</td>
+          <td class="lk"><a href="https://rsj.beijing.gov.cn/xxgk/tzgg/202509/t20250912_4200443.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-天津">
+      <header class="prov-head">
+        <h3>天津</h3>
+        <span class="prov-meta">1 个招录通道 · 稳妥可冲</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>45所高校多含 985/211/双一流；硬性门槛以四选一为主；笔试复习节奏短，可作为练手第一站。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-11-05</td>
+          <td>2025年11月12日8:00 至 11月16日18:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>310</small></td>
+          <td>2025-12-06</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)；或学生干部(校会副部长+/院系主席·班长·团支书满半学年)；或校级以上荣誉；或参军。本科及以上全日制；本≤25/硕≤28/博≤32周。</td>
+          <td class="lk"><a href="https://career.bnu.edu.cn/frontpage/bnu/html/newsDetail.html?id=866943f74c984fc5a0a21bb72d21585e" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-河北">
+      <header class="prov-head">
+        <h3>河北</h3>
+        <span class="prov-meta">2 个招录通道 · 家乡主战场</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>683+838共1521人；本地985/211通过率高，建议作为本地就业首选；常规选调笔试与省考同步，对报考条件要求更严。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-12-16</td>
+          <td>2025年12月16日 至 12月29日18:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>683</small></td>
+          <td>2026-01-17</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员/学生干部/校级以上荣誉或奖励/参军均“同等优先”非硬性。统招本科及以上应届(限院校名单)；本≤25/硕≤28/博≤32周(可放宽)。</td>
+          <td class="lk"><a href="https://scc.pku.edu.cn/frontpage/pku/html/newsDetail_zdtj.html?id=d26b4737913247498846fe44d510c394" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（普通选调）</td>
+          <td>2026-01-30</td>
+          <td>2026年2月1日9:00 至 2月5日17:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>838</small></td>
+          <td>2026-03-14</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)+班级以上学生干部连续满1学年(不含协会)。统招本科及以上应届；本≤25/硕≤28/博≤32周；非党员或未任干的研究生可报。</td>
+          <td class="lk"><a href="https://www.hebpta.com.cn/article?artId=13111&id=303" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-山西">
+      <header class="prov-head">
+        <h3>山西</h3>
+        <span class="prov-meta">2 个招录通道 · 硬性党员</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>党身份必须,缺一不可；硬性条件+应届身份，是党员考生的优选；非党员难报名。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-12-19</td>
+          <td>2025年12月21日9:00 至 12月26日18:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>400</small></td>
+          <td>2026-01-10</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">党员(含预备,硬性)。全日制本科及以上(本科院校)应届；本1999-12后/硕1996-12后/博1992-12后(参军+2岁)；学生干部/校级以上荣誉/参军优先。</td>
+          <td class="lk"><a href="https://scc.pku.edu.cn/frontpage/pku/html/newsDetail_zdtj.html?id=e79aba27a29644bdb46e38c6447463ab" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（普通选调）</td>
+          <td>2026-01-19</td>
+          <td>2026年1月20日9:00 至 1月26日24:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>426</small></td>
+          <td>2026-03-14</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">党员(含预备,硬性)。在校获院系级以上表彰/任学生干部满1年/参军其一。全日制本科及以上应届；本2000-01后/硕1997-01后/博1993-01后(参军+2岁)。</td>
+          <td class="lk"><a href="https://rst.shanxi.gov.cn/rsks/gwyks/2026xdsks/202601/t20260119_10042602.shtml" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-内蒙古">
+      <header class="prov-head">
+        <h3>内蒙古</h3>
+        <span class="prov-meta">3 个招录通道 · 三轨并行</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向269+政法261+集中466共996人；其他/政法/集中三选一，专业受限影响政法类。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（其他类）</td>
+          <td>2025-11-06</td>
+          <td>2025年11月12日10:00 至 11月20日17:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>269</small></td>
+          <td>未明确公布（约2025-12月上旬）</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员/优干/校级以上荣誉/参军“优先”非硬性。全日制本科及以上应届(或24-25择业期)；硕博本科须双一流；本1999-11后/硕1996-11后/博1992-11后(参军+2岁)。</td>
+          <td class="lk"><a href="https://scc.pku.edu.cn//f/newsCenter/view-436fcbd8cf2644938dcced4f39bf4121.htm" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">政法专项选调</td>
+          <td>2025-11-06</td>
+          <td>2025年11月12日10:00 至 11月20日17:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>261</small></td>
+          <td>未明确公布（约2025-12月上旬）</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">限法学/公安/法医学/计算机类等主修专业。党员/优干/校级以上荣誉/参军“优先”非硬性。本科及以上应届；本1999-11后/硕1996-11后/博1992-11后(参军+2岁)。</td>
+          <td class="lk"><a href="http://www.impta.com.cn/xuandiaosheng/2025116172330.asp" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">集中选调（常规/普通）</td>
+          <td>2026-01-21</td>
+          <td>2026年1月26日10:00 至 2月4日17:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>466</small></td>
+          <td>2026-03-14</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须满足之一：党员(预备)；或参军；或学生干部满半年+校级以上荣誉/二等以上奖学金。本科及以上应届(或择业期)；本2000-01后/硕1997-01后/博1993-01后(参军+2岁)。</td>
+          <td class="lk"><a href="https://www.nmgdj.gov.cn/public/siteCache/sobeyfc/detail/15737174.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    </section>
+    <section class="region" id="region-东北">
+      <h2 class="region-h">🗺️ 东北</h2>
+      <nav class="prov-nav"><a href="#p-辽宁" class="nav-link">辽宁</a><a href="#p-吉林" class="nav-link">吉林</a><a href="#p-黑龙江" class="nav-link">黑龙江</a></nav>
+      
+    <article class="prov-card" id="p-辽宁">
+      <header class="prov-head">
+        <h3>辽宁</h3>
+        <span class="prov-meta">2 个招录通道 · 门槛均衡</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>党员+成绩前50%+学生干部三选一，门槛相对友好，985/211 优势明显。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-10-10</td>
+          <td>2025年10月10日10:00 至 10月22日17:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>未明确公布</small></td>
+          <td>2025-11-06</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)；成绩前50%；学生干部1学年或校级以上荣誉或参军之一；2026应届全日制本/硕/博；本≤25、硕≤28、博≤32(参军+2)。</td>
+          <td class="lk"><a href="https://tj91.tongji.edu.cn/frontpage/tongji/html/newsDetail.html?id=8f6f3aa036c841f3a1d472b0d243c199" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（普通选调）</td>
+          <td>2025-12-22</td>
+          <td>2025年12月23日10:00 至 2026年1月16日17:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>313</small></td>
+          <td>随省考（2026-03-14）</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)；成绩前50%；学生干部1学年或校级以上荣誉或参军之一；2026应届全日制本/硕/博；本≤25、硕≤28、博≤32(参军+2)。条件与定向一致。</td>
+          <td class="lk"><a href="https://www.lnrsks.com/html/kaoshitongzhi/6893.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-吉林">
+      <header class="prov-head">
+        <h3>吉林</h3>
+        <span class="prov-meta">2 个招录通道 · 硕博友好</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>省直及长春市直明确要求本科双一流；硕博宽松到30/35岁；适合研究生冲。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-09-29（分高校发布，约9月底）</td>
+          <td>2025年10月10日8:30 至 10月14日16:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>未明确公布</small></td>
+          <td>2025-10-25</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)等四项之一(学生干部1学年/校级以上荣誉/参军)；2026应届全日制硕或博(本科须全日制，省直及长春市直要求本科双一流)；硕≤30、博≤35。</td>
+          <td class="lk"><a href="https://www.career.zju.edu.cn/notification/detail?xwid=3FFCDA4706A0AA64E0653A68DD0E9B18" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（含于省考）</td>
+          <td>2026-01-29</td>
+          <td>2026年2月2日8:30 至 2月6日14:30</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>未明确公布</small></td>
+          <td>随省考（2026-03-14）</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)；在校任校/院/系/班级干部；应届全日制本科及以上(省内高校或省外吉林籍)；选调生职位年龄18–33周。</td>
+          <td class="lk"><a href="http://www.jlgwyks.cn/index.aspx/news.aspx?id=1196" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-黑龙江">
+      <header class="prov-head">
+        <h3>黑龙江</h3>
+        <span class="prov-meta">2 个招录通道 · 招录大省</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向940+常规510共1450人；年龄上限较宽(本30硕32博35)；给应届生留出更多空间。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-09-05</td>
+          <td>2025年9月5日8:30 至 9月19日17:30</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>940</small></td>
+          <td>2025-10-19</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/连续半年以上学生干部/校级以上奖励/参军之一；招录范围高校2026应届全日制本/硕/博；本≤30、硕≤32、博≤35(参军+2)。</td>
+          <td class="lk"><a href="https://gongxuan.ljxfw.gov.cn/newsDetails.html?id=1263db37-91be-491d-a53e-76c620ce676a&type=1" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（普通选调/基层）</td>
+          <td>2026-01-23</td>
+          <td>2026年1月26日9:00 至 2月1日17:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>510</small></td>
+          <td>随省考（2026-03-14）</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员等四项之一(连续1年学生干部/校级以上奖励/参军)，优先选调；2026应届全日制本科及以上(省内或省外黑籍)；本≤30、硕≤32、博≤35(参军+2)。</td>
+          <td class="lk"><a href="https://gongxuan.ljxfw.gov.cn/newsDetails.html?id=4b7a6e6f-960d-4d46-af86-485ee77e390f&type=1" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    </section>
+    <section class="region" id="region-华东">
+      <h2 class="region-h">🗺️ 华东</h2>
+      <nav class="prov-nav"><a href="#p-上海" class="nav-link">上海</a><a href="#p-江苏" class="nav-link">江苏</a><a href="#p-浙江" class="nav-link">浙江</a><a href="#p-安徽" class="nav-link">安徽</a><a href="#p-福建" class="nav-link">福建</a><a href="#p-江西" class="nav-link">江西</a><a href="#p-山东" class="nav-link">山东</a></nav>
+      
+    <article class="prov-card" id="p-上海">
+      <header class="prov-head">
+        <h3>上海</h3>
+        <span class="prov-meta">1 个招录通道 · 顶级配置</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>44+30+22+3所=99所高校，党员+学干+校奖三选一；题型综合，需提前规划。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-09-08</td>
+          <td>2025年9月9日10:00 至 9月24日12:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>约400</small></td>
+          <td>2025-11-01</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)或任校院系主要学生干部满1年；须获校级以上荣誉或校二等以上奖学金；应届本/硕/博；本≤25、硕≤30、博≤35(参军放宽2岁)。</td>
+          <td class="lk"><a href="https://www.shacs.gov.cn/Link/2026018xd.htm" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-江苏">
+      <header class="prov-head">
+        <h3>江苏</h3>
+        <span class="prov-meta">2 个招录通道 · 党员强制</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>党员强制+成绩前50%+学干满1年+校级以上表彰四项叠加；考核严谨,985优势显著。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（名校优生/县级以上机关）</td>
+          <td>2025-10-14</td>
+          <td>2025年10月27日 至 11月3日16:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>632</small></td>
+          <td>2025-11-15</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">党员(含预备，强制)；任班委/院系学生会中层副职以上满1学年；获校级以上综合性表彰(部分放宽)；本科成绩前50%；应届本/硕/博；本≤25、硕≤28、博≤31。</td>
+          <td class="lk"><a href="http://www.jszzb.gov.cn/col75/91014.html" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（乡镇/街道）</td>
+          <td>2025-10-14</td>
+          <td>2025年11月4日 至 11月10日16:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>578</small></td>
+          <td>2025-12-07（随省考，公共科目A类）</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">党员(含预备，强制)；任班委/院系学生会中层副职以上满1学年；获院系级及以上表彰；本科成绩前50%；应届本/硕/博；本≤25、硕≤28、博≤31。</td>
+          <td class="lk"><a href="http://www.jszzb.gov.cn/col75/91014.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-浙江">
+      <header class="prov-head">
+        <h3>浙江</h3>
+        <span class="prov-meta">2 个招录通道 · 性价比首选</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>常规743+定向275共1018人；只要四选一即可报名；山岛县放宽资格,门槛最低之一。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">常规选调</td>
+          <td>2025-10-09</td>
+          <td>2025年10月10日9:00 至 10月19日17:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>743</small></td>
+          <td>2025-11-08</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)或任学生干部满1学年或校级以上荣誉或校一等以上奖学金(四选一)；应届本/硕/博；本≤25、硕≤28、博≤30(参军放宽2岁)。</td>
+          <td class="lk"><a href="http://xd.zjks.com" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">定向紧缺专业选调</td>
+          <td>2025-10-09</td>
+          <td>2025年10月10日9:00 至 10月19日17:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>275</small></td>
+          <td>2025-11-08</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须35类紧缺专业且院校对应；党员(含预备)或学生干部满1学年或校级以上荣誉或校一等以上奖学金(四选一)；应届本/硕/博；本≤25、硕≤28、博≤30；山区海岛县免资格限制。</td>
+          <td class="lk"><a href="http://xd.zjks.com" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-安徽">
+      <header class="prov-head">
+        <h3>安徽</h3>
+        <span class="prov-meta">2 个招录通道 · 双批次</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向10月+常规次年1月；常规报名要求'党员+学干双硬性'，分数线偏高。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（面向重点高校，分校公告）</td>
+          <td>2025-10-11</td>
+          <td>2025年10月15日9:00 至 10月22日15:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>未明确公布</small></td>
+          <td>2025-11-15</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须满足之一:党员(含预备)或任学生干部满1学年或校级以上荣誉/二等以上奖学金；应届本/硕/博；本≤25、硕≤28、博≤32(参军放宽2岁)。</td>
+          <td class="lk"><a href="http://apta.gov.cn/Officer/ExamDetail?examid=402" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调</td>
+          <td>2026-01-15</td>
+          <td>2026年1月19日9:00 至 1月25日18:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>700</small></td>
+          <td>2026-03-14（随省考）</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">党员(含预备，强制)；本/研究生期间任学生干部满1学年(强制)；应届本/硕/博(含服务基层)；本≤25、硕≤28、博≤32(参军放宽2、基层放宽3)。</td>
+          <td class="lk"><a href="https://www.ahxf.gov.cn/Home/Content/1186075?ClassId=237" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-福建">
+      <header class="prov-head">
+        <h3>福建</h3>
+        <span class="prov-meta">2 个招录通道 · 法检专项</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>党政400+法检专项若干；过法考+本科双一流是法检类硬通货。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">常规选调（党政类/法院类/检察院类）</td>
+          <td>2025-11-21</td>
+          <td>2025年11月21日12:00 至 12月2日24:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>400</small></td>
+          <td>2026-02-01（资格考试，福州）</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">福建生源(硕本)/应届博士(不限生源)；无强制党员；须任学生干部(按生源地1-2学年)并获表彰/奖励/优秀成果；应届本/硕/博；本≤25、硕≤28、博≤32；法检类须过法考且法学专业。</td>
+          <td class="lk"><a href="http://xds.fzu.edu.cn/newsdetail.asp?id=304" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">专项选调（引进生·人才专项）</td>
+          <td>2025年10月</td>
+          <td>2025年10月27日 至 11月23日</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>若干名</small></td>
+          <td>未明确公布（综合管理类约2025年12月上旬、专业技术类约12月中下旬，民营企业类无笔试）</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">面向指定高校(如北大等)应届博/硕；党员优先(非强制)；须满足之一:校级以上综合性荣誉或任学生干部超1学年；博≤32、硕≤28；本科须毕业于相关高校。</td>
+          <td class="lk"><a href="https://www.renshiksw.com/a/508592.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-江西">
+      <header class="prov-head">
+        <h3>江西</h3>
+        <span class="prov-meta">1 个招录通道 · 严格本科出身</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>第一学历须本科一批或本科院校(不含民办/独立)，民办生需绕行。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-11-17</td>
+          <td>2025年11月22日9:00 至 11月27日18:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>未明确公布</small></td>
+          <td>2025-12-06</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须满足之一:党员(含预备)或最高学历任学生干部满1学年或校级以上荣誉/校二等以上奖学金或参军；应届本/硕/博；本≤25、硕≤30、博≤35；第一学历须本科一批或本科院校(不含民办、独立学院)。</td>
+          <td class="lk"><a href="https://rc.jxzzb.gov.cn" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-山东">
+      <header class="prov-head">
+        <h3>山东</h3>
+        <span class="prov-meta">3 个招录通道 · 三批次规模大</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>第一批640+定向267+常规690共1597人；19所专额定向很稳；常规批次党员+学干双硬性。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（第一批·专额定向）</td>
+          <td>2025-10-09</td>
+          <td>2025年10月10日9:00 至 10月16日16:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>640</small></td>
+          <td>2025-10-26</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">面向19所指定高校(北大/清华等)应届本/硕/博；党员、主要学生干部、校级以上荣誉优先(非强制)；本≤25、硕≤30、博≤35(学制5年+每增1年放宽1岁)。</td>
+          <td class="lk"><a href="https://www.dtdjzx.gov.cn/web/dtdjzx/dtrdtzgg/67521.html" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">定向选调（第二批）</td>
+          <td>2025-11-06</td>
+          <td>2025年11月10日9:00 至 14日16:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>267</small></td>
+          <td>2025-12-06</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">面向部分高校及相关专业(名单见附件)应届本/硕/博；党员、主要学生干部、校级以上荣誉优先(非强制)；本≤25、硕≤30、博≤35(学制5年+每增1年放宽1岁)。</td>
+          <td class="lk"><a href="https://www.dtdjzx.gov.cn/web/dtdjzx/lyxdszkgg/3911677.html" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（第二批）</td>
+          <td>2025-11-06</td>
+          <td>2025年11月10日9:00 至 14日16:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>690</small></td>
+          <td>2025-12-06</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">面向全国普通高校应届本/硕/博；须为学生干部中的中共党员(党员+学生干部均强制)；学生干部须连续半年以上；本≤25、硕≤30、博≤35(学制5年+每增1年放宽1岁)。</td>
+          <td class="lk"><a href="https://www.dtdjzx.gov.cn/web/dtdjzx/lyxdszkgg/3911677.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    </section>
+    <section class="region" id="region-华中">
+      <h2 class="region-h">🗺️ 华中</h2>
+      <nav class="prov-nav"><a href="#p-河南" class="nav-link">河南</a><a href="#p-湖北" class="nav-link">湖北</a><a href="#p-湖南" class="nav-link">湖南</a></nav>
+      
+    <article class="prov-card" id="p-河南">
+      <header class="prov-head">
+        <h3>河南</h3>
+        <span class="prov-meta">2 个招录通道 · 大规模+门槛低</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向406(党员)+常规1268(四选一)共1674人；常规门槛最友好。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（国内部分高校）</td>
+          <td>2025-11-27</td>
+          <td>2025年11月28日10:00 至 12月4日18:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>406</small></td>
+          <td>2025-12-14</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">省直岗须党员(含预备)；市直岗党员/优秀学生干部/校级以上奖励者优先；48所高校应届硕士及以上；硕≤28周、博≤35周。</td>
+          <td class="lk"><a href="https://xds.jyt.henan.gov.cn/front/newsDetail?newsId=c22f3280-32b5-4add-a377-842ebd231915" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（到基层）</td>
+          <td>2026-01-04</td>
+          <td>2026年1月6日10:00 至 1月11日18:00</td>
+          <td><span class="badge" style="background:#c0392b">★★★★★ 大规模</span><br><small>1268</small></td>
+          <td>2026-03-07</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)、班级以上学生干部满1年、校级以上奖励、参军经历四选一；应届本/硕/博；本≤25、硕≤28、博≤35周。</td>
+          <td class="lk"><a href="https://xds.jyt.henan.gov.cn/" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-湖北">
+      <header class="prov-head">
+        <h3>湖北</h3>
+        <span class="prov-meta">2 个招录通道 · 党员学干校奖三选一</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向710+常规497共1207人；门槛中等；本省985/211优势大。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-11-12</td>
+          <td>2025年11月12日10:00 至 11月19日17:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>710</small></td>
+          <td>2025-12-07</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)、1年以上学生干部经历、校级以上表彰三选一；39所及双一流高校2026届本科及以上；本<25、硕<28、博<32周。</td>
+          <td class="lk"><a href="http://www.shashi.gov.cn/bmtx/202511/t20251112_1051422.shtml" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（普通选调）</td>
+          <td>2026-01-12</td>
+          <td>2026年1月13日10:00 至 1月20日17:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>497</small></td>
+          <td>2026-03-14</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)、1年以上学生干部经历、校级以上表彰三选一；双一流及省内部分高校本科及以上；本<25、硕<28、博<32周。</td>
+          <td class="lk"><a href="https://news.hubeidaily.net/pc/c_5012318.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-湖南">
+      <header class="prov-head">
+        <h3>湖南</h3>
+        <span class="prov-meta">2 个招录通道 · 双重叠加</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>党员+学干满1年为强制双条件；定向要求硕士起步,门槛偏高。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-10-16</td>
+          <td>2025年10月18日9:00 至 10月24日17:30</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>300</small></td>
+          <td>2025-11-16</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须同时满足党员(含预备)＋校院学生会/团委/班长/团支书任职满1学年；45所双一流应届硕士及以上；硕≤28、博≤35周。</td>
+          <td class="lk"><a href="https://xsjy.whu.edu.cn/frontpage/whu/html/newsDetail.html?id=908517a7cfa04feb9ea1ee66e082b640" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调</td>
+          <td>2025-10-16</td>
+          <td>2025年10月18日9:00 至 10月24日17:30</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>900</small></td>
+          <td>2025-11-16</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须同时满足党员(含预备)＋班长/团支书/学生会等任职满1学年；全国普通高校应届本科及以上；本≤24、硕≤28、博≤35周。</td>
+          <td class="lk"><a href="https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/showZwxx?zpxxid=525664816" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    </section>
+    <section class="region" id="region-华南">
+      <h2 class="region-h">🗺️ 华南</h2>
+      <nav class="prov-nav"><a href="#p-广东" class="nav-link">广东</a><a href="#p-广西" class="nav-link">广西</a><a href="#p-海南" class="nav-link">海南</a></nav>
+      
+    <article class="prov-card" id="p-广东">
+      <header class="prov-head">
+        <h3>广东</h3>
+        <span class="prov-meta">1 个招录通道 · 应届最大池</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>1715人单一公告最大池；本≤24硕≤27博≤30,门槛中等；时间靠后,可作为压轴志愿。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">常规选调（优秀大学毕业生）</td>
+          <td>2025-12-01</td>
+          <td>2025年12月4日9:00 至 12月8日16:00</td>
+          <td><span class="badge" style="background:#c0392b">★★★★★ 大规模</span><br><small>1715</small></td>
+          <td>2025-12-28</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)、学生干部任职、校级以上奖学金/荣誉、参军四选一；部分高校应届本科及以上；本≤24、硕≤27、博≤30周。</td>
+          <td class="lk"><a href="https://www.gdzz.gov.cn/gwygz/lypytzgg/content/mpost_24298.html?jump=true" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-广西">
+      <header class="prov-head">
+        <h3>广西</h3>
+        <span class="prov-meta">2 个招录通道 · 双轨</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向分校+常规340共约600人；定向分校门槛宽,常规门槛四选一。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">常规选调（到基层）</td>
+          <td>2026-01-18</td>
+          <td>2026年1月19日8:00 至 1月25日18:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>340</small></td>
+          <td>2026-03-14（随广西省考同步）</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/参军/团员任学生干部满1学年或院系级以上荣誉、校级奖学金/青马学员四选一；公办本科及以上；本≤26、硕≤30、博≤32周。</td>
+          <td class="lk"><a href="https://career.bnu.edu.cn/frontpage/bnu/html/newsDetail.html?id=aafae85e99244968b629d77447980b34" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">定向选调（分高校）</td>
+          <td>2025-10-28</td>
+          <td>2025年10月28日 至 11月16日18:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>未明确公布</small></td>
+          <td>2025-12-13</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/参军/学生会主席团、班长团支书等任职满1学年或院系级以上荣誉三选一；定向高校本科及以上；本≤26、硕≤30、博≤32周。</td>
+          <td class="lk"><a href="https://gx.huatu.com/2025/1029/2068592.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-海南">
+      <header class="prov-head">
+        <h3>海南</h3>
+        <span class="prov-meta">1 个招录通道 · 省内院校友好</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>仅部分省内院校要求门槛身份,省外高校基本放行。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">常规选调（优秀大学毕业生）</td>
+          <td>2026-01-23</td>
+          <td>2026年1月26日8:00 至 1月30日16:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>280</small></td>
+          <td>2026-03-29</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">仅部分省内院校须党员(含预备)/校级以上荣誉/学生干部满1学年/参军之一；应届本科及以上；本≤25、硕≤30、博≤35周。</td>
+          <td class="lk"><a href="https://www.nanhaixf.gov.cn/articles/59/48943.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    </section>
+    <section class="region" id="region-西南">
+      <h2 class="region-h">🗺️ 西南</h2>
+      <nav class="prov-nav"><a href="#p-重庆" class="nav-link">重庆</a><a href="#p-四川" class="nav-link">四川</a><a href="#p-贵州" class="nav-link">贵州</a><a href="#p-云南" class="nav-link">云南</a><a href="#p-西藏" class="nav-link">西藏</a></nav>
+      
+    <article class="prov-card" id="p-重庆">
+      <header class="prov-head">
+        <h3>重庆</h3>
+        <span class="prov-meta">2 个招录通道 · 紧缺+集中</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>紧缺专业+基层集中双轨道；基层400人,门槛低。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（急需紧缺专业）</td>
+          <td>2025-09-29</td>
+          <td>2025年10月13日10:00 至 10月17日17:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>未明确公布</small></td>
+          <td>2025-11-01</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/优干/校奖/参军四选一；应届全日制硕士及以上(部分校含本科)；本≤25硕≤30博≤35(参军+2)。</td>
+          <td class="lk"><a href="https://www.12371.gov.cn/h5/article/1438702998309199872/h5/content_1438702998309199872.html" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（集中选调·基层）</td>
+          <td>2026-03-02</td>
+          <td>2026年3月4日10:00 至 3月8日17:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>400</small></td>
+          <td>2026-03-21</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/优干/校奖/参军四选一；国内应届全日制本科及以上；本≤25硕≤30博≤35(参军+2)。</td>
+          <td class="lk"><a href="https://www.12371.gov.cn/web/column/col5011026.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-四川">
+      <header class="prov-head">
+        <h3>四川</h3>
+        <span class="prov-meta">2 个招录通道 · 规模天花板</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向1987人,招录总规模全国天花板；十选一门槛极宽松,是综合最优。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（急需紧缺专业）</td>
+          <td>2025-09-22</td>
+          <td>2025年10月9日 至 10月15日18:00</td>
+          <td><span class="badge" style="background:#c0392b">★★★★★ 大规模</span><br><small>1987</small></td>
+          <td>2025-10-25</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/参军/国奖/校青马/院系级荣誉/副班长以上学生干部满1年(六选一)；应届本科及以上(省直硕士)；本≤25硕≤30博≤35(参军+2)。</td>
+          <td class="lk"><a href="https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/showZwxxForWx?zpxxid=518266941&type=ZPXX" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（基层选调）</td>
+          <td>2025-10-29</td>
+          <td>2025年11月4日 至 11月10日18:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>795</small></td>
+          <td>2025-12-07</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/参军/院系级荣誉/校级青马/省级A证/国奖/班长以上学生干部满1年等(十选一)；应届本科及以上(非定向硕士)；本≤25硕≤30博≤32(参军/基层+3)。</td>
+          <td class="lk"><a href="https://www.scpta.com.cn/front/News/info/5786130dd0d2460aa5ec2ba91853f59e?t=56" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-贵州">
+      <header class="prov-head">
+        <h3>贵州</h3>
+        <span class="prov-meta">1 个招录通道 · 省本友好</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>本省生源市州以下岗位不限身份；定向范围55所,普通本科机会大。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（定向部分高校）</td>
+          <td>2025-10-13</td>
+          <td>2025年10月17日9:00 至 10月27日14:00（分层截止）</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>未明确公布</small></td>
+          <td>2025-11-07</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">本科须党员(含预备)/学生干部1年/校奖/院系表彰/参军五选一(本省生源市州以下不限)；本科及以上；本硕≤30博≤35(参军+2)。</td>
+          <td class="lk"><a href="https://rsj.trs.gov.cn/zwgk/xxgkml/rsxx/gwykl/202510/t20251014_88693785.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-云南">
+      <header class="prov-head">
+        <h3>云南</h3>
+        <span class="prov-meta">2 个招录通道 · 规模大灵活</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向1517+常规300共1817人；部分职位不要求党员,选择面广。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（面向选定高校）</td>
+          <td>2025年11月</td>
+          <td>2025年11月21日9:00 至 11月25日18:00</td>
+          <td><span class="badge" style="background:#c0392b">★★★★★ 大规模</span><br><small>1517</small></td>
+          <td>2025-12-06</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">部分职位限党员(含预备)/正式党员,其余不限；选定高校应届本科及以上；本≤28硕≤31博≤35；无统一学生干部/荣誉门槛。</td>
+          <td class="lk"><a href="https://jobs.ynu.edu.cn/detail/news?id=1784079&menu_id=&type_id=5661" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调（普通选调·省考）</td>
+          <td>2026-01-30</td>
+          <td>2026年2月7日9:00 至 2月11日18:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>300</small></td>
+          <td>2026-03-14</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">党员(含预备)硬性；公办普全本科及以上2026应届；本≤28硕≤31博≤35；校级以上优秀毕业生/三好学生/班级以上班干部满1年(三选一)。</td>
+          <td class="lk"><a href="https://ylxf.1237125.cn/TopicWeb/ynskslygwy/index.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-西藏">
+      <header class="prov-head">
+        <h3>西藏</h3>
+        <span class="prov-meta">1 个招录通道 · 小规模</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>70人,应届身份刚性,优先党员+学干+校奖; 进藏工作意愿要强。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-12-02</td>
+          <td>2025年12月5日9:30 至 12月15日18:30</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>70</small></td>
+          <td>2025-12-28</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/优干/校奖/参军均同等优先(非硬性)；部分高校全日制本科及以上应届；本≤25硕≤30博≤35。</td>
+          <td class="lk"><a href="https://hrss.xizang.gov.cn/xwzx/tzgg/202512/t20251202_512171.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    </section>
+    <section class="region" id="region-西北">
+      <h2 class="region-h">🗺️ 西北</h2>
+      <nav class="prov-nav"><a href="#p-陕西" class="nav-link">陕西</a><a href="#p-甘肃" class="nav-link">甘肃</a><a href="#p-青海" class="nav-link">青海</a><a href="#p-宁夏" class="nav-link">宁夏</a><a href="#p-新疆" class="nav-link">新疆</a><a href="#p-新疆生产建设兵团" class="nav-link">新疆生产建设兵团</a></nav>
+      
+    <article class="prov-card" id="p-陕西">
+      <header class="prov-head">
+        <h3>陕西</h3>
+        <span class="prov-meta">1 个招录通道 · 门槛友好</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>党员/学干/校奖同优先(非硬性),双一流优势大;建议稳妥冲。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-12-01</td>
+          <td>2025年12月8日12:00 至 12月17日12:00</td>
+          <td><span class="badge" style="background:#d68910">★★★★ 较多</span><br><small>690</small></td>
+          <td>2026-01-17</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)、班委≥1年、校级以上奖励、参军者同等优先(非硬性)；2026全日制本科及以上；本≤24/硕≤27/博≤30(参军+2)。</td>
+          <td class="lk"><a href="http://www.sxdyjy.cn/info/15828" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-甘肃">
+      <header class="prov-head">
+        <h3>甘肃</h3>
+        <span class="prov-meta">3 个招录通道 · 0门槛先驱</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向300+常规250+政法50共600人,无党员学干硬性,2026届最容易上岸省份之一。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-09-18</td>
+          <td>2025年10月13日9:00 至 11月10日18:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>300</small></td>
+          <td>2025-11-22</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">无硬性党员/学生干部要求；2026全日制本科及以上应届；本≤25/硕≤30/博≤35；面向41所指定高校。</td>
+          <td class="lk"><a href="http://www.gszg.gov.cn/20250918/28e7383784c842618c082e37d07e77c6/c.html" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规选调</td>
+          <td>2025-09-18</td>
+          <td>2025年10月13日9:00 至 11月10日18:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>250</small></td>
+          <td>2025-11-22</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">无硬性党员/学生干部要求；2026全日制本科及以上应届；本≤25/硕≤30/博≤35；面向93所高校(县乡基层)。</td>
+          <td class="lk"><a href="http://www.gszg.gov.cn/20250918/28e7383784c842618c082e37d07e77c6/c.html" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">专项选调（政法专项）</td>
+          <td>2025-09-18</td>
+          <td>2025年10月13日9:00 至 11月10日18:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★ 未明确</span><br><small>50</small></td>
+          <td>2025-11-22</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">限法学专业(本科法学030101K/硕博法学0301)；无硬性党员要求；2026全日制本科及以上；本≤25硕≤30博≤35；录用法检系统。</td>
+          <td class="lk"><a href="http://www.gszg.gov.cn/20250918/28e7383784c842618c082e37d07e77c6/c.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-青海">
+      <header class="prov-head">
+        <h3>青海</h3>
+        <span class="prov-meta">3 个招录通道 · 三类分层</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>定向46所+常规专项3所+常规非专项;门槛四选一;本科生主战场。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-10-31</td>
+          <td>2025年10月31日10:00 至 11月13日18:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★★ 小规模</span><br><small>约140</small></td>
+          <td>2025-12-11</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须具四条件之一:党员(含预备)/学生干部≥1年/校级以上奖励/参军；全日制本科及以上；本≤25硕≤29博≤35；46所指定高校。</td>
+          <td class="lk"><a href="https://www.qhsdj.gov.cn/cmsx/p894/tzgg/37892.html" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规专项选调</td>
+          <td>2025-10-31</td>
+          <td>2025年10月31日10:00 至 11月13日18:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★★ 小规模</span><br><small>180</small></td>
+          <td>2025-12-11</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须具四条件之一(党员/学干≥1年/校奖/参军)；青海大学·师大·民大应届；全日制本科及以上；本≤25硕≤29博≤35。</td>
+          <td class="lk"><a href="https://www.qhsdj.gov.cn/cmsx/p894/tzgg/37892.html" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">常规非专项选调</td>
+          <td>2025-10-31</td>
+          <td>2025年10月31日10:00 至 11月13日18:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★★ 小规模</span><br><small>约180</small></td>
+          <td>2025-12-11</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">须具四条件之一(党员/学干≥1年/校奖/参军)；省内外高校全日制本科及以上；本≤25硕≤29博≤35；县乡机关。</td>
+          <td class="lk"><a href="https://www.qhsdj.gov.cn/cmsx/p894/tzgg/37892.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-宁夏">
+      <header class="prov-head">
+        <h3>宁夏</h3>
+        <span class="prov-meta">1 个招录通道 · 四类分层</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>39/105/5/4所分四类;党员学干校奖参军优先;省内4校须具其一。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调</td>
+          <td>2025-10-24</td>
+          <td>2025年11月10日9:00 至 11月17日18:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>240</small></td>
+          <td>2025-12-14</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/校院学干≥1年/校级以上荣誉/参军优先(区内4校须具其一)；2026全日制本科及以上；本≤25硕≤30博≤35。</td>
+          <td class="lk"><a href="https://www.nxpta.com/gwyks/202510/t20251024_5071775.html" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-新疆">
+      <header class="prov-head">
+        <h3>新疆</h3>
+        <span class="prov-meta">2 个招录通道 · 招录大户</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>自治区1239+兵团181+法检专项213=1633人;招录规模仅次于广东;适合愿意扎根西部的考生。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（自治区）</td>
+          <td>2025-10-20</td>
+          <td>2025年10月22日10:00 至 11月5日20:00</td>
+          <td><span class="badge" style="background:#c0392b">★★★★★ 大规模</span><br><small>1239</small></td>
+          <td>2025-11-22</td>
+          <td><span class="badge b-soft">优先党员</span></td>
+          <td class="cond">党员(含预备)/学干≥1年/校奖/参军优先(非硬性)；本科及以上应届；本≤25硕≤30博≤35(参军+2)；部分高校。</td>
+          <td class="lk"><a href="https://www.career.zju.edu.cn/notification/detail?xwid=41A41328EAF51D6EE0653A68DD0E9B18" target="_blank">原文↗</a></td>
+        </tr>
+        <tr>
+          <td class="ct">专项选调（法官助理、检察官助理）</td>
+          <td>2025-10-20</td>
+          <td>2025年10月22日10:00 至 11月5日20:00</td>
+          <td><span class="badge" style="background:#27ae60">★★★ 中等</span><br><small>213</small></td>
+          <td>2025-11-22</td>
+          <td><span class="badge b-none">无党员硬性</span></td>
+          <td class="cond">须取得法律职业资格A类证书；公办高校本科及以上(法学)；年龄≤38；志愿建设边疆。</td>
+          <td class="lk"><a href="https://www.career.zju.edu.cn/notification/detail?xwid=41A41328EAF51D6EE0653A68DD0E9B18" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    <article class="prov-card" id="p-新疆生产建设兵团">
+      <header class="prov-head">
+        <h3>新疆生产建设兵团</h3>
+        <span class="prov-meta">1 个招录通道 · 同新疆</span>
+      </header>
+      <p class="prov-tip">📌 <strong>规划建议：</strong>并入新疆体系;户籍或志愿须先想清。</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>选调类型</th><th>公告日期</th><th>报名时间</th><th>招录规模</th>
+            <th>笔试时间</th><th>党员要求</th><th>报考条件摘要</th><th>原文</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="ct">定向选调（兵团）</td>
+          <td>2025-10-20</td>
+          <td>2025年10月22日10:00 至 11月5日20:00</td>
+          <td><span class="badge" style="background:#7f8c8d">★★ 小规模</span><br><small>181</small></td>
+          <td>2025-11-22</td>
+          <td><span class="badge b-hard">硬性党员</span></td>
+          <td class="cond">同新疆自治区(联合公告)：党员等优先(非硬性)；本科及以上应届；本≤25硕≤30博≤35(参军+2)；兵团机关/师市。</td>
+          <td class="lk"><a href="https://www.career.zju.edu.cn/notification/detail?xwid=41A41328EAF51D6EE0653A68DD0E9B18" target="_blank">原文↗</a></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </article>
+    </section>
+  </section>
+
+  <section class="section">
+    <h2 class="section-h">🎯 分层定位：你是哪种考生？</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+      <div style="background:#fff5f5;padding:18px;border-radius:12px;border:1px solid #f5b7b1">
+        <h4 style="color:#c0392b;margin-bottom:8px">🟥 党员硬身份型</h4>
+        <p style="font-size:13px;line-height:1.7">已具备党员/预备党员 → 可解锁<strong>山西、河北常规、湖南、安徽常规、山东常规、江苏</strong>等7省硬性通道</p>
+      </div>
+      <div style="background:#fff7e6;padding:18px;border-radius:12px;border:1px solid #fad7a0">
+        <h4 style="color:#e67e22;margin-bottom:8px">🟧 学业突出型</h4>
+        <p style="font-size:13px;line-height:1.7">校级以上奖学金/三好学生 → <strong>北京、天津、上海、江苏</strong>等头部通道对校奖最敏感</p>
+      </div>
+      <div style="background:#fdf2e9;padding:18px;border-radius:12px;border:1px solid #f5cba7">
+        <h4 style="color:#d35400;margin-bottom:8px">🟨 学生干部型</h4>
+        <p style="font-size:13px;line-height:1.7">班长/团支书/学生会主席团任满1年 → <strong>湖南、安徽常规</strong>双硬性通道必需</p>
+      </div>
+      <div style="background:#eafaf1;padding:18px;border-radius:12px;border:1px solid #a9dfbf">
+        <h4 style="color:#27ae60;margin-bottom:8px">🟩 门槛最低型</h4>
+        <p style="font-size:13px;line-height:1.7">条件相对空白 → <strong>甘肃、青海（常规非专项）、新疆兵团、内蒙古其他类</strong>门槛最宽松</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-h">📅 大学生实操规划表</h2>
+    <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th style="width:14%">学期</th><th style="width:18%">关键时段</th><th style="width:34%">重点动作</th><th>目标</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>大三上</strong><br>(2025 秋)</td>
+          <td>9-12月</td>
+          <td>① 入党流程加速（成为发展对象/预备党员）；② 争取校级奖学金/三好学生；③ 班长/团支书/学生会部长等学生干部任职满半年</td>
+          <td>把"硬性门槛"四项落实至少 1 项</td>
+        </tr>
+        <tr>
+          <td><strong>大三下</strong><br>(2026 春)</td>
+          <td>2-5月</td>
+          <td>① 准备定向选调笔试（行测+申论+公基）；② 收集目标省份公告；③ 提前准备报名佐证材料（任职证明、获奖证书、党员证明）</td>
+          <td>完成目标省份 30% 复习进度</td>
+        </tr>
+        <tr>
+          <td><strong>大三暑假</strong><br>(2026 夏)</td>
+          <td>7-8月</td>
+          <td>① 行测刷题模考；② 申论真题练习；③ 关注各省组织部官网；④ 准备面试答题素材</td>
+          <td>模考稳定 70+</td>
+        </tr>
+        <tr>
+          <td><strong>大四上</strong><br>(2026 秋)</td>
+          <td>9-12月</td>
+          <td>① <strong>9-11月</strong>集中报名定向选调；② 10-12月陆续笔试；③ 准备常规选调报名材料<br>📌 重点：天津/北京/上海/江苏/浙江/山东/广东/四川/重庆 等</td>
+          <td>报名 3-5 个定向 + 2-3 个常规</td>
+        </tr>
+        <tr>
+          <td><strong>大四下</strong><br>(2027 春)</td>
+          <td>1-6月</td>
+          <td>① <strong>1-3月</strong>常规选调与省考同步；② 面试+体检+政审；③ 签约；④ 落实毕业实习/论文答辩</td>
+          <td>上岸并完成毕业</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="font-size:13px;color:var(--c-muted);margin-top:14px">
+      ⚠️ <strong>节奏口诀：</strong>"大三攒身份、大三下打基础、暑假猛冲刺、大四上集中报名、大四下收割上岸"。错过大三，等于错过定向选调入场券。
+    </p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-h">⚠️ 避坑清单（最容易踩的 5 个雷）</h2>
+    <ol style="padding-left:22px;line-height:2">
+      <li><strong>党员≠预备党员</strong>：山西/江苏等省明确要求"中共党员(含预备)"可报，而山东常规/安徽常规要求"中共党员"必须为正式党员（留意时间差异）。</li>
+      <li><strong>"学生干部满 1 年"</strong>特指班委/学生会部长及以上任职时长，社团/协会干部多数省份不算。</li>
+      <li><strong>第一学历</strong>江西/陕西等省明确本科须为本科一批/本科院校，<strong>独立学院、民办本科直接出局</strong>。</li>
+      <li><strong>年龄按"周"算</strong>：本≤24/本≤25/硕≤28/博≤35 是相对常见上限，参军经历普遍可 +2 岁，部分省份基层经历 +3。</li>
+      <li><strong>报名佐证提前准备</strong>：党员证明、任职证明、获奖证书需学院盖章；准备周期 2 周起步，临时抱佛脚会赶不上首批审核。</li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2 class="section-h">📊 招录规模 TOP 10（按公告数字）</h2>
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>排名</th><th>省份·选调类型</th><th>招录人数</th><th>主要面向</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>四川·定向选调（急需紧缺）</td><td><strong>1987</strong></td><td>十选一门槛，门槛最低之一</td></tr>
+        <tr><td>2</td><td>广东·常规选调</td><td><strong>1715</strong></td><td>四选一门槛，最大单一公告</td></tr>
+        <tr><td>3</td><td>河南·常规选调</td><td><strong>1268</strong></td><td>四选一门槛，乡镇为主</td></tr>
+        <tr><td>4</td><td>新疆联合（自治区+兵团+法检）</td><td><strong>1633</strong></td><td>1239+181+213，扎根西部</td></tr>
+        <tr><td>5</td><td>云南·定向选调</td><td><strong>1517</strong></td><td>部分岗位不要求党员</td></tr>
+        <tr><td>6</td><td>黑龙江·定向选调</td><td><strong>940</strong></td><td>本30硕32博35，年龄最宽</td></tr>
+        <tr><td>7</td><td>湖南·常规选调</td><td><strong>900</strong></td><td>党员+学干满1年双硬性</td></tr>
+        <tr><td>8</td><td>四川·常规选调（基层）</td><td><strong>795</strong></td><td>十选一门槛</td></tr>
+        <tr><td>9</td><td>浙江·常规选调</td><td><strong>743</strong></td><td>四选一门槛，山海县放宽</td></tr>
+        <tr><td>10</td><td>山东联合三批次</td><td><strong>1597</strong></td><td>640+267+690，三次机会</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <footer class="footer">
+    📌 本报告基于 2025 年 9 月-2026 年 3 月各省/兵团官方选调公告汇总生成；<br>
+    最终报考以各省组织部官网公告原文为准；引用来源见各省份"原文↗"链接。
+  </footer>
+</div>
+</body>
+</html>

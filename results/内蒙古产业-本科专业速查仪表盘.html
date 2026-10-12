@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内蒙古产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f7f5;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e8e4;
+  --brand:#1d6b4f;
+  --brand-soft:#e6f1ec;
+  --accent:#0e5a8a;
+  --accent-soft:#e5eef5;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#0b4a72;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>内蒙古产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年内蒙古统计公报</b> · <b>3个万亿级产业集群（新材料/新型化工/数字产业）+9条千亿级产业链</b> · <b>十大产业集群</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">2.67万亿</div><div class="note">增长4.7%，全国第20</div></div>
+  <div class="stat"><div class="lab">绿色算力</div><div class="val">16.5万P</div><div class="note">全国第一，智算15.4万P</div></div>
+  <div class="stat"><div class="lab">稀土产业</div><div class="val">破1000亿</div><div class="note">2025增近17%、产能全国第一</div></div>
+  <div class="stat"><div class="lab">乳业营收</div><div class="val">3000亿+</div><div class="note">国家先进制造业集群</div></div>
+  <div class="stat"><div class="lab">新能源装机</div><div class="val">1.7亿kW</div><div class="note">全国第一、发电量占32%</div></div>
+  <div class="stat"><div class="lab">现代煤化工</div><div class="val">+39.6%</div><div class="note">全区增速第一</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：稀土、算力、电气、新能源、乳业、煤化工、计算机、材料、蒙医、草学、内工大、内科大、内农大">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体装备、储能科学与工程），<b>低空经济（对应内蒙古低空经济集群）、生物制造（对应呼和浩特生物医药）、储能（对应新型储能全国第一）、半导体装备（对应包头晶硅/稀土）全部对得上内蒙古产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。内蒙古高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>内蒙古有万亿/千亿产业或国家集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应内蒙古独有赛道（乳业/稀土/算力/草业/蒙医/边疆治理），分数友好但需选对方向。适合想留蒙、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>内大线及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>内蒙古大学（生物/计算机/化学/法学双一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>内工大（新能源/化工/电气）、内科大（冶金/稀土）、内农大（草学/食品）、内医大（蒙医/临床）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴内蒙古产业链</td><td>内师大（师范/心理）、内财（财经）、内蒙古民族大学（蒙医药/农学）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>师范、财经、蒙医药、语言（叠加贸易）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在内蒙古读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>电气/新能源/材料（稀土·硅·铝）/计算机（算力）/化工（煤化工）/食品（乳业）<br><span style="color:var(--ink-3);font-size:12.5px">（能源+稀土+算力+乳业硬科技）</span></td><td><b style="color:var(--green)">优先留蒙</b></td><td>产业+高校双密集，内工大/内科大/内大/内农大全国特色独一，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>草学/蒙医/动物科学/法学/师范/会计</td><td><b style="color:var(--green)">留蒙或出省</b></td><td>内农大草学 A+、内医大蒙医全国顶尖、内大法学在北方认可度高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/纯语言</td><td><b style="color:var(--accent)">考虑他省</b></td><td>包头房地产 -37.1%、土建链承压，泛管理/纯语言内卷更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1d6b4f;border-left-color:var(--brand);margin-top:14px">
+      <b>内蒙古独有优势：算力规模全国第一（16.5万P） + 稀土新材料产能全国第一 + 乳业国家先进制造业集群 + 风光氢储全产业链 + 草学A+。</b>内蒙古高教梯度分明（内大 211/双一流 + 一众行业特色校），但<b>全区仅 1 所双一流</b>（内蒙古大学）；<b>外省/河北考生来蒙读「计算机（算力）/材料（稀土）/新能源/电气/食品（乳业）/草学/蒙医」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理·纯语言不建议来蒙；长期须算清「留蒙 vs 出走」（常住人口 2374 万、自然增长率 -4.58‰，人口向呼包鄂乌集中、东部西部流出）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>内蒙古靠「能源（风光氢储）+ 稀土 + 算力 + 现代煤化工 + 乳业」五引擎，别被「草原/畜牧」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>电气、新能源、材料（稀土/硅/铝）、计算机（算力）、化工（煤化工）、食品（乳业）六者覆盖内蒙古最有确定性的岗位，优先冲。</li>
+      <li><b>贴「呼和浩特 + 包头 + 鄂尔多斯 + 乌兰察布」四极。</b>呼市（乳业/算力/生物）、包头（稀土/晶硅）、鄂尔多斯（能源化工）、乌兰察布（草原云谷）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>内工大（新能源/化工/电气）、内科大（冶金/稀土）、内农大（草学 A+/食品）、内医大（蒙医）、内大（计算机/法学/生物）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>绿色算力是内蒙古最被低估的王牌。</b>算力 16.5 万 P 全国第一、绿电占比超 80%、至京津冀 5 毫秒；计算机/软件/人工智能在内蒙古的壁垒全国无对手，且分数友好。</li>
+      <li><b>稀土要从「挖矿」看到「永磁电机/储氢/抛光」。</b>包头稀土产值破 1000 亿、新材料产能全国第一；选材料（稀土）/冶金而非泛采矿。</li>
+      <li><b>乳业不是「种地」是「食品科技」。</b>乳业 3000 亿+、伊利全球第 5/蒙牛第 10；食品科学/生物工程/合成生物才是真对口，草学 A+ 是育种高科技。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>包头房地产 -37.1%、建筑业 -60.5%；除非志在能源基地建设或央企设计院。</li>
+      <li><b>算清「留蒙 vs 出走」。</b>常住人口 2374 万、自然增长率 -4.58‰，长期人才外流压力；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：内蒙古自治区统计局《2025 年内蒙古自治区国民经济和社会发展统计公报》（2026-04-09）、自治区政府「开局起步十五五」专题新闻发布会（2026-04-21）、人民网「绿色算力优等生」调研（2025-07）、新华网奶业大会报道（2026-07/08）、自治区能源局/工信厅官方发布、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"电气工程及其自动化（电网/新能源）",c:"工学",ch:"风光氢储/电网",t:"A",h:5,s:"内蒙古工业大学（电气/能源动力）／内蒙古科技大学／内蒙古大学",j:"电网、新能源电站、电气设计、储能",
+  r:"电力总装机全国率先超3亿kW、新能源装机1.7亿kW全国第一；十五五电网投3500亿；能源央企校招密集。",w:"电网方向需准备国网考试；内蒙古电力集团是本地铁饭碗。",city:"呼和浩特·包头·鄂尔多斯"},
+ {n:"新能源科学与工程（风光氢储）",c:"工学",ch:"风光氢储",t:"A",h:5,s:"内蒙古工业大学（新能源校企共建）／内蒙古科技大学／内蒙古大学",j:"风电场/光伏电站、制氢、储能、源网荷储",
+  r:"新能源装机1.7亿kW全国第一、发电量占比32%；9个沙戈荒大基地；十五五每年新增3000万kW。",w:"内工大新能源与金风/北方联合电力共建，就业对口率95%+。",city:"呼和浩特·包头·乌兰察布"},
+ {n:"材料科学与工程（稀土/硅/铝）",c:"工学",ch:"稀土/晶硅/铝",t:"A",h:5,s:"内蒙古科技大学（冶金/稀土/材料）／内蒙古大学／内蒙古工业大学",j:"稀土永磁/储氢、半导体硅材料、铝合金深加工",
+  r:"包头稀土新材料产能近30万吨全国第一、晶硅光伏产值千亿+、铝材+46.4%；内大设稀土材料专业。",w:"锁稀土/硅/铝方向，避泛材料；稀土方向全国独一。",city:"包头·呼和浩特·通辽"},
+ {n:"计算机类（软件/人工智能/算力）",c:"工学",ch:"绿色算力",t:"A",h:5,s:"内蒙古大学（计算机B-、软件国家一流）／内蒙古工业大学／鄂尔多斯应用技术学院",j:"软件开发、智算运维、数据标注、AI训练",
+  r:"全区算力16.5万P全国第一、79个数据中心、2800亿投资；和林格尔+乌兰察布急需人才。",w:"工程能力大于文凭；和林格尔/乌兰察布校招缺口大。",city:"呼和浩特·乌兰察布"},
+ {n:"化学工程与工艺（现代煤化工）",c:"工学",ch:"现代煤化工",t:"A",h:4,s:"内蒙古工业大学（化工过程机械）／内蒙古科技大学／内蒙古大学",j:"煤化工、精细化工、化工新材料、绿氨绿醇",
+  r:"现代煤化工+39.6%全区增速第一，专利100多项；新型化工为十五五3个万亿级集群之一。",w:"选现代煤化工/化工新材料方向，避传统焦化。",city:"鄂尔多斯·包头"},
+ {n:"食品科学与工程（乳业/农畜）",c:"工学",ch:"乳业/农畜",t:"A",h:4,s:"内蒙古农业大学（食品/乳业支撑）／内蒙古大学",j:"乳品研发、食品质检、精深加工、供应链",
+  r:"呼和浩特乳业全产业链3000亿+、国家先进制造业集群；牛奶占全国1/5；伊利/蒙牛急需人才。",w:"进伊利/蒙牛技术岗而非泛食品；乳铁蛋白/合成生物最稀缺。",city:"呼和浩特·通辽·巴彦淖尔"},
+ {n:"自动化/机器人工程（智造/矿卡）",c:"工学",ch:"智造/矿卡",t:"B",h:4,s:"内蒙古工业大学（自动化）／内蒙古科技大学／内蒙古大学",j:"智能产线、工业机器人、永磁电机控制",
+  r:"装备制造+20.6%；包头稀土永磁电机产业园（卧龙/厦门钨业）；新能源重卡规模化。",w:"强电+控制背景比普机械更有溢价。",city:"包头·呼和浩特"},
+ {n:"机械设计制造（新能源装备）",c:"工学",ch:"新能源装备",t:"B",h:4,s:"内蒙古工业大学（机械B类）／内蒙古科技大学／内蒙古大学",j:"风电/光伏装备、矿山机械、智能产线",
+  r:"包头风电装备配套率85%、产值200亿+；晶硅光伏、铝加工全线扩产。",w:"锁新能源/矿用装备方向，避泛机加工。",city:"包头·赤峰"},
+ {n:"冶金工程（稀土冶金/钢铁）",c:"工学",ch:"稀土/铝钢",t:"B",h:4,s:"内蒙古科技大学（冶金B-、包钢/宝武校招）",j:"稀土冶金、钢铁冶金、铝冶炼深加工",
+  r:"白云鄂博冶炼分离产能占全国近六成；包钢特钢、包头铝业、通辽铝深加工。",w:"与稀土绑定是内蒙古独一壁垒，起薪居工科前列。",city:"包头·通辽·赤峰"},
+ {n:"人工智能/数据科学（算力产业）",c:"工学",ch:"绿色算力",t:"B",h:4,s:"内蒙古大学（人工智能/大数据）／内蒙古工业大学／内蒙古师范大学",j:"算法、数据标注、大模型训练、算力调度",
+  r:"和林格尔智算9.6万P、乌兰察布智算占比90%；人工智能+行动落地垂直大模型。",w:"数学要求高，是算力产业通用底座。",city:"呼和浩特·乌兰察布"},
+ {n:"生物医学工程/生物工程（生物制造）",c:"工学",ch:"生物制造",t:"B",h:3,s:"内蒙古大学（生医工）／内蒙古农业大学（生物工程）／内蒙古医科大学",j:"生物制剂、疫苗、发酵工程、医疗器械",
+  r:"生物医药产业链326亿（年均两位数）；呼和浩特mRNA疫苗项目、生物发酵领先。",w:"医工交叉比纯生物更对产业口。",city:"呼和浩特·通辽"},
+ {n:"储能科学与工程（新型储能）",c:"工学",ch:"新型储能",t:"B",h:3,s:"内蒙古工业大学（能源动力）／内蒙古科技大学／内蒙古大学",j:"储能系统、电池材料、电网调峰",
+  r:"新型储能2025年底超1700万kW（后续超2300万kW居全国第一）；十五五末破5000万kW。",w:"新兴专业，与电气/化工交叉，深造路径清晰。",city:"鄂尔多斯·包头·呼和浩特"},
+ {n:"动物科学/草学（农牧/育种）",c:"农学",ch:"农畜/育种",t:"C",h:4,s:"内蒙古农业大学（草学A+全国第一、动物科学）",j:"奶牛育种、饲草种业、牧场管理、种质资源",
+  r:"内农大草学A+全国第一、草业国创中心；奶牛育种全国前100占43头居首。",w:"草学/育种是内蒙古独一王牌，不是种地。",city:"呼和浩特·通辽·包头"},
+ {n:"临床医学/蒙医学",c:"医学",ch:"大健康",t:"C",h:5,s:"内蒙古医科大学（蒙医全国顶尖、临床强）／内蒙古大学",j:"三甲/地市医院、蒙医诊疗、科研",
+  r:"老龄化+健康需求长期刚性；内医大蒙医/蒙药学全国顶尖、留蒙三甲比例高。",w:"学制长、分数高；蒙医是内蒙古独有赛道。",city:"呼和浩特·通辽"},
+ {n:"法学（民族法/边疆治理）",c:"法学",ch:"法律治理",t:"C",h:4,s:"内蒙古大学（法学国家一流）",j:"公检法、企业法务、边疆治理、涉外法务",
+  r:"内大法学国家一流（C+）、民族学B；边疆治理与涉蒙俄贸易法务需求稳定。",w:"须过法考，考公优势明显。",city:"呼和浩特"},
+ {n:"数学/统计学（算力/金融底座）",c:"理学",ch:"算力/金融",t:"C",h:3,s:"内蒙古大学（数学国家重点）／内蒙古师范大学／内蒙古工业大学",j:"算法、数据分析、精算、量化",
+  r:"算力产业与AI均依赖数学/统计底座；内大数学国家重点。",w:"数学要求高，是AI与金融通用底座。",city:"呼和浩特·包头"},
+ {n:"交通运输/物流（口岸通道）",c:"工学",ch:"口岸通道",t:"C",h:3,s:"内蒙古大学（交通运输）／内蒙古工业大学／财经类院校",j:"口岸物流、多式联运、供应链、跨境电商",
+  r:"20个对外开放口岸、2条中欧班列大通道经此出境；口岸附加值待提升。",w:"贴口岸+供应链金融比纯运输更有前景。",city:"满洲里·二连浩特·呼和浩特"},
+ {n:"环境科学/水土保持（生态屏障）",c:"工学",ch:"生态屏障",t:"C",h:3,s:"内蒙古农业大学（水土保持与荒漠化防治）／内蒙古大学（环境科学国家一流）",j:"生态修复、环境治理、碳汇、环保工程",
+  r:"北方生态安全屏障，防沙治沙、草原修复需求长期。",w:"政策与生态项目驱动，稳定性强。",city:"呼和浩特·呼伦贝尔"},
+ {n:"会计学/财务（能源/乳企职能）",c:"管理学",ch:"财经",t:"C",h:3,s:"内蒙古大学（会计国家一流）／财经类院校",j:"企业财务、审计、税务",
+  r:"能源央企、伊利/蒙牛等龙头财务需求稳定；内大会计国家一流。",w:"须考证（CPA等），叠加行业职能更优。",city:"呼和浩特·包头"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"（仅央企/重大基建）／内蒙古科技大学",j:"设计院、施工、基建、智能建造",
+  r:"包头稀土高新区2025房地产-37.1%、建筑业-60.5%，土建链承压。",w:"仅志在能源基地建设或央企设计院；否则慎选。",city:"包头·呼和浩特"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"（叠加行业管理）／内蒙古大学",j:"企业职能管理、行政、咨询",
+  r:"以能源/制造国企为主，泛管理岗位稀缺、内卷严重。",w:"叠加行业+管理（能源/乳企/医院），否则慎选。",city:"呼和浩特·包头"},
+ {n:"外国语言文学（纯语言）",c:"文学",ch:"跨境",t:"D",h:2,s:"（叠加国贸/法律）／内蒙古大学",j:"跨境贸易、外事、翻译",
+  r:"对俄蒙贸易有需求，但纯语言内卷、AI替代快。",w:"须叠加国贸/法律/物流，否则慎选。",city:"呼和浩特·口岸"}
+];
+
+var CHAINS = [
+ {n:"稀土新材料（包头第一引擎）",u:["白云鄂博稀土矿采选","冶炼分离（占全国近六成）"],m:["永磁/储氢/抛光/催化四类新材料（产能近30万吨全国第一）"],d:["永磁电机","储氢材料","抛光粉","稀土应用器件"],
+  mj:"材料（稀土）、冶金、化学、材料化学",
+  f:"白云鄂博储量占国内83.7%；2024包头稀土产值破1000亿、2025增近17%；全国前15强永磁企业10家落户；稀土高新区稀土产业+20.6%。"},
+ {n:"风光氢储一体化（新能源双第一）",u:["风机/光伏装备制造（晶硅、叶片、齿轮箱）"],m:["风光发电","新型储能","绿氢制储"],d:["绿电外送","绿氢耦合化工","氢能重卡","源网荷储"],
+  mj:"新能源、电气、能源动力、储能、自动化",
+  f:"新能源装机1.7亿kW全国第一、发电量占比32%；新型储能超1700万kW（后续超2300万kW居全国第一）；十五五末储能破5000万kW；9个沙戈荒大基地。"},
+ {n:"绿色算力/东数西算（全国第一算力）",u:["数据中心基建","服务器（液冷）","绿电直供"],m:["通算/智算/超算（和林格尔10.1万P、乌兰察布8.1万P+）"],d:["AI训练推理","数据标注","数据交易","行业大模型"],
+  mj:"计算机、软件、人工智能、数据科学、网络工程",
+  f:"全区算力16.5万P（智算15.4万P）全国第一；79个数据中心、2800亿投资；绿电占比超80%；至京津冀时延5毫秒。"},
+ {n:"现代煤化工/新型化工（增速之王）",u:["煤炭","煤制气"],m:["煤制油/煤制烯烃/煤制乙二醇","精细化工","氟化工"],d:["化工新材料","可降解材料","绿氨绿醇"],
+  mj:"化工、应用化学、材料化学",
+  f:"现代煤化工+39.6%全区最高；专利100多项；新型化工为十五五3个万亿级集群之一；鄂尔多斯四个世界级产业之一。"},
+ {n:"晶硅光伏/新能源装备（世界绿色硅都）",u:["工业硅","多晶硅","单晶硅"],m:["硅片","电池片","组件","风电装备（齿轮箱/法兰/电机）"],d:["光伏电站","风电运维"],
+  mj:"材料（硅）、新能源、电气、机械、自动化",
+  f:"包头晶硅光伏产值1000亿+、单晶硅26.38万吨（+33.2%）；风电装备200亿（+16.8%）、配套率85%；协鑫/通威/大全40余家集聚。"},
+ {n:"乳业/绿色农畜产品加工（世界乳都）",u:["饲草","奶牛育种","牧场"],m:["液态奶","奶粉","奶酪","乳铁蛋白等精深加工"],d:["商超","电商","特医食品","全球市场"],
+  mj:"食品、生物工程、动物科学、草学、机械",
+  f:"牛奶758.5万吨占全国1/5连续8年第一；呼和浩特乳业全产业链3000亿+、国家先进制造业集群；伊利全球第5、蒙牛第10。"},
+ {n:"冶金/铝基新材料（包头·通辽·赤峰）",u:["铝土/电解铝","铁矿"],m:["高端铝合金","铝箔","特钢"],d:["轨道交通/汽车/电池用铝","航空铝"],
+  mj:"冶金、材料、金属材料",
+  f:"稀土高新区原铝88.3万吨、铝材29.79万吨（+46.4%）；通辽铝深加工；铝基新材料为自治区级先进制造业集群。"},
+ {n:"生物医药/生物制造（呼和浩特·通辽）",u:["原料药","生物发酵","疫苗"],m:["mRNA疫苗","核酸药物","生物制剂"],d:["医疗服务","康养"],
+  mj:"生物科学、生医工、药学、生物工程",
+  f:"生物医药产业链规模2024年326亿（年均两位数）；呼和浩特mRNA疫苗及核酸药物项目落地；生物制造为十大产业集群之一。"}
+];
+
+var CITIES = [
+ {c:"呼和浩特（首府）",i:"乳业全产业链、绿色算力（和林格尔）、生物医药、新能源装备",l:"伊利、蒙牛、和林格尔数据中心集群、金宇生物",m:"食品、生物工程、计算机、软件、人工智能"},
+ {c:"包头",i:"稀土新材料、晶硅光伏（世界绿色硅都）、钢铁、铝业、风电装备",l:"北方稀土、包钢、通威、协鑫、中车戚墅堰",m:"材料（稀土）、冶金、电气、机械、新能源"},
+ {c:"鄂尔多斯",i:"煤炭/煤电、现代煤化工、绿氢、新型化工（四个世界级产业）",l:"国能/神华、伊泰、宝丰（煤化工）",m:"化工、能源动力、电气、储能、氢能"},
+ {c:"乌兰察布",i:"绿色算力（草原云谷）、马铃薯、铁合金、新能源",l:"阿里云、华为云、中金数据、快手",m:"计算机、软件、数据科学、自动化"},
+ {c:"通辽",i:"玉米深加工、肉牛、铝深加工、绿氢绿氨绿醇、蒙医药",l:"科尔沁牛业、锦联铝材、蒙药企业",m:"食品、动物科学、材料（铝）、生物"},
+ {c:"赤峰",i:"有色金属冶炼加工、医药、电力、新能源",l:"有色冶炼、制药企业",m:"冶金、材料、化工、电气"},
+ {c:"呼伦贝尔",i:"能源、化工、农畜产品加工、冰雪/生物科技",l:"能源化工、农畜加工",m:"化工、食品、旅游管理"},
+ {c:"巴彦淖尔",i:"绿色农畜产品加工（葵花/番茄/小麦）、新能源",l:"农畜加工龙头",m:"食品、动物科学、农业工程"},
+ {c:"锡林郭勒",i:"牛羊肉、有色金属、旅游、新能源",l:"肉羊/肉牛加工、能源",m:"食品、动物科学、旅游"},
+ {c:"乌海",i:"能源、煤焦化工、新材料",l:"焦化、化工企业",m:"化工、材料"},
+ {c:"兴安盟",i:"绿色农畜产品、清洁能源",l:"农畜加工、清洁能源",m:"食品、农业、新能源"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

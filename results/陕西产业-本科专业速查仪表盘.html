@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陕西产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#a23c2c;
+  --brand-soft:#f8ece9;
+  --accent:#c8702d;
+  --accent-soft:#fdf1e7;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#8a4a1c;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>陕西产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年陕西统计公报</b> · <b>万亿级五大集群</b> · <b>34条重点产业链「链长制」</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">3.66万亿</div><div class="note">增长5.1%，全国第13</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+7.3%</div><div class="note">采矿业+9.5%</div></div>
+  <div class="stat"><div class="lab">原煤产量</div><div class="val">8.05亿吨</div><div class="note">全国第3</div></div>
+  <div class="stat"><div class="lab">新能源汽车</div><div class="val">119.8万辆</div><div class="note">全国第3（总产175万辆第7）</div></div>
+  <div class="stat"><div class="lab">货物进出口</div><div class="val">+18.5%</div><div class="note">出口+22.0%、外资+6.1%</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-7.9%</div><div class="note">土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">10条产业链</button>
+  <button class="tab" data-p="p3">地市产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：航空、芯片、钛、车辆、电气、临床、农学、法学、西工大、西电">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：地市 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应陕西无人机/商业航天）、生物制造（对应西安医药）、半导体装备（对应西安 IC）、具身智能（对应铂力特/机器人）全部对得上陕西产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。陕西高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>陕西有国家级/世界级集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应陕西独有赛道（航空/IC/钛/农学/临床/能源），分数友好但需选对方向。适合想留陕、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>西交/西工大/西电</td><td>学校优先 + 专业不将就，锁定有国家重点实验室/产教融合平台的三有专业</td><td>西交（电气/能动/机械/计算机/临床）、西工大（航空宇航/材料/计算机）、西电（通信/电子/计算机）</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖211</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>西北大学（考古/地质）、长安大学（交通/车辆/地质）、陕师大（师范/文史）、空军军医大（临床）</td></tr>
+        <tr><td><b>中分</b><br>双一流线</td><td>用行业校补分数差，贴陕西产业链</td><td>西安理工（水利/电气/机械）、西安建筑科技（建筑/环境）、陕西科技（轻工/食品）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>西安外国语（外语/国贸）、西北政法（法学）、延安大学/陕西中医药（医/药）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在陕西读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>航空航天/微电子/光电/材料(钛)/车辆/电气<br><span style="color:var(--ink-3);font-size:12.5px">（硬科技双核）</span></td><td><b style="color:var(--green)">优先留陕</b></td><td>西工大/西电/西交全国顶尖，产业+高校双密集，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床医学/农学种业/地质能源</td><td><b style="color:var(--green)">优先留陕</b></td><td>空军军医大、西农、西北大学地质在西北无对手，属地就业稳</td></tr>
+        <tr><td>计算机/软件/AI</td><td><b style="color:var(--green)">留陕或出省</b></td><td>陕西 IT 底座强（西电），冲清北华五可出省</td></tr>
+        <tr><td>土木/建筑/泛管理</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-7.9%、三产投资-9.4%，陕西土建链承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#a23c2c;border-left-color:var(--brand);margin-top:14px">
+      <b>陕西独有优势：硬科技 + 能源 + 高教三角齐全。</b>8所双一流、3所985（西交/西工大/西农）、5所211，西北高教第一；<b>外省/河北考生来陕读「航空航天·微电子·光电·材料·车辆·电气·临床·农学·地质」性价比极高</b>——产业对口、院校顶尖、分数低于同档京沪苏浙；土建·泛管理·传统周期品不建议来陕；长期须算清「留陕 vs 出走」（人口净减17万）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>陕西靠「能源压舱 + 航空航天/半导体/光伏/汽车硬科技 + 高教」三引擎，别被 52.8% 三产误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>航空航天、微电子、材料、车辆、电气、计算机六者覆盖陕西最有确定性的岗位，优先冲。</li>
+      <li><b>贴「西安 + 榆林」双极。</b>西安（科创/航空/IC/光伏/汽车）+ 榆林（现代煤化工/新能源）贡献全省最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>西电（电子 A+）、西交（电气/能动 A+）、西工大（航空/材料 A+）、长安大学（交通/车辆 A+）、西北大学（考古/地质 A+）——专业全国顶尖、分数远低于同档综合校。</li>
+      <li><b>未来产业可提前卡位。</b>光子/低空经济/生物制造/具身智能对应新设专业，但本科先读材料/计算机/机械/自动化更稳，研究生再切前沿。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产-7.9%、待售+10.4%；除非西建大建筑老八校或志在央企设计院。</li>
+      <li><b>新专业可冲不可押。</b>低空经济/半导体装备/具身智能听着香，但无数据验证，本科先读机械/电子/材料更稳。</li>
+      <li><b>算清「留陕 vs 出走」。</b>陕西人口净减 17 万、自然增长率-2.54‰，长期人才外流；选专业时要规划深造路径与就业地。</li>
+      <li><b>看承压面与人口。</b>固投-3.0%、房地产-7.9%、PPI-5.8%、人口净减——选专业须贴「能源+硬科技+未来」向上链，避「地产/传统周期/泛管理」向下链。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：陕西省统计局《2025 年陕西省国民经济和社会发展统计公报》（2026-04-15）、省发改委《2025 年全省经济运行稳中向好圆满收官》（2026-01-22）、陕西省工信厅「重点产业链群建设硬仗」新闻发布会（2025-11-07）、陕西省 2025 年政府工作报告及「十五五」规划建议、西安市政府《「十四五」工业和信息化发展规划》、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第四轮学科评估 A 类及 2025 年双一流名单。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"航空航天工程/飞行器设计",c:"工学",ch:"航空航天",t:"A",h:5,s:"西北工业大学（航空宇航A+，三航独一档）／西安交通大学／空军工程大学",j:"西飞/一飞院/航天六院、民航维修、商业航天",
+  r:"西安2025航空总产值破2500亿、企业超700家；C919约60%关键部件「陕西造」。",w:"西工大分数极高；军工系统校招密集但需政审/保密。",city:"西安阎良 · 汉中"},
+ {n:"微电子/集成电路",c:"工学",ch:"半导体",t:"A",h:5,s:"西安电子科技大学（电子A+）／西安交通大学（微电子A-）／西北工业大学",j:"芯片设计、制造、封测、装备、EDA",
+  r:"西安集成电路产值破1300亿、企业超380家；三星占全球近15%闪存。",w:"数理要求高；深造为主，本科多去制造/封测/验证岗。",city:"西安高新区"},
+ {n:"材料科学与工程（钛/半导体）",c:"工学",ch:"钛/光伏",t:"A",h:4,s:"西北工业大学（材料A+）／西安交通大学（材料A-）／西北有色院体系",j:"钛合金、半导体材料、光伏材料、电池材料",
+  r:"钛金属产量全球第一（宝鸡）、隆基单晶硅片全球第一。",w:"锁「钛/半导体/新能源」方向，避泛材料；西工大材料全国顶尖。",city:"宝鸡 · 西安"},
+ {n:"车辆工程（新能源/智能网联）",c:"工学",ch:"新能源汽车",t:"A",h:4,s:"长安大学（车辆/交通A+）／西安交通大学／西北工业大学",j:"整车研发、三电、智能网联、重卡（陕汽出口第2）",
+  r:"陕西2024汽车175.4万辆全国第7、新能源119.8万辆全国第3。",w:"锁新能源/智能网联，避传统燃油车研发；长安大学是行业黄埔。",city:"西安 · 宝鸡"},
+ {n:"电气工程及其自动化",c:"工学",ch:"输变电/能源",t:"A",h:4,s:"西安交通大学（电气A+，电气四虎）／西北工业大学／西安理工大学",j:"电网、电气设备、储能、电驱、能源化工电气",
+  r:"西电集团（中国西电）输变电国家队；电力外送/新型储能均依赖电气。",w:"西交电气保研率高、国网认可度拉满。",city:"西安 · 宝鸡"},
+ {n:"计算机/软件工程",c:"工学",ch:"数字经济",t:"A",h:5,s:"西安电子科技大学（计算机A）／西安交通大学（A-）／西北工业大学",j:"工业软件、信创、汽车软件、互联网、光子控制",
+  r:"西安软件与信息服务业发达；光子/半导体/AI全需软件底座。",w:"工程能力>文凭；西电性价比最高。",city:"西安"},
+ {n:"人工智能/机器人工程",c:"工学",ch:"未来产业",t:"B",h:4,s:"西安电子科技大学／西安交通大学／西北工业大学",j:"大模型、工业AI、机器人本体/控制、汽车智能",
+  r:"陕西AI列入9条未来产业链；雁塔AI算力中心500P、铂力特3D打印成势。",w:"本科多归计算机/自动化下；数学底子要硬。",city:"西安"},
+ {n:"光电信息科学与工程",c:"工学",ch:"光子",t:"B",h:4,s:"西安电子科技大学／西北工业大学／西安交通大学",j:"激光、光通信、半导体激光芯片、新型显示",
+  r:"全国首个精准布局光子省；炬光科技/立芯光电世界领先。",w:"优先「激光+通信+半导体」复合方向。",city:"西安 · 铜川 · 咸阳"},
+ {n:"新能源/储能科学与工程",c:"工学",ch:"光伏/能源",t:"B",h:4,s:"西安交通大学（新能源/储能领先）／西北工业大学／西安理工",j:"光伏研发、储能系统、氢能、电网侧储能",
+  r:"隆基绿能全球光伏龙头、晶硅-钙钛矿叠层34.85%世界纪录；陕鼓储能破世界纪录。",w:"西交储能科学与工程是全国首批特色专业，含金量高。",city:"西安 · 榆林"},
+ {n:"生物医学工程/药学",c:"医学",ch:"生物医药",t:"B",h:3,s:"西安交通大学（生医工B+）／空军军医大学／陕西中医药大学",j:"医疗器械、药物研发、IVD、注册/CRA",
+  r:"西安高新区医药制造集群、陕南现代中药与富硒健康特色。",w:"研发岗多需硕士；本科多去注册/市场/技术支持。",city:"西安 · 陕南"},
+ {n:"自动化/测控技术与仪器",c:"工学",ch:"高端装备",t:"B",h:4,s:"西安交通大学（自动化强）／西北工业大学／西安理工",j:"控制系统、工业自动化、航空测控、机器人集成",
+  r:"航空发动机/卫星/工业母机全需测控；法士特黑灯工厂123台机器人。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"西安 · 宝鸡"},
+ {n:"机械工程（工业母机方向）",c:"工学",ch:"工业母机",t:"B",h:3,s:"西北工业大学（机械A-）／西安交通大学（机械A）／西安理工",j:"数控机床、航空零部件制造、工业母机研发",
+  r:"宝汉天工业母机入选国家先进制造业集群；秦川机床全国领先。",w:"锁「工业母机/航空」方向，避泛机加工。",city:"宝鸡 · 西安"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"空军军医大学（临床顶尖）／西安交通大学（临床B+）／西安医学院",j:"三甲/地市医院、科研、公共卫生",
+  r:"西安三甲密度西北第一；老龄化+健康需求长期刚性。",w:"学制长（5+3本博）、分数高；空军军医大是西北临床天花板。",city:"西安 · 延安"},
+ {n:"农学/园艺/植物保护/种业",c:"农学",ch:"特色农业",t:"C",h:3,s:"西北农林科技大学（农学/园艺/植保/水土保持A+，葡萄酒全国第一）",j:"种业研发、农技推广、果业/食品加工、智慧农业",
+  r:"杨凌农科城全国农业硅谷；陕西苹果1521万吨全国第一。",w:"西农是985中分数门槛较低、保研率高、深造导向明显。",city:"杨凌"},
+ {n:"食品/轻工科学与工程",c:"工学",ch:"食品",t:"C",h:3,s:"西北农林科技大学（食品B+）／陕西科技大学（轻工B+）",j:"食品加工、乳品、白酒技术岗、质检",
+  r:"苹果/羊乳/富硒/白酒形成食品集群；西凤3万吨基酒产能释放。",w:"进名酒/名乳技术岗而非泛食品；白酒处调整期。",city:"西安 · 咸阳 · 宝鸡"},
+ {n:"法学",c:"法学",ch:"专业服务",t:"C",h:3,s:"西北政法大学（法学强校）／西安交通大学（法学B-）／西北大学",j:"律所、法院、企业法务、知识产权",
+  r:"西安「一带一路」国际商事、文旅法务、国企法务刚需。",w:"须过法考；西北政法在西北公检法系统认可度高。",city:"西安"},
+ {n:"统计学/数据科学",c:"理学",ch:"数字经济",t:"C",h:3,s:"西安交通大学（统计B+）／西北大学／陕西师范大学",j:"量化、数据分析、AI数据、商业智能",
+  r:"金融、AI、政务大数据均依赖统计底座。",w:"数学要求高，是金融与AI通用底座。",city:"西安"},
+ {n:"地质学/资源勘查（能源）",c:"理学",ch:"现代能源",t:"C",h:3,s:"西北大学（地质A+）／长安大学（地质A）／西安石油大学",j:"油气勘查、地质工程、能源央企",
+  r:"陕西油气当量全国第2、煤炭全国第3，长庆/延长支撑需求。",w:"行业周期性强，但能源央企稳定；长安大学地质行业壁垒高。",city:"西安 · 延安"},
+ {n:"考古学/历史学/汉语言",c:"人文",ch:"文化旅游",t:"C",h:3,s:"西北大学（考古A+全国第一、历史A）／陕西师范大学／西安外国语",j:"文博、文旅策划、出版、教育、文创",
+  r:"文旅及相关产业增加值2024年2337亿、连续两年两位数增长。",w:"考古全国独一档（北大+西大）；就业偏文博/教育/体制内。",city:"西安"},
+ {n:"外国语言文学（中亚/俄语）",c:"文学",ch:"开放型经济",t:"C",h:3,s:"西安外国语大学（外语B+，西北标杆）／西安交大",j:"外贸、跨境商务、涉外服务、翻译",
+  r:"中欧班列（西安）集结中心、中国—中亚峰会效应拉动需求。",w:"须叠加商务/国贸技能，纯语言竞争力弱。",city:"西安"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"西安建筑科技大学（建筑老八校）／西安交通大学",j:"设计院、施工、基建、智能建造",
+  r:"房地产投资-7.9%、待售+10.4%，土建链承压。",w:"仅西建大/西交且志在央企设计院/重大基建，或走智能建造新方向。",city:"西安"},
+ {n:"工商管理/公共管理及泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"西安交通大学（经管A）／西北大学",j:"企业职能管理、行政、咨询",
+  r:"三产投资-9.4%、消费承压，泛管理内卷严重。",w:"锁「行业+管理」（能源管理/医院管理），否则慎选。",city:"西安"}
+];
+
+var CHAINS = [
+ {n:"航空航天（全省王牌，西安总产值破2500亿）",u:["钛/铝/复材","发动机叶片","起落架锻件"],m:["整机（西飞/大飞机部件）","发动机（航天六院）","无人机（爱生）"],d:["维修MRO","卫星应用","商业航天"],
+  mj:"航空航天工程、飞行器设计、材料（钛）、测控",
+  f:"国产大飞机C919约60%关键部件「陕西造」；阎良亚洲最大航空制造集聚区；全国仅西安/上海/成都三城有完整全产业链。"},
+ {n:"半导体及集成电路（西安产值破1300亿）",u:["硅片（奕斯伟）","电子气体","光刻胶"],m:["设计（紫光国芯）","制造（三星西安NAND）","封测（华天）"],d:["手机/汽车/算力终端"],
+  mj:"微电子、集成电路、材料（半导体）、电子信息",
+  f:"三星西安占全球近15%闪存；高新区集群破500亿，形成「设计—制造—封测—材料设备」完整链。"},
+ {n:"太阳能光伏（隆基绿能全球龙头）",u:["单晶硅片（全球第一）"],m:["电池（隆基HIBC27.81%/叠层34.85%双纪录）","组件"],d:["电站/绿电绿氢"],
+  mj:"新能源、材料、电气（光伏装备）",
+  f:"杨凌美畅金刚石线锯出货量全球第1；隆基带动陕西光伏全产业链，晶硅-钙钛矿叠层效率刷新世界纪录。"},
+ {n:"新能源汽车/汽车（新能源产量全国第3）",u:["电池","电机电控"],m:["整车（比亚迪/陕汽）"],d:["充换电","智能网联","后市场"],
+  mj:"车辆工程、电气、自动化、人工智能",
+  f:"2024产量175.4万辆全国第7、新能源119.8万辆全国第3；陕汽新能源重卡占国内约10%、出口第2。"},
+ {n:"现代能源化工（原煤全国第3、油气当量第2）",u:["煤炭/石油/天然气"],m:["煤制烯烃/芳烃","现代煤化工（陕煤榆林化学）"],d:["塑料/材料/可降解/电池溶剂"],
+  mj:"化学工程、材料、新能源、电气",
+  f:"榆鄂宁现代煤化工入选国家先进制造业集群；陕西「稳控转」向高端化工原料转型。"},
+ {n:"钛及新材料（宝鸡全球领先）",u:["钛矿/海绵钛"],m:["钛及钛合金（宝钛/西部超导）"],d:["航空发动机","医疗植入","海洋工程"],
+  mj:"材料（钛）、机械、生医工",
+  f:"钛金属产量全球第一；宝钛超长宽幅钛合金厚板刷新19.45米世界纪录；西部超导牵头国家稀有金属材料创新中心。"},
+ {n:"光子（全国首个精准布局省份）",u:["光子材料"],m:["激光（炬光科技）","光通信","半导体激光芯片（立芯光电）"],d:["通信/医疗/光刻/传感"],
+  mj:"光电信息、电子、材料",
+  f:"炬光科技侧泵模块世界领先、立芯光电高功率单模芯片填补国内空白；2025年1–9月产值136.55亿（+17.39%）。"},
+ {n:"输变电装备（中国西电国家队）",u:["硅钢/绝缘材料"],m:["特高压/超高压变压器","开关","GIS"],d:["电网/新能源并网/外送"],
+  mj:"电气工程、自动化、机械",
+  f:"西电集团（中国西电）是输变电国家队；电力外送与新型电力系统建设拉动需求。"},
+ {n:"生物医药/大健康（西安高新区集群）",u:["原料/中草药（陕南）"],m:["创新药","高端医疗器械","疫苗"],d:["医院/IVD/健康服务"],
+  mj:"临床医学、药学、生医工、生物科学",
+  f:"西安集聚大型制药与医疗器械企业；陕南现代中药与富硒健康形成特色，大健康长期刚性。"},
+ {n:"特色农业/食品（苹果全国第一）",u:["良种（杨凌种业）"],m:["种植/养殖（苹果/猕猴桃/羊乳/富硒）"],d:["深加工/品牌/文旅"],
+  mj:"农学、园艺、植物保护、食品、种业",
+  f:"陕西苹果1521万吨全国第一；红星美羚羊乳全产业链；杨凌农科城是全国农业硅谷。"}
+];
+
+var CITIES = [
+ {c:"西安（双极之一）",i:"航空航天、半导体集成电路、光子、新能源汽车、高端装备、生物医药、太阳能光伏",l:"西飞、航天六院/四院、三星、隆基、比亚迪、陕汽、西电、铂力特",m:"航空宇航、微电子、光电、车辆、电气、生医工、材料"},
+ {c:"榆林（双极之一）",i:"现代煤化工、新材料（镁合金）、风光氢储",l:"陕煤榆林化学（1500万吨/年煤炭分质转化）、延长石油",m:"化工、材料、新能源、电气"},
+ {c:"宝鸡",i:"钛及钛合金新材料、工业母机、新能源汽车、石油装备、轨道交通",l:"宝钛集团、秦川机床、宝石机械",m:"材料（钛）、机械（工业母机）、车辆、自动化"},
+ {c:"咸阳",i:"新型显示、生物医药、现代能源化工",l:"虹阳显示（G8.5+基板玻璃）、步长、中医药",m:"光电、药学、化工、生医工"},
+ {c:"铜川",i:"光子/半导体集成电路、新型建材、太阳能光伏电池",l:"铝基新材料、光电子",m:"光电、材料、电子"},
+ {c:"渭南",i:"增材制造、新材料、名特优新农产品",l:"3D打印产业园、精细化工",m:"材料、机械、农学（种业/食品）"},
+ {c:"延安",i:"新能源（风/光/氢）、能化装备、苹果、红色旅游",l:"延安气田、能源化工",m:"新能源、化工、电气、园艺"},
+ {c:"汉中",i:"航空、传感器、数控机床、现代中药",l:"汉中航空、中航电测（传感器）",m:"航空宇航、测控、机械、中药"},
+ {c:"安康",i:"富硒食品、新材料、钒材储能、锂电",l:"富硒产业、钒电池",m:"食品、材料、新能源"},
+ {c:"商洛",i:"生物医药、锌钼钨钒新材料、尾矿固废利用、生态旅游",l:"钒及钒合金、钼钨材料",m:"药学、材料、环境、旅游"},
+ {c:"杨凌（示范区）",i:"现代种业、生物医药、农业智能装备",l:"西北农林科技大学、杨凌农科城",m:"农学、园艺、植保、种业、食品"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

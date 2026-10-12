@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="高考志愿填报全国29省报考逻辑培训手册：新高考模式、志愿单位、本科批数量、调剂规则与批次时间，按省归类，单文件离线可用。">
+<title>高考志愿填报培训手册（全国29省）</title>
+<style>
+
+:root{--bg:#f5f7fa;--card:#fff;--ink:#1f2933;--muted:#5b6b7b;
+--brand:#1668dc;--brand2:#0b4f9e;--accent:#d97706;--soft:#eef4ff;--soft2:#fff7ed}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+background:var(--bg);color:var(--ink);line-height:1.75;font-size:15px}
+a{color:var(--brand);text-decoration:none}a:hover{text-decoration:underline}
+header.hero{background:linear-gradient(135deg,var(--brand2),var(--brand));color:#fff;padding:34px 28px}
+header.hero h1{margin:0 0 8px;font-size:26px;letter-spacing:.5px}
+header.hero p{margin:4px 0;opacity:.92;font-size:14px}
+.wrap{display:flex;align-items:flex-start;max-width:1280px;margin:0 auto;padding:0 16px}
+nav.toc{position:sticky;top:0;align-self:flex-start;width:260px;flex:0 0 260px;max-height:100vh;overflow:auto;
+padding:18px 14px;background:var(--card);border-right:1px solid var(--line);margin-right:18px}
+nav.toc h3{font-size:13px;color:var(--muted);margin:0 0 6px}
+nav.toc a{display:block;padding:4px 10px;border-radius:6px;color:var(--ink);font-size:13.5px}
+nav.toc a:hover{background:var(--soft)}
+nav.toc .grp{font-weight:700;color:var(--brand2);margin-top:14px}
+main{flex:1;min-width:0;padding:22px 6px 80px}
+section.province{background:var(--card);border:1px solid var(--line);border-radius:12px;
+padding:22px 26px;margin-bottom:22px;scroll-margin-top:14px;box-shadow:0 1px 3px rgba(20,40,80,.04)}
+section.province h2{margin:0 0 4px;font-size:21px;color:var(--brand2);border-left:5px solid var(--brand);padding-left:12px}
+section.province .badge{display:inline-block;font-size:12px;color:#fff;background:var(--accent);
+border-radius:20px;padding:2px 11px;margin:0 6px 10px 0}
+section.province .badge.b{background:var(--brand)}
+.subsec{margin:18px 0 6px;padding-bottom:4px;border-bottom:2px solid var(--soft);
+font-size:16px;color:var(--brand2);font-weight:700}
+.subsec::before{content:'▍';color:var(--brand);margin-right:6px}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:13.5px;background:#fff}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:700;color:var(--brand2)}
+tbody tr:nth-child(even){background:#fafcff}
+blockquote{border-left:4px solid var(--accent);background:var(--soft2);margin:10px 0;padding:8px 14px;
+color:var(--muted);font-size:13.5px;border-radius:0 6px 6px 0}
+ul,ol{margin:8px 0;padding-left:24px}li{margin:3px 0}p{margin:8px 0}
+.callout{background:var(--soft);border:1px solid #cfe0ff;border-radius:10px;padding:16px 20px;margin:18px 0}
+.callout h3{margin:0 0 8px;color:var(--brand2);font-size:17px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff}
+.card h4{margin:0 0 6px;color:var(--brand)}
+footer{background:#0b1f3a;color:#cbd5e1;padding:24px 28px;font-size:13px;line-height:1.8}
+footer b{color:#fff}.quick{overflow:auto}
+@media (max-width:900px){.wrap{flex-direction:column}nav.toc{position:static;width:100%;flex:none;border-right:none;border-bottom:1px solid var(--line);margin:0}.grid2{grid-template-columns:1fr}}
+@media print{body{background:#fff}nav.toc{display:none}.wrap{display:block}section.province{page-break-inside:avoid}}
+
+
+/* ===== 培训版增强样式 ===== */
+:root{--train:#0b4f9e;--train2:#1668dc;--train-soft:#eef4ff}
+/* 顶部工具栏 */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;
+  flex-wrap:wrap;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);padding:8px 16px;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+.topbar .brand{font-weight:700;color:var(--train);font-size:15px;margin-right:auto;white-space:nowrap}
+.topbar input{border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;
+  width:200px;outline:none}
+.topbar input:focus{border-color:var(--train2)}
+.topbar button{border:1px solid var(--train2);background:#fff;color:var(--train2);
+  border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;font-weight:600}
+.topbar button:hover{background:var(--train2);color:#fff}
+/* 阅读进度 */
+.progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+  background:linear-gradient(90deg,var(--accent),var(--train2));transition:width .1s}
+/* 回到顶部 */
+#toTop{position:fixed;right:18px;bottom:22px;z-index:60;width:44px;height:44px;border-radius:50%;
+  border:none;background:var(--train2);color:#fff;font-size:20px;cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);display:none;line-height:44px;text-align:center}
+#toTop:hover{background:var(--train)}
+/* 培训封面卡片 */
+.train-hero{background:linear-gradient(135deg,var(--train),var(--train2));
+  color:#fff;padding:30px 28px;border-radius:16px;margin:18px 16px 6px;
+  box-shadow:0 10px 30px rgba(11,79,158,.25)}
+.train-hero h1{margin:0 0 6px;font-size:26px;letter-spacing:.5px}
+.train-hero .sub{opacity:.92;font-size:14px;margin:2px 0}
+.train-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;margin:16px 16px}
+.train-card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.train-card h3{margin:0 0 8px;font-size:15px;color:var(--train)}
+.train-card ol,.train-card ul{margin:0;padding-left:20px;font-size:13.5px;color:var(--ink);line-height:1.7}
+.train-card .tip{font-size:12.5px;color:var(--muted);margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+.kpi{display:flex;gap:18px;flex-wrap:wrap;margin:4px 0 0}
+.kpi b{font-size:22px;color:#fff}.kpi span{opacity:.9;font-size:12px;display:block}
+/* 搜索高亮 */
+mark{background:#fff3a3;padding:0 2px;border-radius:3px}
+/* 小屏优化 */
+@media(max-width:900px){
+  .topbar input{width:130px}
+  .train-hero h1{font-size:22px}
+  .topbar .brand{font-size:13px;width:100%;margin-bottom:4px}
+}
+footer.train-foot{text-align:center;color:var(--muted);font-size:12.5px;
+  padding:26px 16px 40px;line-height:1.9}
+footer.train-foot a{color:var(--train2)}
+
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="topbar">
+  <span class="brand">📘 高考志愿填报培训手册（29省）</span>
+  <input id="search" type="search" placeholder="搜索省份，如：河南" aria-label="搜索省份">
+  <button onclick="window.print()" title="打印或另存为PDF">🖨 打印</button>
+  <button id="copyLink" title="复制本页链接分享">🔗 复制链接</button>
+</div>
+<button id="toTop" title="回到顶部" aria-label="回到顶部">↑</button>
+
+
+<div class="train-hero">
+  <h1>📘 高考志愿填报 · 全国29省报考逻辑培训手册</h1>
+  <p class="sub">面向招生老师 / 升学规划师 / 培训学员 · 数据截至 2026-08-21</p>
+  <p class="sub">系统梳理新高考"3+3"与"3+1+2"两类模式、志愿单位、本科批数量、调剂规则与批次时间，按省归类，便于一线讲解与家长沟通。</p>
+  <div class="kpi">
+    <div><b>29</b><span>省级行政区</span></div>
+    <div><b>2</b><span>新高考模式</span></div>
+    <div><b>7</b><span>每省分析模块</span></div>
+    <div><b>100%</b><span>单文件离线可用</span></div>
+  </div>
+</div>
+
+<div class="train-cards">
+  <div class="train-card">
+    <h3>🎯 本手册用途</h3>
+    <ul>
+      <li>培训授课：作为招生/规划师内部讲义</li>
+      <li>家长沟通：按省解释报考规则差异</li>
+      <li>自查核验：核对志愿数量与批次时间</li>
+      <li>转发分享：单个 HTML 文件即可传播</li>
+    </ul>
+  </div>
+  <div class="train-card">
+    <h3>🚀 如何快速使用</h3>
+    <ol>
+      <li>顶部"搜索"框输入省份名秒定位</li>
+      <li>左侧目录点击直达对应省份</li>
+      <li>右上角"打印"生成 PDF 随身带</li>
+      <li>"复制链接"分享给同事/学员</li>
+    </ol>
+    <div class="tip">提示：本页无任何外部依赖，断网也能打开。</div>
+  </div>
+</div>
+
+
+<div class="wrap">
+<nav class="toc"><h3>省份索引（按改革批次）</h3>
+<div class="grp">新高考“3+3”模式（京沪津浙鲁琼 6 省市）</div><a href="#p-北京">北京</a><a href="#p-上海">上海</a><a href="#p-天津">天津</a><a href="#p-浙江">浙江</a><a href="#p-山东">山东</a><a href="#p-海南">海南</a><div class="grp">新高考“3+1+2”模式（冀辽吉黑晋蒙 6 省）</div><a href="#p-河北">河北</a><a href="#p-辽宁">辽宁</a><a href="#p-吉林">吉林</a><a href="#p-黑龙江">黑龙江</a><a href="#p-山西">山西</a><a href="#p-内蒙古">内蒙古</a><div class="grp">新高考“3+1+2”模式（苏皖闽赣鄂湘 6 省）</div><a href="#p-江苏">江苏</a><a href="#p-安徽">安徽</a><a href="#p-福建">福建</a><a href="#p-江西">江西</a><a href="#p-湖北">湖北</a><a href="#p-湖南">湖南</a><div class="grp">新高考“3+1+2”模式（粤桂渝川黔 5 省）</div><a href="#p-广东">广东</a><a href="#p-广西">广西</a><a href="#p-重庆">重庆</a><a href="#p-四川">四川</a><a href="#p-贵州">贵州</a><div class="grp">新高考“3+1+2”模式（滇陕甘青宁豫 6 省）</div><a href="#p-云南">云南</a><a href="#p-陕西">陕西</a><a href="#p-甘肃">甘肃</a><a href="#p-青海">青海</a><a href="#p-宁夏">宁夏</a><a href="#p-河南">河南</a>
+<div class="grp">速览</div>
+<a href="#diff">2026 最新公告差异对照</a>
+<a href="#quick">跨省要点速查</a>
+</nav>
+<main>
+
+<div class="callout">
+  <h3>一、报考逻辑原理回顾（先读懂"规则"，再看"省份"）</h3>
+  <p>全国 29 个高考综合改革省份（不含新疆、西藏、台湾）均已落地新高考，但在<strong>志愿单位</strong>与<strong>投档模式</strong>上分为两大阵营，理解和区分它是读懂后面每一省的前提：</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>① 院校专业组（主流：23 省）</h4>
+      <p>以"院校专业组"为投档单位。同一组内各专业选考科目要求相同；组内一般设 6 个专业志愿 + <strong>"是否服从专业调剂"</strong>选项（调剂仅限本组内）。退档后若"不服从调剂且所报专业已满"，可能落入征集或下一批次。</p>
+    </div>
+    <div class="card">
+      <h4>② 专业（类）+ 院校（河北/辽宁/浙江/山东/重庆/贵州/青海/河南提前批等）</h4>
+      <p>以"1 个专业 + 1 个院校"为 1 个志愿，<strong>不设专业调剂</strong>，档案按 1:1 直接投到所填具体专业。好处是不会被调剂到冷门专业，但退档风险集中于体检、单科、语种、政审等"硬条件"——一旦不符即退档，必须靠"填满志愿 + 拉开梯度"对冲。</p>
+    </div>
+  </div>
+  <p style="margin-top:12px"><strong>两条共同铁律：</strong>① <b>平行志愿"分数优先、遵循志愿、一轮投档"</b>——投档后本批次不再二次检索，退档只能等征集；② <b>选考科目必须匹配</b>专业组/专业要求，不符则志愿直接作废。此外，<b>强基计划、综合评价、三大专项（国家/地方/高校）、公费师范/免费医学生/定向、军队公安院校</b>等特殊类型，其批次位置、填报方式各省差异显著，须逐省核对。</p>
+  <p><strong>本文结构：</strong>每省独立成节，均含【高考模式与志愿单位 → 报考条件 → 报考流程 → 时间节点 → 特殊政策 → 注意事项 → 官方信息源】七部分；文末附<strong>跨省要点速查表</strong>、<strong>2026 最新公告差异对照</strong>。所有时间、数量均以来源官方文件为准，2026 届具体安排以各省当年公告为准。</p>
+</div>
+
+<h2 style="margin:26px 0 10px;color:var(--brand2)">▌2026 最新公告差异对照（新高考落地进度与志愿单位差异）</h2>
+<section class="province" id="diff">
+<h2>2026 最新公告差异对照</h2>
+<p>下表梳理 29 省在"新高考落地进度"与"志愿单位/志愿数量"上的关键差异，帮助快速判断某省 2026 届考生面对的是"稳定沿用"还是"首年改革"。凡未明确查到官方 2026 公告之处，均已标注以往届口径，并以当年公告为准。</p>
+<table>
+<thead><tr><th>省份 / 类别</th><th>新高考落地进度（2026）</th><th>本科批志愿单位与数量</th><th>志愿单位类型</th><th>2026 关键提示</th></tr></thead>
+<tbody><tr><td><b>河南</b></td><td>2025 首年落地新高考（2026 为第二届）</td><td>普通本科批 48 个院校专业组；提前批等 64 个“专业+院校”</td><td>院校专业组 + 专业+院校 并存（提前批等无调剂）</td><td>双向并行，须分清批次所用单位</td></tr><tr><td><b>四川</b></td><td>2025 首年落地新高考（2026 第二届）</td><td>本科批 B 段 45 个院校专业组</td><td>院校专业组（设组内调剂）</td><td>首年改革，关注选科要求与往年文理位次换算</td></tr><tr><td><b>黑龙江</b></td><td>2026 首年落地新高考</td><td>本科批 45 个院校专业组</td><td>院校专业组（设组内调剂）</td><td>由旧高考梯度志愿改为平行志愿，参考往年数据谨慎</td></tr><tr><td><b>山西</b></td><td>2026 首年落地新高考</td><td>本科批 45 个院校专业组</td><td>院校专业组（设组内调剂）</td><td>由旧高考改为“院校专业组”，志愿填报逻辑大变化</td></tr><tr><td><b>内蒙古</b></td><td>2026 首年落地新高考</td><td>本科批 60 个院校专业组</td><td>院校专业组（设组内调剂）</td><td>取消原“动态排名”填报，改为平行志愿一次性投档</td></tr><tr><td><b>吉林</b></td><td>2026 首年落地新高考（2025 已部分）</td><td>本科批 50 个院校专业组</td><td>院校专业组（设组内调剂）</td><td>由旧高考改为“院校专业组”</td></tr><tr><td><b>河北/辽宁/浙江/山东/重庆/贵州/青海</b></td><td>已实施多年</td><td>河北/辽/浙/鲁/渝/黔 96（辽112）/青 96</td><td>专业（类）+院校（不设调剂）</td><td>无调剂，退档风险靠志愿梯度对冲</td></tr><tr><td><b>京沪津琼</b></td><td>已实施多年</td><td>京30/沪24/津A50·B25/琼30</td><td>院校专业组（设组内调剂）</td><td>稳定，关注随迁子女门槛差异</td></tr><tr><td><b>苏皖闽赣鄂湘/粤桂/滇陕甘宁</b></td><td>已实施数年</td><td>40–45 个院校专业组</td><td>院校专业组（设组内调剂）</td><td>稳定，关注地方专项与综合评价批次位置</td></tr></tbody>
+</table>
+<blockquote><strong>说明</strong>：2026 年 6 月各省会陆续发布《2026 年普通高校招生工作规定 / 志愿填报须知》，报名、体检、成绩公布与志愿填报的具体日期请以各省当年公告为准；本表"志愿数量"均取已公布的最新口径（多为 2025 届），2026 届通常沿用。</blockquote>
+</section>
+
+<h2 style="margin:26px 0 10px;color:var(--brand2)">▌新高考“3+3”模式（京沪津浙鲁琼 6 省市）</h2>
+<section class="province" id="p-北京">
+<h2>北京</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：30</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+3"。统一高考科目为语文、数学、外语 3 门；学考等级考科目为思想政治、历史、地理、物理、化学、生物 6 门中自主选择 3 门（北京市命题），总分 750 分。</li><li><strong>志愿单位</strong>：本科阶段志愿填报与录取投档采用 <strong>"院校专业组"</strong> 模式。院校专业组是本科志愿填报与录取投档的基本单位，同一院校专业组内各专业选考科目要求相同。</li><li><strong>志愿数量</strong>：本科普通批实行平行志愿，<strong>设置 30 个院校专业组志愿</strong>；每个志愿一般设置 6 个专业和 1 个"是否服从专业组内调剂"选项（本科提前批普通类 B 段除外）。</li><li><strong>调剂</strong>：设"专业组内调剂"（非全校调剂），降低了退档风险但仍需谨慎勾选。</li><li>来源：北京教育考试院《北京市 2025 年普通高等学校招生工作规定》（北京市政府门户 beijing.gov.cn，2025-04-29）；央广网《2025 年北京高招生工作规定出台》（2025-04-29）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>本市户籍基本条件</strong>：遵守宪法和法律；高级中等教育学校毕业或具同等学力；身体状况符合要求；具有北京市正式户口。</li><li><strong>进城务工人员随迁子女</strong>：按《进城务工人员随迁子女接受义务教育后在京参加升学考试工作方案》（京政办发〔2012〕62 号）及《北京教育考试院关于做好 2025 年进城务工人员随迁子女在京参加高等职业学校招生考试报名工作的通知》（京考高招〔2024〕16 号）：须持有效期内北京市居住证/居住登记卡/工作居住证，在京有合法稳定住所、合法稳定职业满 6 年，连续缴纳基本养老保险或基本医疗保险满 6 年（2019 年 9 月至 2024 年 8 月连续，不含补缴），随迁子女须具本市学籍且连续就读高中阶段 3 年。<strong>注意：随迁子女只能参加高等职业学校招生考试，不能报考本科普通批。</strong></li><li><strong>不得报名情形（5 类）</strong>：①具有普通高等学历教育资格的高校在校生或已被录取并保留入学资格者；②高级中等教育学校非应届毕业在校生；③在非应届毕业年份以弄虚作假手段报名并违规参加高考的应届毕业生；④因违规被给予暂停参加高考处理且在停考期内者；⑤因触犯刑法受刑事处罚尚在处罚期内者（未成年人按规定执行）。</li><li><strong>选科要求</strong>：报名时同时选报学考等级考选考科目，所选科目须已通过学业水平合格性考试方可报考。</li><li>来源：beijing.gov.cn 2025-04-29 招生工作规定；北京教育考试院《随迁子女在京考高职明起报名》（bjeea.cn，2024-10-16）。</li></ul></div>
+<div class="subsec">三、报考流程（2025 届口径）</div><div class="blk"><ol><li><strong>网上报名申请</strong>：2025 年北京高招报名于 2024 年 10 月 25 日启动。报名包括"网上提交报名申请 → 网上填报个人信息并缴费 → 现场报名资格确认"三阶段（依据京考高招〔2024〕17 号）。</li><li><strong>随迁子女专项流程</strong>：网上申请 2024 年 10 月 10 日 9 时至 10 月 11 日 17 时；通过审核后 11 月 1 日 9 时至 4 日 17 时登录北京教育考试院网填报个人信息并缴费；现场资格确认在 11 月 11 日前完成。</li><li><strong>选科</strong>：高考报名时同步选报学考等级考 3 门选考科目。</li><li><strong>体检</strong>：2025 年 3 月 1 日至 3 月 31 日，在指定二级甲等以上医院或相应医疗单位进行。</li><li><strong>缴费</strong>：网上报名后按规定网上缴纳考试费。</li><li>来源：北京教育考试院报名通知、随迁子女通知（bjeea.cn）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名（随迁子女申请）</td><td>2024 年 10 月 10—11 日</td><td>京考高招〔2024〕16 号</td></tr><tr><td>高考报名（网上申请/缴费/确认）</td><td>2024 年 10 月 25 日起；网报缴费 11 月 1—4 日；现场确认 11 月 11 日前</td><td>京考高招〔2024〕17 号</td></tr><tr><td>选科（学考等级考）</td><td>报名时同步选报</td><td>须合格考通过</td></tr><tr><td>体检</td><td>2025 年 3 月 1—31 日</td><td>指定二级甲等以上医院</td></tr><tr><td>全国统考</td><td>2025 年 6 月 7—10 日（6 月 7—8 日统考，6 月 9—10 日等级考）</td><td>北京考试院规定</td></tr><tr><td>成绩公布</td><td>2025 年 6 月下旬</td><td>同步公布一分一段</td></tr><tr><td>本科志愿填报</td><td>2025 年 6 月 27 日—7 月 1 日</td><td>院校专业组</td></tr><tr><td>专科志愿填报</td><td>2025 年 7 月 24—25 日</td><td>—</td></tr><tr><td>录取</td><td>2025 年 7 月—8 月</td><td>按批次依次录取</td></tr><tr><td>征集志愿</td><td>录取进程中安排</td><td>以北京教育考试院公告为准</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：北京市在本科提前批普通类 B 段安排"农村专项计划"（面向本市农村户籍考生），以及"双培计划""外培计划"。国家专项、高校专项按教育部统一部署在相应批次实施。</li><li><strong>综合评价录取</strong>："双培计划""外培计划"在本科提前批普通类 B 段录取；部分高校（如北京外国语大学等）综合评价招生安排在本科提前批普通类 A 段。</li><li><strong>公费师范生 / 优师计划</strong>：教育部直属 6 所师范大学及地方公费师范生、优师计划在本科提前批普通类 A 段录取。</li><li><strong>军队、公安院校</strong>：军事、公安、飞行学员、部分体育专业、航海类等在本科提前批普通类 A 段，须面试、体测、政审。</li><li><strong>强基计划</strong>：通过教育部阳光高考平台（gaokao.chsi.com.cn）报名，在提前批次前完成。</li><li><strong>高职分类 / 春季高考</strong>：北京有高职自主招生、专科普通批等通道；专科招生设专科提前批、专科普通批。</li><li>来源：北京市 2025 年招生工作规定、北京市政府门户志愿填报日程公告。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：平行志愿"一轮投档"，若所报专业已满且"不服从专业组内调剂"，可能被退档；但院校专业组内调剂机制降低了风险，建议合理勾选。</li><li><strong>选科匹配</strong>：院校专业组对选考科目有明确要求，填报前须核对自身选科是否符合。</li><li><strong>志愿梯度</strong>：本科普通批 30 个院校专业组志愿，应形成"冲—稳—保"梯度，尽量填满。</li><li><strong>随迁子女门槛</strong>：随迁子女仅能报考高职，且须满足居住证、稳定住所、职业、社保 6 年及本市高中学籍 3 年等条件，材料须真实。</li><li><strong>补报名 / 借考</strong>：北京一般不安排补报名；报名后至开考前发现资格不符将取消报名资格。</li><li>来源：教育部阳光高考"平行志愿退档风险"解读（moe.gov.cn）。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>北京教育考试院：https://www.bjeea.cn/</li><li>北京市教育委员会 / 北京市政府：https://www.beijing.gov.cn/</li><li>高考报名系统：北京教育考试院官网（https://www.bjeea.cn/）</li><li>阳光高考信息平台：https://gaokao.chsi.com.cn/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-上海">
+<h2>上海</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：24</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+3"。统一高考语文、数学、外语 3 门（外语一年两考，1 月与 6 月）；学业水平等级性考试 6 门（政史地理化生）中自主选 3 门。</li><li><strong>志愿单位</strong>：本科各批次以 <strong>"院校专业组"</strong> 为志愿填报与投档单位。</li><li><strong>志愿数量</strong>：本科普通批实行平行志愿，<strong>最多可填报 24 个院校专业组志愿</strong>，每个院校专业组内最多可填报 4 个专业志愿；本科提前批设 4 个顺序志愿（院校专业组，组内 4 专业+调剂）。</li><li><strong>调剂</strong>：每个院校专业组志愿均须填写"愿否专业调剂"代码（1=全愿意、2=全不愿意、3=除高收费外愿意、4=除医科外愿意），<strong>专业调剂仅限所投档的院校专业组内</strong>。</li><li>来源：上海市教育考试院《2025 年上海市普通高校招生考生志愿表（本科普通批次样表）》（sh.gov.cn PDF）；上海招考热线 shmeea.edu.cn（2025-06-23 本科阶段志愿填报安排）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>本市户籍</strong>：遵守宪法和法律；身体状况符合；具有本市常住户籍的高中阶段学校毕业生或同等学力者。</li><li><strong>非本市户籍（9 类可在沪报考）</strong>：①积分达标准分值《上海市居住证》持证人的同住子女，且在本市参加中考或父母一方连续持《上海市居住证》3 年，并具本市高中阶段学校毕业；②《上海市海外人才居住证》留学人员同住子女且本市高中毕业；③持有效《留学人员持外国护照子女享受优惠政策证明》者；④父母双方或一方现属本市常住户籍、本人持《上海市居住证》且具本市中考经历与完整高中学习经历；⑤经认定的驻沪机构工作人员子女；⑥在沪定居持签发地为上海的《外国人永久居留身份证》的外国人；⑦在沪博士后科研流动站（工作站）在站人员子女；⑧在沪台胞、港澳特别行政区永久居民身份且本市高中毕业；⑨梅山、大屯、鲁矿三地上海后方基地单位职工子女。</li><li><strong>不得报名情形（5 类）</strong>：与教育部规定一致（高校在校生/保留资格、非应届在校生、弄虚作假应届、停考期内、触犯刑法处罚期内）。</li><li>来源：上海市教委《关于做好 2025 年上海市普通高校考试招生报名工作的通知》（沪教委学〔2024〕37 号）；上海市教育考试院《2025 年上海市普通高校考试招生报名实施办法》（沪教考院高招〔2024〕20 号，shmeea.edu.cn，2024-09-29）。</li></ul></div>
+<div class="subsec">三、报考流程（2025 届口径）</div><div class="blk"><ol><li><strong>网上报名</strong>：2024 年 10 月 14—18 日（10 月 14—17 日每天 8:00—21:00；10 月 18 日 8:00—16:00），通过"上海招考热线"（www.shmeea.edu.cn）填报。</li><li><strong>资格审核与信息确认 + 网上付费</strong>：采用网上报名、资格审核与信息确认、网上付费相结合方式。</li><li><strong>选科 / 外语</strong>：秋季高考外语一年两考（1 月、6 月），报名时须选定语种；3+3 等级考选科在报名及后续等级考中确定。</li><li><strong>体检</strong>：按上海市统一安排（一般 3—4 月，具体以区招办通知为准）。</li><li>来源：沪教考院高招〔2024〕20 号；上海教育新闻网《浅谈新一年高考报名》（2024-10-21）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名（网上报名）</td><td>2024 年 10 月 14—18 日</td><td>上海招考热线</td></tr><tr><td>资格审核 / 信息确认 / 缴费</td><td>报名后按区招办安排</td><td>网上付费</td></tr><tr><td>体检</td><td>2025 年 3—4 月（以公告为准）</td><td>各区组织</td></tr><tr><td>全国统考</td><td>2025 年 6 月 7—9 日</td><td>含外语、等级考</td></tr><tr><td>成绩公布</td><td>2025 年 6 月 23 日左右</td><td>以公告为准</td></tr><tr><td>本科阶段志愿填报</td><td>2025 年 7 月 1—2 日（每天 8:00—17:00）</td><td>含综合评价、零志愿、提前、艺体、地方农村专项、特殊类型、普通批</td></tr><tr><td>录取</td><td>2025 年 7 月—8 月</td><td>按批次</td></tr><tr><td>征求志愿</td><td>录取进程中（本科普通批设两次征求）</td><td>以公告为准</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>综合评价批次（上海特色）</strong>：在零志愿批次之后、本科提前批之前，复旦大学、上海交通大学、同济大学、华东师范大学、上海财经大学、上海外国语大学、华东理工大学、东华大学、上海大学、上海中医药大学等本地高校开展综合评价录取改革试点。</li><li><strong>零志愿批次</strong>：清华、北大等少数高校。</li><li><strong>地方农村专项计划批次</strong>：须具有本市农村户籍。</li><li><strong>公费师范生 / 优师计划</strong>：在本科提前批次录取。</li><li><strong>军队、公安院校</strong>：本科提前批，须面试体测政审。</li><li><strong>强基计划</strong>：通过阳光高考平台报名。</li><li><strong>春季高考 / 分类考试</strong>：上海形成成熟体系——1 月春季考试招生、3 月专科层次依法自主招生、5 月招收中等职业学校应届毕业生考试（三校生高考）、6 月秋季统一高考。</li><li>来源：上海招考热线志愿填报安排公告（2025-06-23）；沪教委学〔2024〕37 号。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>专业调剂代码</strong>：院校专业组内须填写"愿否专业调剂"代码，建议尽量选"1"（全愿意）以增加录取概率。</li><li><strong>退档风险</strong>：平行志愿一轮投档，投档后不再检索其余志愿。</li><li><strong>随迁子女门槛</strong>：非沪籍 9 类考生须同时满足身份资格与学习经历（中考、本市高中毕业、完整学习经历等），应逐条比对。</li><li><strong>兼报限制</strong>：本科提前批次志愿和本科艺体类批次志愿不得兼报。</li><li><strong>补报名</strong>：逾期不再补报，须在报名期内完成。</li><li>来源：教育部阳光高考平行志愿解读；上海招考热线公告。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>上海招考热线（上海市教育考试院）：https://www.shmeea.edu.cn/</li><li>上海市教育委员会：https://edu.sh.gov.cn/</li><li>高考报名 / 志愿填报系统：上海招考热线（https://www.shmeea.edu.cn/）</li><li>阳光高考信息平台：https://gaokao.chsi.com.cn/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-天津">
+<h2>天津</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：A段50 / B段25</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+3"。统一高考语文、数学、外语 3 门；等级性考试为思想政治、历史、地理、物理、化学、生物学 6 门中自主选 3 门。</li><li><strong>志愿单位</strong>：普通类以 <strong>"院校专业组"</strong> 为单位。</li><li><strong>志愿数量</strong>：</li><li>普通本科批次 <strong>A 阶段：50 个平行院校专业组志愿</strong>；</li><li>普通本科批次 <strong>B 阶段：25 个平行院校专业组志愿</strong>；</li><li>每个院校专业组志愿栏设 6 个专业志愿和 1 个服从调剂专业志愿。</li><li>提前本科批次 A 阶段（顺序志愿，招飞/其他院校各 1 个院校专业组）、B 阶段（地方农村专项，5 个平行）。</li><li><strong>调剂</strong>：设"服从调剂专业志愿"，在院校专业组内进行。</li><li>来源：天津市教育招生考试院《2025 年高考志愿填报热点问答（第一期）》（阳光高考 gaokao.chsi.com.cn 转载，2025-06-22）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>本市户籍</strong>：遵守宪法和法律；高中阶段学校毕业或同等学力；身体符合；且符合：①<strong>应届毕业生</strong>须于 2022 年 8 月 31 日（含）前取得我市常住户籍，具有我市高中阶段学校 3 年学籍并实际就读；②<strong>往届毕业生</strong>须具我市高中阶段学校毕业证书（持外省高中毕业证书者须毕业 3 年及以上）；③<strong>同等学力考生</strong>须参加我市 9 门高中学业水平合格性考试且各科合格，并具有我市初中学校毕业证书（外省初中毕业须初中毕业 6 年及以上）。</li><li><strong>蓝印户口</strong>：符合《关于蓝印户口学生在我市入学就读及参加普通高考报名资格的通知》（津教委中〔2009〕6 号）规定。</li><li><strong>其他可在津报名</strong>：在津内地西藏、新疆高中班毕业生（在津报名但不在津录取）；持国家移民管理局签发的《外国人永久居留身份证》者；高校少年班/数学英才班资格考生等。</li><li><strong>不得报名情形（含 6 类）</strong>：高校在校生/保留资格、高中阶段非应届在校生、弄虚作假应届、停考期内、触犯刑法处罚期内，以及天津市中等职业学校按相关规定招收的外省市学生等不符合国家及天津市规定者。</li><li>来源：天津市招生委员会《2025 年天津市普通高等学校招生考试报名工作规定》（津招委高发〔2024〕13 号，阳光高考 chsi.com.cn 文件）；天津市人民政府门户 tj.gov.cn 政策解读。</li></ul></div>
+<div class="subsec">三、报考流程（2025 届口径）</div><div class="blk"><ol><li><strong>网上报名</strong>：2025 年天津高考报名于 <strong>2024 年 10 月 28 日—11 月 2 日</strong> 进行，实行网上报名、现场确认、资格审查。</li><li><strong>资格审核 / 现场确认</strong>：按"分级实施、分级审查""谁审查、谁签字、谁负责"原则。</li><li><strong>选科</strong>：报名时选报等级性考试科目。</li><li><strong>体检</strong>：按市高招办统一安排（具体时间以各区通知为准）。</li><li>来源：招考资讯网《2025 年天津高考报名时间和截止时间》；今日头条/天津教育考试相关公告（2024-10）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名（网上报名）</td><td>2024 年 10 月 28 日—11 月 2 日</td><td>招考资讯网</td></tr><tr><td>资格审核 / 现场确认</td><td>报名后按区安排</td><td>谁审查谁负责</td></tr><tr><td>体检</td><td>2025 年 3—4 月（以公告为准）</td><td>各区组织</td></tr><tr><td>全国统考</td><td>2025 年 6 月 7—9 日</td><td>—</td></tr><tr><td>成绩及控制线公布</td><td>2025 年 6 月 24 日</td><td>天津教育招生考试院</td></tr><tr><td>志愿填报（提前/普通本科）</td><td>2025 年 6 月 25 日 9 时—6 月 27 日 12 时（提前本科 A/B）；6 月 25 日 9 时—6 月 29 日 17 时（普通本科 A/B）</td><td>"两次填报"</td></tr><tr><td>录取</td><td>2025 年 7 月—8 月</td><td>按批次</td></tr><tr><td>征集志愿（"四次征询"）</td><td>7 月 13 日（提前本科）、7 月 21 日（本科 A）、7 月 26—27 日（本科 B）、8 月 2 日（高职专科）</td><td>逾期不再补报</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：地方农村专项计划安排在提前本科批次 B 阶段（5 个平行院校专业组），限宁河区、武清区、静海区、宝坻区、蓟州区高中三年学籍和本市户籍制度改革前农村户籍、且在该五区报名参加高考的考生。国家专项、高校专项按教育部部署。</li><li><strong>综合评价录取</strong>：部分高校在津开展综合评价招生，须在合格考生名单内填报。</li><li><strong>公费师范生 / 免费医学生</strong>：在提前本科批次 A 段录取。</li><li><strong>军队、公安院校</strong>：提前本科 A 段，须面试、体测、政治考察、体检。</li><li><strong>强基计划</strong>：通过阳光高考平台报名。</li><li><strong>高职分类 / 春季高考</strong>：天津有面向中职与普通高中毕业生的春季高考（高职分类考试）。</li><li><strong>高水平运动队</strong>：在普通本科批次 A 阶段前单独设置"高水平运动队考生志愿"。</li><li>来源：天津教育招生考试院志愿填报热点问答（gaokao.chsi.com.cn，2025-06-22）。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>志愿序号连续</strong>：平行志愿模式下志愿序号必须连续、不能有空缺。</li><li><strong>两次填报、四次征询</strong>：相关批次须在规定时间内完成，逾期不再补报。</li><li><strong>户籍学籍双认定</strong>：应届生须"3 年户籍 + 3 年学籍并实际就读"，严禁空挂学籍、人籍分离、高考移民。</li><li><strong>随迁子女门槛</strong>：天津对外省户籍随迁子女报考普通高考限制严格，主要通道为蓝印户口及特定人才/驻津机构子女，须逐条核对。</li><li><strong>退档风险</strong>：平行志愿一轮投档，不服从调剂且不符合专业要求可能被退档。</li><li>来源：天津市普通高考报名资格审查工作规定；教育部阳光高考解读。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>天津招考资讯网（天津市教育招生考试院）：https://www.zhaokao.net/</li><li>天津市教育招生考试院（阳光高考转载）：https://gaokao.chsi.com.cn/</li><li>高考报名系统：天津招考资讯网（https://www.zhaokao.net/）</li><li>阳光高考信息平台：https://gaokao.chsi.com.cn/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-浙江">
+<h2>浙江</h2>
+<span class="badge b">志愿单元：专业+院校</span><span class="badge">本科批志愿数：80</span><span class="badge">调剂：不设调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+3"。统一高考语文、数学、外语 3 门；选考科目为政治、历史、地理、物理、化学、生物、技术中自主选 3 门（浙江选考含技术，每年 1 月、6 月两考取优）。</li><li><strong>志愿单位</strong>：普通类平行录取实行 <strong>"专业（类）+ 院校"</strong> 模式，以 1 所高校的 1 个专业（类）作为 1 个独立的志愿单位。</li><li><strong>志愿数量</strong>：考生每次可填报 <strong>不超过 80 个志愿</strong>；分两段填报（第一段、第二段）。</li><li><strong>调剂</strong>：专业平行志愿<strong>无专业服从调剂</strong>，直接投档到考生所填报的具体专业（类），投档比例 1:1。</li><li>来源：浙江省教育考试院《2025 年浙江省普通高校招生工作通知》；《浙江省 2025 年高考招生志愿填报百问百答》（仙居县政府门户转载，2025-06-17）；阳光高考 gaokao.chsi.com.cn《2025 年浙江高考志愿填报热点问答（二段更新版）》（2025-07-25）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>本省户籍</strong>：遵守宪法和法律；高级中等教育学校毕业或具有同等学力；身体状况符合相关要求。</li><li><strong>随迁子女</strong>：符合《浙江省人民政府办公厅转发省教育厅等 4 部门关于做好外省籍进城务工人员随迁子女接受义务教育后在我省参加升学考试工作实施意见的通知》（浙政办发〔2012〕160 号）；随迁子女可在浙报考普通院校、军队院校（军队院校地方计划除外），<strong>不能报考公安院校、浙江警官职业学院、北京电子科技学院等需政审或按户籍实行定向招生的院校（专业）</strong>；不得在"流入"和"流出"两地同时报名，须在毕业前学籍所在地报名。</li><li><strong>港澳台 / 外籍</strong>：港澳居民持《港澳居民居住证》、台湾居民持《台湾居民居住证》；在中国定居持《外国人永久居留身份证》者。</li><li><strong>不得报名情形（5 类）</strong>：高校在校生/保留资格、高中非应届在校生、弄虚作假应届、停考期内、触犯刑法处罚期内。</li><li>来源：浙江省教育考试院《关于做好 2025 年普通高校招生考试报名工作的通知》（zjzs.net，2024-10-11/13，文号含《2025 年浙江省普通高校招生考试报名办法》）。</li></ul></div>
+<div class="subsec">三、报考流程（2025 届口径）</div><div class="blk"><ol><li><strong>网上信息输入</strong>：2024 年 11 月 1 日 9:00—11 月 10 日 17:00，登录浙江省教育考试院网站（www.zjzs.net）报名系统，签订《诚信承诺书》，录入报名信息。</li><li><strong>资格审核</strong>：报名结束后由招生考试机构和报名点学校进行网上审核。</li><li><strong>网上缴费</strong>：2024 年 11 月 15 日 9:00—11 月 18 日 17:00；未按规定缴费不能参加考试。6 月高考外语信息确认和网上缴费安排在 2025 年 4 月与 6 月选考信息确认一并进行。</li><li><strong>选科（选考）</strong>：选考与高考同期（6 月 7—10 日），外语语种于报名时选定。</li><li><strong>体检</strong>：按各市安排（具体时间以当地通知为准）。</li><li>来源：浙江省教育考试院报名通知；杭州网《定了！2025 高考报名流程收好》（2024-10-15）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名（网上信息输入）</td><td>2024 年 11 月 1—10 日</td><td>zjzs.net</td></tr><tr><td>资格审核</td><td>信息输入后网上审核</td><td>—</td></tr><tr><td>网上缴费</td><td>2024 年 11 月 15—18 日</td><td>未缴费不得考试</td></tr><tr><td>统考 / 选考</td><td>2025 年 6 月 7—10 日</td><td>语数外 + 选考</td></tr><tr><td>成绩公布</td><td>2025 年 6 月 25 日</td><td>普通类一段线 490、二段线 268、特殊类型控制线 592</td></tr><tr><td>志愿填报（第一段）</td><td>2025 年 6 月 29—30 日</td><td>普通类一段考生</td></tr><tr><td>志愿填报（第二段）</td><td>2025 年 7 月下旬（以公告为准）</td><td>剩余计划 + 二段考生</td></tr><tr><td>录取</td><td>2025 年 7 月—8 月</td><td>分段投档</td></tr><tr><td>征求志愿</td><td>第二段录取后酌情实行</td><td>以公告为准</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项（高校专项须达到特殊类型招生控制线 592 分且具资格）。地方专项面向农村和脱贫地区学生。</li><li><strong>综合评价录取（"三位一体"）</strong>：浙江特色，省内多所高校及部分部属高校开展"三位一体"综合评价招生，须在相应平台报名。</li><li><strong>公费师范生 / 免费医学生</strong>：师资定向培养、基层卫生人才定向（农村订单定向免费医学生）等，分县区录取。</li><li><strong>军队、公安院校</strong>：在提前录取环节，须政审、面试、体测。</li><li><strong>强基计划</strong>：通过阳光高考平台报名。</li><li><strong>高职分类 / 春季高考</strong>：浙江有高职提前招生、单独考试招生（面向中职，1 月）、"三定向"等；单独考试招生与统一高考报名同步进行。</li><li>来源：浙江省 2025 年招生工作通知；浙江省教育考试院政策百问。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>无调剂、直接投专业</strong>：80 个专业平行志愿按 1:1 投档到具体专业，退档风险主要来自体检、单科成绩、外语语种等不符合招生章程。</li><li><strong>选科匹配</strong>：每个专业（类）有选考科目要求，填报前务必核对自身选科是否满足。</li><li><strong>分段线 ≠ 本科线</strong>：一段线按实考人数比例划定，一段线上未录满时二段考生也可填报本科剩余计划。</li><li><strong>随迁子女限制</strong>：不能报考公安院校、浙江警官职业学院、北京电子科技学院等，且不得在两地重复报名。</li><li><strong>补报名</strong>：一般不再补报，以当年公告为准。</li><li>来源：教育部阳光高考；浙江志愿填报百问百答。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>浙江省教育考试院：https://www.zjzs.net/</li><li>浙江省普通高校招生志愿填报系统：https://pgzy.zjzs.net/</li><li>高考报名系统：浙江省教育考试院官网（https://www.zjzs.net/）</li><li>阳光高考信息平台：https://gaokao.chsi.com.cn/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-山东">
+<h2>山东</h2>
+<span class="badge b">志愿单元：专业+院校</span><span class="badge">本科批志愿数：96</span><span class="badge">调剂：不设调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+3"。统一高考语文、数学、外语 3 门；学业水平等级考试科目为物理、化学、生物、思想政治、历史、地理 6 门中自主选择 3 门。自 2025 年起，夏季高考外语听力考试安排在 6 月与笔试合并举行（均 1 次）。</li><li><strong>志愿单位</strong>：普通类常规批实行 <strong>"专业（专业类）+ 学校"</strong> 平行志愿模式。</li><li><strong>志愿数量</strong>：常规批安排 <strong>3 次志愿填报</strong>，每次均以"专业（专业类）+ 学校"为单位，<strong>考生每次填报志愿的数量最多不超过 96 个</strong>。地方专项、文物全科人才、高职院校专项、公费专科医学生等志愿均包含在 96 个志愿之内。</li><li><strong>调剂</strong>：专业平行志愿<strong>无专业服从调剂</strong>，直接投档到具体专业，投档比例 1:1（省属高校按 1:1 投档）。</li><li>来源：山东省教育招生考试院《山东省 2025 年普通类常规批第 1 次志愿填报注意事项》（sdzk.cn，NewsID=6972）；《山东省普通高校招生考试政策百问百答（2025 版）》（潍坊市政府门户 weifang.gov.cn 转载）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>本省户籍</strong>：遵守宪法和法律；身体状况符合；具有山东省户籍的高级中等教育学校（普高、普通中专、职业高中、职业中专、成人中专、技工学校）毕业生或具有同等学力人员。</li><li><strong>随迁子女</strong>：非山东省户籍的就业人员随迁子女（含进城务工人员随迁子女），应为<strong>具有山东省高级中等教育学校学籍并有 3 年完整学习经历的合格毕业生或结业生</strong>。</li><li><strong>不得报名情形（5 类）</strong>：高校在校生/保留资格、高中非应届在校生、弄虚作假应届、停考期内、触犯刑法处罚期内。</li><li>来源：山东省教育招生考试院《关于做好山东省 2025 年普通高等学校招生考试报名工作的通知》（鲁招考〔2024〕102 号，sdzk.cn/NewsInfo.aspx?NewsID=6715，2024-10-18）。</li></ul></div>
+<div class="subsec">三、报考流程（2025 届口径）</div><div class="blk"><ol><li><strong>网上填报信息</strong>：2024 年 10 月 23—29 日（每天 9:00—18:00），登录报名网站 https://wsbm.sdzk.cn。</li><li><strong>网上资格审核</strong>：2024 年 10 月 30 日—11 月 11 日（网上审核确认身份、审核报考资格）。</li><li><strong>确认缴费</strong>：2024 年 11 月 12—16 日（每天 9:00—18:00），缴纳报名费、体育专业测试费、艺术类专业统考费；其他考试费在等级考试科目选报时一并缴纳。</li><li><strong>选科（等级考选报）</strong>：拟于 2025 年 4 月进行普通高中学业水平等级考试科目选报。</li><li><strong>体检</strong>：所有报名考生均须参加当地组织的高考体检，具体时间另文通知。</li><li>来源：鲁招考〔2024〕102 号；新华网山东频道（2024-10-24）；山东教育社相关报道。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名（网上填报信息）</td><td>2024 年 10 月 23—29 日</td><td>wsbm.sdzk.cn</td></tr><tr><td>资格审核</td><td>2024 年 10 月 30 日—11 月 11 日</td><td>网上审核</td></tr><tr><td>确认缴费</td><td>2024 年 11 月 12—16 日</td><td>报名费 + 艺体统考费</td></tr><tr><td>等级考选报</td><td>2025 年 4 月（拟，以公告为准）</td><td>—</td></tr><tr><td>全国统考</td><td>2025 年 6 月 7—10 日（外语听力合并 6 月）</td><td>鲁招考〔2024〕102 号</td></tr><tr><td>成绩公布</td><td>2025 年 6 月 25 日</td><td>特殊类型控制线 521、一段线 441</td></tr><tr><td>志愿填报（常规批第 1 次）</td><td>2025 年 7 月 5—7 日（9:00—18:00）</td><td>96 个志愿（本科）</td></tr><tr><td>志愿填报（提前批等）</td><td>2025 年 6 月 29 日起多次（以公告为准）</td><td>共 6 次志愿填报</td></tr><tr><td>录取</td><td>2025 年 7 月—8 月</td><td>按批次</td></tr><tr><td>征集志愿</td><td>各批次录取后安排</td><td>以公告为准</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项（地方专项志愿包含在常规批 96 个志愿内）；<strong>高校专项计划在特殊类型批</strong>填报，须达特殊类型招生控制线（521 分）且具资格；高职院校专项计划在常规批第 2 次志愿起填报。</li><li><strong>综合评价录取</strong>：山东大学、中国海洋大学、中国石油大学（华东）等驻鲁高校及部分部属高校在鲁开展综合评价招生。</li><li><strong>公费师范生 / 免费医学生</strong>：省属公费师范生、公费医学生（本科提前批/常规批）；"文物全科人才"须达特殊类型线；公费专科医学生在常规批第 2 次志愿起填报。</li><li><strong>军队、公安院校</strong>：在提前批，须政审、面试、体测。</li><li><strong>强基计划</strong>：通过阳光高考平台报名。</li><li><strong>高职分类 / 春季高考</strong>：山东春季高考实行"知识 + 技能"模式（3 月技能测试、5 月知识考试）；另有高职（专科）注册入学（9 月）。属"职教高考"体系。</li><li>来源：山东省 2025 年招生政策百问；山东省教育招生考试院志愿填报注意事项。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>无调剂、直接投专业</strong>：96 个"专业+学校"志愿 1:1 投档到具体专业，退档风险在体检、单科成绩、外语语种、综合评价资格等不符时产生。</li><li><strong>一段线 ≠ 本科线</strong>：常规批第 1 次为一段线上考生填报本科；第 2、3 次一段线下考生也可填报本科剩余计划。</li><li><strong>随迁子女门槛</strong>：须具山东省高中学籍并有 3 年完整学习经历。</li><li><strong>兼报限制</strong>：同一录取批次内，艺术类（体育类）考生只能在艺术类（体育类）与普通类中选择一类填报。</li><li><strong>补报名</strong>：逾期不再补报，报名后至入学报到前不应更改姓名、身份证号等关键信息。</li><li>来源：教育部阳光高考；山东省招生政策百问。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>山东省教育招生考试院：https://www.sdzk.cn/</li><li>山东省普通高校招生考试信息平台（报名）：https://wsbm.sdzk.cn/</li><li>阳光高考信息平台：https://gaokao.chsi.com.cn/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-海南">
+<h2>海南</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：30</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+3"。统一高考语文、数学、外语 3 门；学业水平选择性考试科目为思想政治、历史、地理、物理、化学、生物 6 门中自主选择 3 门。</li><li><strong>志愿单位</strong>：<strong>"院校专业组"</strong> 是志愿填报与投档录取的基本单位，考生以院校专业组为单位填报志愿，选考科目须满足拟报院校专业组要求。</li><li><strong>志愿数量</strong>：</li><li>本科普通批（含本科少数民族班）<strong>设 30 个平行院校专业组志愿</strong>，每个院校专业组设 6 个专业志愿和 1 个专业服从调剂志愿。</li><li>本科提前部分：普通类 6 个、本科艺术类（统考）/体育类/国家专项/地方专项各 10 个、艺术校考 1 个、特殊类型 1 个院校专业组志愿。</li><li>专科批各设 10 个院校专业组志愿。</li><li><strong>调剂</strong>：设"专业服从调剂志愿"，在院校专业组内进行；考生须表明是否愿意服从调剂到该组其他专业。</li><li>来源：海南省考试局《2025 年海南省普通高校招生实施办法》（海南省政府门户 hainan.gov.cn、三亚市政府 sanya.gov.cn，2025-05-30/06-03）；南海网/新海南客户端（2025-07-03 本科志愿填报公告）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>本省户口</strong>：遵守宪法和法律；已从高级中等教育学校毕业或具同等学力；身体符合；且符合下列条件之一方<strong>不受报考批次限制</strong>：①本人及法定监护人在我省有常住户口 3 年以上（至 2025-08-31 推算）、有固定住所和省教育厅认定的我省高中阶段学籍并修满学制；②高层次人才 C 类及以上子女；③ D/E 类高层次人才子女（具我省高中学籍并修满学制）；④驻琼部队现役军人子女。<strong>不符合上述但具本省户口者，只能报考原本科 B 批（民办本科/独立学院）及高职专科学校。</strong></li><li><strong>随迁子女（异地高考）四档</strong>：</li><li>"3 个 6"：本人及监护人合法稳定住所并连续居住满 6 年；初一至高三在我省学校连续就读 6 年并高中毕业；监护人合法稳定职业且社保满 6 年 → <strong>不受报考批次限制</strong>。</li><li>"2 个 12"：小学一年级至高三在我省连续就读满 12 年并高中毕业，监护人住所居住满 12 年、合法稳定职业 → <strong>不受批次限制</strong>。</li><li>"3 个 3"：居住 3 年以上不满 6 年；初中毕业并具我省高中学籍满 3 年并毕业；监护人职业且社保 3 年以上不满 6 年 → <strong>只能报考原本科 B 批及高职专科</strong>。</li><li>"3 个有"：有合法稳定住所、我省高中就读经历并取得高中毕业证书、监护人合法稳定职业 → <strong>只能报考本省高职专科学校</strong>。</li><li><strong>不得报名情形（5 类）</strong>：高校在校生/保留资格、高中非应届在校生、弄虚作假应届、停考期内、触犯刑法处罚期内。</li><li>来源：海南省教育厅《关于做好 2025 年海南省普通高等学校招生考试报名工作的通知》（海南省考试局发布）；海南省 12345 政务服务热线政策解读；海口本地宝整理。</li></ul></div>
+<div class="subsec">三、报考流程（2025 届口径）</div><div class="blk"><ol><li><strong>现场提交材料</strong>：2024 年 10 月 24—28 日（上午 8:00—12:00、下午 14:30—17:30），到指定报名点提交材料、领取报考卡。</li><li><strong>网上报名及缴费</strong>：2024 年 10 月 24—29 日，登录海南省考试局网站凭报考卡进入报名系统填报；网上缴费截止于 2024 年 11 月 1 日 17:30。</li><li><strong>选科</strong>：报名时从 6 门选择性考试科目中自主选择 3 科；艺术/体育类还须选报专业统考类别。</li><li><strong>体检</strong>：按各市（县）招生办安排（具体时间以通知为准）。</li><li><strong>不受理借考</strong>：海南不受理本省考生在外省或省外考生在我省借考的申请。</li><li>来源：海南省考试局 2025 年普通高考报名通知。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>现场提交材料</td><td>2024 年 10 月 24—28 日</td><td>报名点</td></tr><tr><td>网上报名及缴费</td><td>2024 年 10 月 24—29 日（缴费至 11 月 1 日 17:30）</td><td>ea.hainan.gov.cn</td></tr><tr><td>选科（选择性考试）</td><td>报名时自主选报 3 科</td><td>6 选 3</td></tr><tr><td>体检</td><td>2025 年 3—4 月（以公告为准）</td><td>各市组织</td></tr><tr><td>全国统考</td><td>2025 年 6 月 7—10 日</td><td>—</td></tr><tr><td>成绩公布</td><td>2025 年 6 月 25 日左右</td><td>标准分公布</td></tr><tr><td>志愿填报启动</td><td>2025 年 6 月 27 日</td><td>省考试局</td></tr><tr><td>本科批志愿填报</td><td>2025 年 7 月 4 日 8:00—7 日 17:30</td><td>30 个院校专业组</td></tr><tr><td>录取</td><td>2025 年 7 月 9 日—8 月 15 日</td><td>分 3 个批次</td></tr><tr><td>征集志愿</td><td>各批次按志愿录取结束后组织</td><td>数量同原批次</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项（特殊类型志愿）；农村订单定向免费医学生；乡村小学教师定向公费培养师范生；本科少数民族班、本科预科班（少数民族/边防子女预科）。</li><li><strong>综合评价录取</strong>：在特殊类型志愿中设置"综合评价、高校专项计划、高水平运动队、拔尖创新人才班"等，取得资格并经阳光高考公示者方可填报。</li><li><strong>公费师范生 / 免费医学生</strong>：定向公费培养师范生（含本科提前部分体育类定向公费培养师范生等）、农村订单定向免费医学生。</li><li><strong>军队、公安院校</strong>：本科提前部分须面试、体测、政审。</li><li><strong>强基计划</strong>：通过阳光高考平台报名；已被强基计划等录取者不再参加其他投档。</li><li><strong>高职分类 / 春季高考</strong>：海南高等职业院校分类招生考试（报名条件、办法另行通知），属职业教育分类考试通道。</li><li>来源：海南省 2025 年招生实施办法；省考试局本科志愿填报公告（2025-07-03）。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>专业服从调剂</strong>：院校专业组内调剂，考生须明确是否服从，建议谨慎勾选以降低退档风险。</li><li><strong>退档风险</strong>：平行志愿一轮投档，不服从调剂且所报专业不符可能被退档。</li><li><strong>选科匹配</strong>：选考科目须满足院校专业组要求，无要求者不限。</li><li><strong>随迁子女门槛</strong>：异地高考四档条件差异巨大，社保、学籍、居住年限直接决定能否报本科及是否受限，须提前核对。</li><li><strong>借考</strong>：海南不受理借考申请。</li><li><strong>补报名</strong>：现场提交材料与网上报名逾期不再受理。</li><li>来源：海南省考试局招生实施办法；教育部阳光高考解读。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>海南省考试局：https://ea.hainan.gov.cn/</li><li>海南省教育厅：https://edu.hainan.gov.cn/</li><li>高考报名 / 志愿填报系统：海南省考试局官网（https://ea.hainan.gov.cn/）</li><li>阳光高考信息平台：https://gaokao.chsi.com.cn/</li></ul>
+<p>---</p>
+<p>&gt; <strong>总体说明</strong>：上述六省市均为新高考"3+3"模式，但在志愿填报单位上分两类——<strong>北京、上海、天津、海南采用"院校专业组"</strong>（设专业组内调剂）；<strong>浙江、山东采用"专业（类）+ 院校"</strong>（无专业调剂，直接投档到具体专业）。本科批可填志愿数量：北京 30、上海 24、天津 A 段 50 / B 段 25、浙江 80、山东 96、海南 30。所有时间、数量均以来源官方文件为准，2026 届具体安排以各省 2026 年公告为准。</p></div>
+</section>
+<h2 style="margin:26px 0 10px;color:var(--brand2)">▌新高考“3+1+2”模式（冀辽吉黑晋蒙 6 省）</h2>
+<section class="province" id="p-河北">
+<h2>河北</h2>
+<span class="badge b">志愿单元：专业+院校</span><span class="badge">本科批志愿数：96</span><span class="badge">调剂：不设调剂</span>
+<div class="subsec">高考模式与志愿单位</div><div class="blk"><p>河北省实行"3+1+2"模式（语文、数学、外语为统考科目；首选物理或历史；再选思想政治、地理、化学、生物学中2科）。本科批采用<strong>"专业（类）+学校"</strong>为单位的平行志愿模式，普通类本科批每次最多可填报<strong>96个</strong>志愿。</p>
+<p>来源：《2026年河北省普通高考志愿填报须知》https://www.hebeea.edu.cn/c/2026-06-17/493051.html</p></div>
+<div class="subsec">一、报考条件</div><div class="blk"><ol><li><strong>统考基本报名条件</strong>：①具有河北省户籍的中国公民，或教育部规定的港、澳、台地区等非我省户籍人员；②遵守中华人民共和国宪法和法律；③高级中等教育学校毕业（含应届）或具有同等学力；④身体状况符合相关要求。</li><li><strong>外省进城务工人员随迁子女</strong>：除具备上述条件外，还须同时具备：①在父亲或母亲或法定监护人经常居住地（居住证所在市）接受高中段教育，至毕业时具有两年（含）以上连续就学记录（不含高中毕业后复读时间）和学籍；②父亲或母亲或法定监护人具有居住证、就业创业证（就业创业证电子证或就业失业登记证）。</li><li><strong>不得报名情形</strong>（按照教育部及我省规定）：具有普通高等学历教育资格的高校在校生或已被录取并保留入学资格者；高级中等教育学校非应届毕业的在校生；在高中阶段非应届毕业年份以弄虚作假手段报名并违规参加考试的应届毕业生；因违反国家教育考试规定被暂停参加高考处理且在停考期内的人员；因触犯刑法被有关部门采取强制措施或正在服刑者等。</li></ol>
+<p>来源：《2026年河北省普通高校招生考试报名须知》http://www.hebeea.edu.cn/html/ptgk/tzgg/2025/1011-093323-960.html ；河北2026年高考报名常见问题（河北省教育考试院）</p></div>
+<div class="subsec">二、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025年10月28日9时至11月11日17时，登录河北省教育考试院官网或 https://gk.hebeea.edu.cn 填报。</li><li><strong>资格审核与现场确认/采像</strong>：考生原则上在户籍所在地报名点报名，应届生可在学籍所在地报名；随迁子女在居住证所在市级招办指定报名点报名。</li><li><strong>缴费与选科</strong>：2026年4月下旬（另行通知）选择统考科目并缴纳考试费，未缴费不得参加考试。</li><li><strong>体检</strong>：2026年3月前后由报名点指定单位组织。</li></ol>
+<p>来源：廊坊市2026年普通高考报名须知、河北省教育考试院报名须知</p></div>
+<div class="subsec">三、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名</td><td>2025年10月28日—11月11日</td><td>网上报名</td></tr><tr><td>体检</td><td>2026年3月前后</td><td>以报名点通知为准</td></tr><tr><td>全国统一高考</td><td>2026年6月7日—9日</td><td>6月7—8日统考，9日选择性考试</td></tr><tr><td>成绩公布</td><td>2026年6月25日</td><td>通过省考试院渠道查询</td></tr><tr><td>志愿填报</td><td>2026年6月26日起</td><td>本科批96个"专业+学校"志愿</td></tr><tr><td>录取</td><td>2026年7月—8月</td><td>分批次进行</td></tr><tr><td>征集志愿</td><td>各批次录取后</td><td>本科批设2次征集</td></tr></tbody></table></div>
+<div class="subsec">四、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项。高校专项、国家专项等在本科提前批B段（"专业+学校"平行志愿，最多96个）；地方专项在本科批。</li><li><strong>综合评价录取</strong>：河北省往年有北京外国语大学、南方科技大学、上海纽约大学、昆山杜克大学、深圳北理莫斯科大学等5所院校在本科提前批A段按综合评价招生，使用特殊类型招生控制线。</li><li><strong>公费师范生/免费医学生</strong>：国家公费师范生、优师专项、免费医学定向生等安排在本科提前批B段。</li><li><strong>军队、公安院校</strong>：本科提前批A段（军队、公安、飞行、司法等本科专业，顺序志愿）。</li><li><strong>强基计划</strong>：通过教育部阳光高考平台（gaokao.chsi.com.cn）报名，在本科提前批前录取。</li><li><strong>高职分类考试</strong>：河北省高职单招（春季）单独组织。</li></ul>
+<p>来源：《2026年河北省普通高考志愿填报须知》、河北省教育考试院官方发布</p></div>
+<div class="subsec">五、注意事项</div><div class="blk"><ol><li><strong>"专业（类）+学校"模式无专业服从调剂选项</strong>，不会被调剂到不喜欢的专业，也不会因"不服从专业调剂"退档；但考生若不符合高校招生章程中的身体条件、单科成绩、外语语种等要求，仍会被退档。</li><li><strong>选考科目要求必须匹配</strong>，不符合拟报院校专业（类）选考科目要求的不能填报。</li><li><strong>96个志愿应拉开"冲稳保"梯度并尽量填满</strong>，以增加录取机会。</li><li><strong>随迁子女须满足2年连续学籍+父母居住证/就业创业证</strong>，家长须在报名前及时申领居住证。</li></ol></div>
+<div class="subsec">官方信息源</div><div class="blk"><ul><li>河北省教育考试院：http://www.hebeea.edu.cn</li><li>高考报名/志愿填报系统：https://gk.hebeea.edu.cn</li><li>阳光高考地方站（河北）：https://gaokao.chsi.com.cn/hebei/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-辽宁">
+<h2>辽宁</h2>
+<span class="badge b">志愿单元：专业+院校</span><span class="badge">本科批志愿数：112</span><span class="badge">调剂：不设调剂</span>
+<div class="subsec">高考模式与志愿单位</div><div class="blk"><p>辽宁省实行"3+1+2"模式。本科批采用<strong>"专业+学校"</strong>为单位的平行志愿模式，本科批次设置<strong>112个"专业+学校"志愿</strong>（1个"专业+学校"为1个志愿，可填满也可部分填报）。</p>
+<p>来源：《辽宁省2026年普通高校招生志愿填报须知》https://www.lnzsks.com/newsinfo/IMS_20260618_46085_ADKq6tlNcp.htm</p></div>
+<div class="subsec">一、报考条件</div><div class="blk"><ol><li><strong>基本报名资格</strong>：①遵守中华人民共和国宪法和法律；②高级中等教育学校毕业（含应往届）或具有同等学力；③身体状况符合相关要求。</li><li><strong>外省户籍迁入考生</strong>：单人户籍考生（含和非直系亲属户籍在一起）须截至报名开始之日在辽宁户籍满3年、具有辽宁高中3年学籍且连续实际就读；全家户籍考生（含和父母一方或监护人户籍在一起）须有辽宁户籍、辽宁普通高中学籍满1年且连续实际就读。</li><li><strong>进城务工随迁子女</strong>：①在辽宁高级中等教育阶段有3年学籍且有连续实际就读经历（须具我省高级中等教育学校初始注册学籍），往届生还须具辽宁高中毕业证书；②父母在辽宁具有合法稳定职业和合法稳定住所（含租赁）。</li><li><strong>不得报名情形</strong>：高校在校生或已录取保留入学资格者；高中非应届在校生；高中非应届年份弄虚作假报名并违规考试的应届生；停考期内人员；触犯刑法被采取强制措施或服刑者。</li></ol>
+<p>来源：《辽宁省2026年高考报名问答》https://www.lnzsks.com/newsinfo/IMS_20260411_45825_EBOmNtT6FD.htm ；辽宁省2026年高考报名将于2025年10月20日开始 https://www.lnzsks.com/newsinfo/IMS_20250908_45143_lUKskfIePz.htm</p></div>
+<div class="subsec">二、报考流程</div><div class="blk"><ol><li><strong>网上报名与缴费</strong>：2025年10月20日—10月24日。</li><li><strong>现场资格审核与身份验证信息采集</strong>：2025年10月20日—10月29日（不含周六、日）。</li><li><strong>最终确认</strong>：各市须于2025年10月31日16:00前完成。</li></ol>
+<p>来源：辽宁省招生考试之窗《辽宁省2026年高考报名将于2025年10月20日开始》</p></div>
+<div class="subsec">三、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名（网报）</td><td>2025年10月20日—10月24日</td><td>同步网上缴费</td></tr><tr><td>现场确认/采像</td><td>2025年10月20日—10月29日</td><td>不含周末</td></tr><tr><td>体检</td><td>2026年3月—4月</td><td>以市级安排为准</td></tr><tr><td>全国统一高考</td><td>2026年6月7日—9日</td><td>—</td></tr><tr><td>成绩公布</td><td>2026年6月</td><td>志愿网报系统6月19日开通预报</td></tr><tr><td>志愿填报</td><td>2026年6月下旬起</td><td>本科批112个"专业+学校"</td></tr><tr><td>录取</td><td>2026年7月—8月</td><td>分批次</td></tr><tr><td>征集志愿</td><td>各批次录取后</td><td>—</td></tr></tbody></table></div>
+<div class="subsec">四、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：教育部高校专项计划、辽宁省高校专项计划、地方专项等安排在本科批录取。</li><li><strong>综合评价录取</strong>：高校综合评价招生安排在普通类本科提前批A段，考生须将综合评价院校填在A段第一顺序志愿。</li><li><strong>公费师范生/免费医学生</strong>：国家公费师范生、教育部直属高校本研衔接师范生公费教育等在本科提前批B段；农村订单定向医学生免费培养计划和乡村医生委托定向培养计划在专科提前批。</li><li><strong>军队、公安院校</strong>：本科提前批A段（军队院校军事类专业、飞行技术、北京电子科技学院、中国消防救援学院、中央司法警官学院等）。</li><li><strong>强基计划</strong>：安排在艺术类本科提前批次投档工作开始前录取。</li><li><strong>高职分类考试</strong>：辽宁省高职（专科）单独招生（春季）。</li></ul>
+<p>来源：《辽宁省2026年普通高校招生志愿填报及招生录取问答》https://www.lnzsks.com/newsinfo/IMS_20260618_46083_4bKdOyloBV.htm</p></div>
+<div class="subsec">五、注意事项</div><div class="blk"><ol><li><strong>"专业+学校"模式无专业服从调剂选项</strong>，退档风险主要来自身体条件、单科成绩、外语语种等不符合招生章程。</li><li><strong>112个志愿需合理拉开梯度</strong>，避免全部冲高或全部保底。</li><li><strong>随迁子女须3年学籍且具初始注册学籍+父母合法稳定职业住所</strong>，家长应尽早准备相关证明。</li><li>本科提前批A段、专科提前批为有序（顺序）志愿，仅设2个院校志愿，须谨慎排序。</li></ol></div>
+<div class="subsec">官方信息源</div><div class="blk"><ul><li>辽宁招生考试之窗：http://www.lnzsks.com</li><li>网上报名系统：https://gkbm.lnzsks.com</li><li>阳光高考地方站（辽宁）：https://gaokao.chsi.com.cn/liaoning/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-吉林">
+<h2>吉林</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：50</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">高考模式与志愿单位</div><div class="blk"><p>吉林省实行"3+1+2"模式。本科批采用<strong>"院校专业组"</strong>平行志愿，普通类本科批设<strong>50个院校专业组平行志愿</strong>，每个院校专业组志愿设<strong>6个专业志愿和是否服从专业调剂选项</strong>。</p>
+<p>来源：《吉林省2026年普通高考志愿填报及录取时间安排》https://www.jleea.com.cn/site1/xiangqingye/202701/</p></div>
+<div class="subsec">一、报考条件</div><div class="blk"><ol><li><strong>基本条件</strong>：①遵守中华人民共和国宪法和法律；②高级中等教育学校毕业或具有同等学力；③身体状况符合相关要求。</li><li><strong>外省籍考生（身份证前两位非"22"）</strong>须符合以下之一：①单人迁入：户籍、学籍迁入我省满3年（2022年12月31日前迁入），在户籍所在地学校连续就读并参加我省高中学业水平考试；②全家迁入：全家户籍、考生学籍迁入满1年（2024年12月31日前），且父或母连续缴纳城镇企业职工社保满1年（养老、医疗、失业，2025年9月起计算）；③军转及工作调动：不受年限限制；④随迁子女：学籍、考籍转入满3年（2023年9月30日前），连续就读，父或母有合法职业、合法稳定住所并连续缴社保满3年；⑤小初高连读：一直在吉林连续就读小学、初中、高中的外省籍考生不受户籍限制。</li><li><strong>不得报名情形</strong>：高校在校生或已录取保留资格者；高中非应届在校生；高中非应届年份弄虚作假报名并违规考试的应届生；停考期内人员；触犯刑法被强制措施或服刑者；外省籍无学习就读经历、学籍与实际就读学校不一致等。</li></ol>
+<p>来源：《吉林省2026年普通高考报名相关规定》https://www.jleea.com.cn/front/content/202049 ；吉林省2026年普通高考报名相关事项问答（吉林省教育考试院）</p></div>
+<div class="subsec">二、报考流程</div><div class="blk"><ol><li><strong>资格预审</strong>（外省籍及照顾加分等特殊考生）：2025年9月15日—10月9日。</li><li><strong>网上报名</strong>：2025年10月10日—15日（每日9:00—16:30），登录吉林省普通高考考生服务平台 https://gk.jleea.com.cn 。</li><li><strong>现场确认</strong>：2025年10月20日前完成。</li><li><strong>网上缴费</strong>：2025年11月8日—9日（每日9:00—16:30）。</li></ol>
+<p>来源：同上</p></div>
+<div class="subsec">三、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名</td><td>2025年9月15日—10月20日</td><td>分预审、网报、确认三阶段</td></tr><tr><td>体检</td><td>2026年3月—4月</td><td>以当地安排为准</td></tr><tr><td>全国统一高考</td><td>2026年6月7日—9日</td><td>—</td></tr><tr><td>成绩公布</td><td>2026年6月25日</td><td>通过"吉事办"、省考试院等查询</td></tr><tr><td>志愿填报</td><td>提前批6月26—27日；本科批6月28日—7月2日；专科批7月25—26日</td><td>每天8:00—20:00</td></tr><tr><td>录取</td><td>2026年7月—8月</td><td>分批次</td></tr><tr><td>征集志愿</td><td>各批次未完成计划时</td><td>公开征集</td></tr></tbody></table></div>
+<div class="subsec">四、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、高校专项、地方专项等安排在本科批（50个院校专业组平行志愿内）。</li><li><strong>综合评价录取</strong>：有关高校综合评价招生安排在普通类本科提前批A段。</li><li><strong>公费师范生/免费医学生/乡村振兴订单生</strong>：省属院校的免费医学定向、公费师范定向、乡村振兴订单生等相关专业在本科提前批A段。</li><li><strong>军队、公安院校</strong>：本科提前批A段（军事、公安、司法、消防、飞行学员等）。</li><li><strong>强基计划</strong>：通过教育部阳光高考平台报名。</li><li><strong>高职分类考试</strong>：吉林省高职对口升学、高职单独招生（春季）。</li></ul>
+<p>来源：《吉林省2026年普通高考志愿填报及录取时间安排》</p></div>
+<div class="subsec">五、注意事项</div><div class="blk"><ol><li><strong>"院校专业组"模式设专业服从调剂</strong>，不服从调剂且所报专业均未达条件时可能被退档，需慎重选择。</li><li><strong>选考科目须符合院校专业组要求</strong>，首选科目（物理/历史）决定可报专业组范围。</li><li><strong>50个志愿应"冲稳保"结合、尽量填满</strong>。</li><li><strong>随迁子女/外省籍年限要求严格</strong>（如随迁子女需3年社保、单人迁入需3年户籍学籍），家长应尽早规划。</li></ol></div>
+<div class="subsec">官方信息源</div><div class="blk"><ul><li>吉林省教育考试院：https://www.jleea.com.cn</li><li>吉林省普通高考考生服务平台：https://gk.jleea.com.cn</li><li>阳光高考地方站（吉林）：https://gaokao.chsi.com.cn/jilin/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-黑龙江">
+<h2>黑龙江</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">高考模式与志愿单位</div><div class="blk"><p>黑龙江省实行"3+1+2"模式。2026年为<strong>"院校专业组"模式首年落地</strong>。普通类本科批实行平行志愿，设<strong>45个院校专业组志愿</strong>，每个院校专业组志愿下设<strong>6个专业志愿和"是否服从专业调剂"选项</strong>。</p>
+<p>来源：《黑龙江省2026年普通高等学校招生工作规定》及招生计划说明（黑龙江省招生考试院/黑龙江省招生考试信息港）；中国教育在线黑龙江 https://gaokao.eol.cn/hei_long_jiang/dongtai/202606/t20260607_2742019.shtml?proId=44</p></div>
+<div class="subsec">一、报考条件</div><div class="blk"><ol><li><strong>基本条件</strong>：①遵守中华人民共和国宪法、法律；②高级中等教育学校毕业或具备同等学力；③身体条件符合相关要求；④户籍和学籍符合《黑龙江省普通高等学校招生全国统一考试考生报名资格审查工作规定》（黑招考办〔2025〕1号）及学籍管理相关规定。在我省就读的外省户籍（身份证前两位非"23"）考生，其学籍须为高级中等教育学校全日制学籍。</li><li><strong>进城务工随迁子女</strong>：须具有我省高中阶段教育3年学籍且高中阶段教育在我省连续实际就读3年以上（实际就读学校与学籍所在学校必须一致），父母在我省有合法职业和合法稳定住所（含租赁）。</li><li><strong>不得报名情形</strong>：具有普通高等学历教育资格的高校在校生或已录取保留入学资格者；高中非应届在校生；高中非应届年份弄虚作假报名并违规考试的应届生；停考期内人员；不符合户籍学籍规定的人员；因触犯刑法受刑事处罚尚在处罚期内的人员。</li></ol>
+<p>来源：《黑龙江省2026年普通高等学校招生工作规定》https://hlj.gov.cn/hlj/c107857/202604/c00_31936434.shtml ；黑龙江省2026年高考报名相关事项问答 https://hlj.gov.cn/hlj/c107857/202509/c00_31877797.shtml ；伊春市2026年随迁子女等考生公示 https://www.yc.gov.cn/ycsrmzf/c102049/202604/424309.shtml</p></div>
+<div class="subsec">二、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025年10月14日—10月19日（系统每日9:00—21:00开放）。</li><li><strong>现场资格审查及信息确认</strong>：截止2025年11月2日17时，具体时间地点由报名所在地招考机构确定。</li></ol>
+<p>来源：黑龙江省2026年高考报名相关事项问答</p></div>
+<div class="subsec">三、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名（网报）</td><td>2025年10月14日—10月19日</td><td>每日9:00—21:00</td></tr><tr><td>现场确认</td><td>截止2025年11月2日17时</td><td>—</td></tr><tr><td>体检</td><td>2026年3月—4月</td><td>以当地安排为准</td></tr><tr><td>全国统一高考</td><td>2026年6月7日—9日</td><td>—</td></tr><tr><td>成绩公布</td><td>2026年6月</td><td>—</td></tr><tr><td>志愿填报</td><td>第一阶段6月27—29日（本科提前批）；第二阶段7月1—5日（本科批）</td><td>登录hljea.org.cn或lzk.hl.cn"网报中心"</td></tr><tr><td>录取</td><td>2026年7月—8月</td><td>分批次</td></tr><tr><td>征集志愿</td><td>各批次录取后</td><td>—</td></tr></tbody></table></div>
+<div class="subsec">四、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、高校专项、地方专项及"振兴龙江计划"均安排在本科批（45个院校专业组平行志愿内）。</li><li><strong>综合评价录取</strong>：安排在普通类本科提前批（梯度志愿，设1个院校专业组），含香港中文大学、北京外国语大学（综合评价）、北京电子科技学院、中央司法警官学院、深圳北理莫斯科大学（综合评价）、昆山杜克大学（综合评价）、上海纽约大学（综合评价）等。</li><li><strong>公费师范生/免费医学生</strong>：在提前录取普通院校（平行志愿，设20个院校专业组）中，含国家公费师范生、国家优师专项、地方公费师范生、国家免费医学生等。</li><li><strong>军队、公安院校</strong>：军队院校实行梯度志愿（设2个院校专业组）；省内公安院校（黑龙江公安警官职业学院）设5个院校专业组。</li><li><strong>强基计划</strong>：通过教育部阳光高考平台报名，在本科提前批A段开始前录取。</li><li><strong>高职分类考试</strong>：黑龙江省高职院校单独招生（春季）。</li></ul>
+<p>来源：黑龙江省招生考试院《招生计划》说明、哈尔滨新闻网、中国教育在线黑龙江</p></div>
+<div class="subsec">五、注意事项</div><div class="blk"><ol><li><strong>2026年为"院校专业组"首年</strong>，填报逻辑从"选学校"变为"先选院校专业组、再在组内选专业"，一个完整志愿包含批次、院校、专业组、专业四层级。</li><li><strong>选科必须匹配专业组要求</strong>，若选科与专业组要求不符，该志愿直接作废。</li><li><strong>院校专业组设专业服从调剂</strong>，不服从且所报专业均未达条件时可能被退档。</li><li><strong>45个志愿应填满并拉开梯度</strong>。</li><li><strong>随迁子女须3年学籍且实际就读学校与学籍学校一致+父母合法职业住所</strong>。</li></ol></div>
+<div class="subsec">官方信息源</div><div class="blk"><ul><li>黑龙江省招生考试信息港：https://lzk.hl.cn</li><li>黑龙江省教育考试院：https://www.hljea.org.cn</li><li>阳光高考地方站（黑龙江）：https://gaokao.chsi.com.cn/heilongjiang/-</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-山西">
+<h2>山西</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">高考模式与志愿单位</div><div class="blk"><p>山西省实行"3+1+2"模式。本科批采用<strong>"院校专业组"</strong>方式设置志愿，普通类本科批平行志愿栏设置<strong>45个院校专业组志愿</strong>，每个院校专业组设置<strong>6个专业志愿和是否服从专业调剂志愿</strong>。</p>
+<p>来源：《山西省2026年普通高校招生工作规定》https://gaokao.chsi.com.cn/gkxx/zc/ss/202606/20260602/2293523977-5.html</p></div>
+<div class="subsec">一、报考条件</div><div class="blk"><ol><li><strong>户籍在我省的公民基本条件</strong>：①遵守中华人民共和国宪法和法律；②高级中等教育学校毕业或具有同等学力（同等学力者由本人说明、县级教育行政部门审核同意）；③身体状况符合相关要求。</li><li><strong>外省户籍进城务工人员随迁子女</strong>：除符合第1条外，还须符合《山西省招生考试管理中心关于进城务工人员随迁子女参加普通高考有关事项的通知》（晋招考高〔2013〕15号）规定；其父母一方须提供截至2026年8月31日的三年合法稳定住所与职业证明材料。</li><li><strong>特殊情况</strong>：在晋定居外国人须持省级公安机关填发的《外国人永久居留身份证》；港澳台籍考生可在市级招办指定地点报名；因军转安置、工作调动正常迁转在晋落户者不受户籍迁入时间限制。</li><li><strong>不得报名情形</strong>：高校在校生或已录取保留入学资格者；高中非应届在校生；高中非应届年份弄虚作假报名并违规考试的应届生；停考期内人员；思想政治品德考核不合格者；触犯刑法受刑事处罚尚在处罚期内者。</li></ol>
+<p>来源：《山西省招生考试管理中心关于做好我省2026年普通高校招生考试报名工作的通知》http://sxkszx.cn/news/20251022/n1118127001.html ；运城市人民政府随迁子女资格审查答复 https://www.yuncheng.gov.cn/hdjl_1/yhxx/wdxx/index.shtml?searchNo=XJ_256cbb4360774001</p></div>
+<div class="subsec">二、报考流程</div><div class="blk"><ol><li><strong>网上报名与缴费</strong>：2025年10月27日8:00—11月1日18:00，登录山西招生考试网（http://www.sxkszx.cn）完成。</li><li><strong>现场确认</strong>：2025年11月2日8:00—11月7日18:00，到报名点确认。</li><li><strong>报名点</strong>：应届高中毕业生在毕业学校所在县（市、区）招办报名点确认；其他考生原则上在户籍所在县（市、区）报名点；随迁子女在学籍所在县（市、区）报名点确认。</li></ol>
+<p>来源：人民网山西《山西2026年普通高考10月27日开始网报》https://sx.people.com.cn/BIG5/n2/2025/1023/c189130-41388115.html</p></div>
+<div class="subsec">三、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名（网报缴费）</td><td>2025年10月27日—11月1日</td><td>山西招生考试网</td></tr><tr><td>现场确认</td><td>2025年11月2日—11月7日</td><td>—</td></tr><tr><td>体检</td><td>2026年3月—4月</td><td>以当地安排为准</td></tr><tr><td>全国统一高考</td><td>2026年6月7日—9日</td><td>—</td></tr><tr><td>成绩公布</td><td>2026年6月</td><td>—</td></tr><tr><td>志愿填报</td><td>第一段提前批；第二段艺术/体育/普通本科批7月2日8:00—7日18:00</td><td>分段填报</td></tr><tr><td>录取</td><td>2026年7月—8月</td><td>分批次</td></tr><tr><td>征集志愿</td><td>各批次未完成计划时</td><td>至少一次公开征集</td></tr></tbody></table></div>
+<div class="subsec">四、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项、文物全科人才、公费农科生、地方公费师范生、地方优师专项、农村订单定向免费医学生等。其中<strong>高校专项计划从2026年起纳入普通本科批招生录取，实行平行志愿</strong>。</li><li><strong>综合评价录取</strong>：普通本科提前批A段（高校综合评价、参加我省统一录取的香港高校等，设3个院校专业组志愿）。</li><li><strong>军队、公安院校</strong>：本科提前批A段（军队院校军事类专业）。</li><li><strong>强基计划</strong>：在所有批次前提前录取，考生不需填报强基计划志愿，被录取后不再参加后续投档。</li><li><strong>高职分类考试</strong>：山西省高职院校单独招生（春季）。</li></ul>
+<p>来源：《山西省2026年普通高校招生工作规定》、新华网山西相关报道</p></div>
+<div class="subsec">五、注意事项</div><div class="blk"><ol><li><strong>"院校专业组"设专业服从调剂</strong>，不服从且所报专业均未达条件时可能被退档；选考科目须符合专业组要求（物理类专业仅限首选物理考生，历史类仅限首选历史考生）。</li><li><strong>高校专项2026年起并入本科批平行志愿</strong>是重要变化，考生须关注资格申报与填报位置变化。</li><li><strong>45个志愿应拉开"冲稳保"梯度</strong>。</li><li><strong>随迁子女须提供截至2026年8月31日的三年合法稳定住所与职业证明</strong>，家长应尽早准备。</li></ol></div>
+<div class="subsec">官方信息源</div><div class="blk"><ul><li>山西省招生考试管理中心（山西招生考试网）：http://www.sxkszx.cn</li><li>阳光高考地方站（山西）：https://gaokao.chsi.com.cn/shanxi/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-内蒙古">
+<h2>内蒙古</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：60</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">高考模式与志愿单位</div><div class="blk"><p>内蒙古实行"3+1+2"模式。2026年继续改革后的志愿模式：除本科提前批A段为顺序志愿外，其他批（段）采用<strong>"院校专业组"平行志愿</strong>。普通类本科批平行志愿设置<strong>60个院校专业组志愿</strong>（较此前45个增加），每个志愿设置<strong>12个专业和1个是否服从专业调剂选项</strong>。</p>
+<p>来源：《内蒙古自治区2026年普通高等学校招生工作规定》https://gaokao.chsi.com.cn/gkxx/zc/ss/202605/20260521/2293484152-8.html ；内蒙古自治区人民政府网政策解读 https://www.nmg.gov.cn/zmhd/zcwdk/202606/t20260626_2921182.html</p></div>
+<div class="subsec">一、报考条件</div><div class="blk"><ol><li><strong>基本报名条件</strong>：遵守中华人民共和国宪法和法律、高级中等教育学校毕业或具有同等学力、身体状况符合相关要求；具有内蒙古自治区户籍，或符合"25号文件"规定的进城务工人员随迁子女，或符合报名条件的港澳台籍考生，或在内蒙古定居并符合报名条件的外国人。</li><li><strong>区外务工人员随迁子女</strong>：除符合"25号文件"规定的参加2023年我区中考条件外，截至2026年9月1日还须满足4条件：①2023年被自治区内高中阶段学校录取；②本人具有我区高中阶段学校学籍且连续就读满3年；③家长在我区有合法稳定住所（含租赁）且连续居住、有合法职业且纳税（或参加社会保险）均满3年；④参加我区普通高中学业水平合格性考试开考的全部科目考试。</li><li><strong>户籍从区外迁入我区考生</strong>：截至2026年9月1日须满足4条件：①本人具有我区高中阶段学校学籍且连续就读满3年；②本人取得我区户籍满3年；③家长有合法稳定住所且连续居住、有合法职业且纳税（或社保）均满3年；④参加学业水平合格性考试全部科目。</li><li><strong>仅符合部分条件者</strong>：经审核同意可报名，但仅可报考高职（专科）志愿，须签订《只报考高职（专科）志愿承诺书》。</li><li><strong>不得报名情形</strong>：高校在校生或已录取保留入学资格者；高中非应届在校生（少年班、特殊拔尖人才选拔试点除外）等。</li></ol>
+<p>来源：《关于做好内蒙古自治区2026年普通高等学校招生报名工作的通知》（内招考办〔2025〕13号）https://zsks.cn/zszc1/202509/t20250930_46058.html</p></div>
+<div class="subsec">二、报考流程</div><div class="blk"><ol><li><strong>网上报名（含预报名）</strong>：2025年10月20日—10月31日，登录内蒙古招生考试信息网（https://www.nm.zsks.cn）填报，完成身份认证、信息填报、照片上传、签订《高考诚信承诺书》。</li><li><strong>现场确认</strong>：考生到报名点进行资格审核、身份验证信息及采像等确认。</li></ol>
+<p>来源：内蒙古招生考试信息网报名通知及政策解答</p></div>
+<div class="subsec">三、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>高考报名</td><td>2025年10月20日—10月31日</td><td>网上报名</td></tr><tr><td>体检</td><td>2026年3月—4月</td><td>以当地安排为准</td></tr><tr><td>全国统一高考</td><td>2026年6月7日—9日</td><td>—</td></tr><tr><td>成绩公布</td><td>2026年6月24日左右</td><td>内蒙古2026年成绩已公布</td></tr><tr><td>志愿填报</td><td>2026年6月24日起（意向类别6月24日，本科批等后续）</td><td>登录nm.zsks.cn填报</td></tr><tr><td>录取</td><td>2026年7月—8月</td><td>分批次</td></tr><tr><td>征集志愿</td><td>首轮投档后视进度安排</td><td>—</td></tr></tbody></table></div>
+<div class="subsec">四、特殊政策</div><div class="blk"><ul><li><strong>专项计划重大调整</strong>：2026年起将国家专项、地方专项、高校专项等安排在本科普通批录取；本科提前批由A、B、C三段调整为A、B两段（取消本科提前批C段）。</li><li><strong>新增"兴边固边"专项计划</strong>：面向自治区20个边境旗（市、区）符合报考条件的考生招生。</li><li><strong>综合评价录取</strong>：安排在本科提前批A段（顺序志愿，综合评价招生等）。</li><li><strong>公费师范生/免费医学生</strong>：自治区公费定向培养师资计划、优师专项、农村订单定向免费本科医学生等在本科提前批B段。</li><li><strong>军队、公安院校</strong>：本科提前批B段（军事、公安、司法行政警察类、中国消防救援学院等，须先填报意向类别志愿，合格后方可填具体院校专业组）。</li><li><strong>强基计划</strong>：在本科提前批A段开始前依据拟录取名单录取。</li><li><strong>高职分类考试</strong>：内蒙古高职对口招生（对口招生由16类调整为15类，取消蒙牧医类、统一为牧医类）。</li></ul>
+<p>来源：内蒙古自治区人民政府网政策解读、内蒙古招生考试信息网</p></div>
+<div class="subsec">五、注意事项</div><div class="blk"><ol><li><strong>2026年最大变化：取消"动态排名精确定位"填报方式，全面改为"院校专业组"平行志愿（60个）</strong>。考生不再能像往年那样实时查看排名精确定位，须按"冲稳保"策略科学填报。</li><li><strong>本科批院校专业组由45个增至60个</strong>（2026变化），每组12个专业，志愿选择空间扩大。</li><li><strong>院校专业组设专业服从调剂</strong>，不服从且所报专业均未达条件时可能被退档；选考科目须匹配专业组要求。</li><li><strong>放弃本科批次志愿视为放弃本年度所有本科资格</strong>，须慎重操作。</li><li><strong>随迁子女/区外迁入须满足"四个3年"</strong>（学籍3年、户籍3年、家长稳定住所职业社保纳税3年、学业水平合格考全科），门槛较高。</li></ol></div>
+<div class="subsec">官方信息源</div><div class="blk"><ul><li>内蒙古招生考试信息网：https://www.nm.zsks.cn</li><li>阳光高考地方站（内蒙古）：https://gaokao.chsi.com.cn/neimenggu/</li></ul>
+<p>---</p>
+<p>&gt; 综合说明：以上六省均已在教育部阳光高考平台（https://gaokao.chsi.com.cn）设有地方站，强基计划、部分专项计划政策以阳光高考平台及各省教育考试院/招生考试机构当年公告为准。本汇总基于2025—2026年官方发布的报名通知、招生工作规定及志愿填报须知整理，具体执行以考生高考当年最新公告为准。</p></div>
+</section>
+<h2 style="margin:26px 0 10px;color:var(--brand2)">▌新高考“3+1+2”模式（苏皖闽赣鄂湘 6 省）</h2>
+<section class="province" id="p-江苏">
+<h2>江苏</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：40</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><p>实行"3+1+2"模式（统考语文、数学、外语3门全国卷；首选物理/历史1门；再选思想政治、地理、化学、生物中2门，由省自命题）。志愿填报采用<strong>"院校专业组+专业（类）"</strong>模式，院校专业组是志愿填报的基本单位，考生的选考科目须符合所报院校专业组的选科要求。普通类本科批次设置 <strong>40 个院校专业组平行志愿</strong>，每个院校专业组志愿设 6 个专业志愿和 1 个专业服从调剂志愿（来源：江苏省教育厅《2024/2025 年普通高等学校招生工作意见》、新华网江苏频道 2024-06-29）。本科提前批次设 20 个院校专业组志愿；专科批次设 40 个院校专业组志愿。</p></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《江苏省 2025 年普通高校招生工作意见》（苏教考〔2025〕2 号）及《2025 年普通高校招生考试报名办法》（苏教考招〔2024〕36 号）：</p>
+<ul><li><strong>本省户籍</strong>：遵守宪法和法律；高级中等教育学校毕业或具同等学力；身体状况符合要求。</li><li><strong>随迁子女</strong>：除以上条件外，须在我省取得普通高中学籍并有完整普通高中学习经历；其监护人在我省有合法稳定职业、合法稳定住所（含租赁）。</li><li><strong>港澳台/外籍</strong>：港澳台籍参照随迁子女政策；在我省定居并符合报名条件的外国人，持《外国人永久居留身份证》可申请。</li><li><strong>不得报名</strong>：高校在校生或保留入学资格者；高中非应届毕业在校生；弄虚作假违规报考的应届生；停考期内人员；触犯刑法尚在处罚期者（来源：jyt.jiangsu.gov.cn/art/2025/4/7、jseea.cn 2025 年高考报名问答）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025 年高考网上报名时间为 2024 年 11 月 1 日—4 日（截止 11 月 4 日 17:00），网址 www.jseea.cn 或 gk.jseea.cn。</li><li><strong>资格审核</strong>：由市、县招生考试机构审核（往届生、社会考生等先审核后报名）。</li><li><strong>网上支付</strong>：报名信息提交成功后按核定金额网上缴费。</li><li><strong>信息确认（现场）</strong>：网上支付成功后到报名点打印确认表，考生本人签字确认（确认截止 11 月 7 日 17:00）。</li><li><strong>体检</strong>：通常安排在次年 3—4 月，由各市组织（来源：jseea.cn 报名问答）。</li></ol></div>
+<div class="subsec">四、时间节点（以当年公告为准）</div><div class="blk"><table><thead><tr><th>环节</th><th>大致时间</th></tr></thead><tbody><tr><td>高考报名</td><td>前一年 11 月上旬（2025 届：2024-11-01 至 11-04 网报）</td></tr><tr><td>体检</td><td>次年 3—4 月</td></tr><tr><td>全国统考</td><td>6 月 7—9 日</td></tr><tr><td>成绩公布</td><td>6 月下旬</td></tr><tr><td>志愿填报</td><td>第一阶段 6 月 28 日—7 月 2 日（本科）；第二阶段 7 月 27—28 日（专科）</td></tr><tr><td>录取</td><td>7 月 8 日起（本科提前批 7 月 8—14 日，本科批 7 月 18—25 日）</td></tr><tr><td>征集志愿</td><td>各批次录取结束后公布缺额并填报</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家、地方、高校专项计划在苏实施；地方专项、高校专项安排在本科提前批之后、本科批投档前。</li><li><strong>综合评价录取（本省项目）</strong>：2025 年共 23 所高校在苏开展综评，分 A 类 11 所（南京大学、东南大学、中国科学院大学、华南理工、北京外国语、上海科技、南方科技、上海纽约、昆山杜克、香港中文大学（深圳）、深圳北理莫斯科，另西湖大学纳入 A 类）和 B 类 12 所（南京师范、南京信息工程、南京工业、南京邮电、南京医科、南京中医药、南京林业、江苏师范、南通大学、扬州大学、江苏大学、西交利物浦）。A 类在本科提前批前投档，B 类在本科批前投档（来源：江苏省教育厅《关于做好 2025 年普通高校综合评价招生改革试点工作的通知》、人民网江苏频道 2025-04-19）。</li><li><strong>强基计划</strong>：通过教育部阳光高考平台（gaokao.chsi.com.cn）报名。</li><li><strong>定向培养</strong>：乡村教师定向培养计划、农村订单定向医学生免费培养（本科在提前批、专科在专科批，免学费住宿费补助生活费，服务基层≥6 年，分县区录取）。</li><li><strong>春季/分类考试</strong>：高职院校提前招生（需合格性考试成绩）、中职职教高考（对口单招）、"专转本"等本省特色通道。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>志愿单位理解</strong>：以"院校专业组"为单位，同一学校不同专业组是不同志愿，选考科目须匹配。</li><li><strong>退档风险</strong>：平行志愿一轮投档，填报"不服从专业调剂"且所报专业未录满不符时易退档。</li><li><strong>随迁子女资格</strong>：须具江苏普通高中学籍+完整高中经历+监护人稳定职业住所，材料须真实。</li><li><strong>户籍信息</strong>：报名后户籍变更须及时更新，否则影响后期志愿填报。</li><li><strong>兼报限制</strong>：高校专项、综评 B 类、高水平运动队三类志愿不得兼报。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>江苏省教育考试院：https://www.jseea.cn/</li><li>江苏省教育厅：https://jyt.jiangsu.gov.cn/</li><li>报名平台：gk.jseea.cn</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-安徽">
+<h2>安徽</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><p>实行"3+1+2"模式，普通类分历史科目组合、物理科目组合。志愿填报采用<strong>"院校专业组"</strong>模式。普通本科批次、普通高职（专科）批次均实行平行志愿，设置 <strong>45 个院校专业组志愿</strong>，每个院校专业组设 6 个专业志愿及专业服从志愿（来源：安徽省教育厅《关于做好 2025 年普通高校招生工作的通知》jyt.ah.gov.cn/public/7071/40752388.html、安徽省 2024/2025 年录取政策解读）。本科提前批军事、公费师范等类型各设 20 个院校专业组志愿。</p></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《安徽省高等学校招生委员会 安徽省教育厅关于做好 2025 年普通高校招生考试报名工作的通知》（皖招委〔2024〕9 号）：</p>
+<ul><li><strong>本省户籍</strong>：遵守宪法和法律；高级中等教育学校（普高、中职、技校等）毕业或具同等学力；身体状况符合要求。</li><li><strong>随迁子女</strong>：不具有我省户籍的进城务工人员随迁子女，在我省具有高中阶段 3 年完整学籍并有相应学习经历，可在学籍地参考；不得在"流入""流出"两地同时报名。</li><li><strong>港澳台/外籍</strong>：在我省定居并符合报名条件的外国人持《外国人永久居留身份证》申请；港澳台籍在市级考试机构指定地点申请。</li><li><strong>不得报名</strong>：高校在校生/保留资格者；高中非应届在校生；弄虚作假应届生；停考期内；触犯刑法处罚期；其他不符合条件者。</li><li>普通高中应届合格性考试物理、历史均不合格或化学/生物/思政/地理三科及以上不合格的，不得参加统考，可参加高职院校分类考试（来源：ahzsks.cn/ptgxzs/7764.htm、新华网安徽 2024-09-26）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025 年高考网上报名时段为 2024 年 10 月 18 日 10:00 至 10 月 22 日 17:00（含加分及优先录取资格申报同步）。</li><li><strong>资格审核与材料交验</strong>：交验户口本、二代身份证；往届生提供毕业证；非皖籍提供随迁子女证明。</li><li><strong>网上缴费</strong>：艺术类省统考缴费截止 10 月 25 日 17:00。</li><li><strong>体检</strong>：通常次年 3—4 月。</li><li><strong>确认/考试</strong>：由报名点统一组织（来源：ah.xinhua.org 2024-09-26）。</li></ol></div>
+<div class="subsec">四、时间节点（以当年公告为准）</div><div class="blk"><table><thead><tr><th>环节</th><th>大致时间</th></tr></thead><tbody><tr><td>高考报名</td><td>前一年 10 月中旬（2025 届：2024-10-18 至 10-22）</td></tr><tr><td>体检</td><td>次年 3—4 月</td></tr><tr><td>全国统考</td><td>6 月 7—9 日</td></tr><tr><td>成绩公布</td><td>6 月下旬</td></tr><tr><td>志愿填报</td><td>成绩公布后（本科批 45 个院校专业组）</td></tr><tr><td>录取</td><td>7 月起</td></tr><tr><td>征集志愿</td><td>各批次结束后</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家、地方、高校专项均实施，安排在本科提前批录取结束后依次录取（国家→地方→高校），可兼报；国家、地方专项各设 20 个院校专业组平行志愿，高校专项设 1 个院校专业组志愿。</li><li><strong>公费师范/优师/免费医学定向/农技推广定向</strong>：均在本科提前批，分类型各设 20 个院校专业组平行志愿（免费医学、农技定向不设专业服从）。</li><li><strong>综合评价招生</strong>：普通本科提前批"其他类（含定向培养乡村教师、综合评价招生）"中安排（来源：jyt.ah.gov.cn 2025 招生通知）。</li><li><strong>强基计划</strong>：阳光高考平台报名。</li><li><strong>本省特色</strong>：高职院校分类考试、应用型本科对口招生、定向培养乡村教师等。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>志愿单位</strong>：院校专业组为志愿单位，专业服从调剂仅在所投档专业组内进行，不跨组、不跨科类、不跨省。</li><li><strong>退档风险</strong>：不填专业服从被退档后只能参加征集或下一批次。</li><li><strong>随迁子女</strong>：须高中 3 年完整学籍，且不得两地重复报名。</li><li><strong>合格性考试</strong>：应届生合格考不合格将影响统考资格。</li><li><strong>独立学院识别</strong>：XX 大学 XX 学院为独立学院，与母体校不同。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>安徽省教育招生考试院：https://www.ahzsks.cn/</li><li>安徽省教育厅：https://jyt.ah.gov.cn/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-福建">
+<h2>福建</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：50</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><p>实行"3+1+2"模式，普通类分物理、历史科目组合。志愿填报采用<strong>"院校专业组"</strong>模式。普通类本科批常规志愿设 <strong>50 个平行且有顺序排列的院校专业组志愿</strong>（注意：此前部分资料误记为 40 个，以《2026 年福建省普通高等学校招生录取实施办法》（闽招委〔2026〕9 号）为准），每次征求志愿设 20 个；每个院校专业组志愿设 6 个专业志愿和是否服从专业调剂。本科提前批设 1 个第一志愿+3 个参考志愿（梯度志愿），征求志愿设 8 个平行志愿（来源：福建省教育考试院《2026 年福建省普通高等学校招生录取实施办法》闽招委〔2026〕9号，eeafj.cn/gkptgkgsgg/20260612/14670.html）。</p></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《福建省高等学校招生委员会 福建省教育厅关于做好 2025 年普通高等学校招生考试报名工作的通知》：</p>
+<ul><li>须高中阶段学校毕业或同等学力、身体符合要求，并符合下列条件之一：①我省户籍且出生后首次申报户口登记在我省（应届须具我省高中学籍并实际就读）；②因父母工作调动、人才引进、驻闽军人等户籍迁入；③投靠父母一方；④因其他事由迁入的应届生户籍须满 3 年且有 3 学年连续实际就读，往届/同等学力另有年限要求；⑤<strong>随迁子女</strong>：具我省高中阶段学籍且有 3 学年连续实际就读，其父母一方近 3 年在我省缴社保或纳税记录；⑥在我省定居的外国侨民持《外国人永久居留身份证》。</li><li><strong>不得报名</strong>：高校在校生/保留资格者；高中非应届在校生；弄虚作假应届生；停考期内；触犯刑法者；其他不符合条件者（来源：eeafj.cn、莆田市政府 2024-10、泉州晚报 2024-10-16）。</li><li>报名后至 2025 年 7 月 1 日前将户籍迁出或学籍转出我省的，视为放弃我省高考资格。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名+缴费</strong>：2024 年 10 月 23 日—28 日，登录福建省教育考试院网站（www.eeafj.cn）"数字服务大厅—高考高招—高考考生报名系统"。</li><li><strong>现场确认</strong>：2024 年 10 月 29 日—11 月 3 日，持材料到所选确认点确认（逾期不予受理）。</li><li><strong>资格审核</strong>：应届在学籍地、往届在户籍地、随迁子女非应届在原学籍地确认点。</li><li><strong>体检</strong>：次年 3—4 月（来源：eeafj.cn 报名通知、putian.gov.cn）。</li></ol></div>
+<div class="subsec">四、时间节点（以当年公告为准）</div><div class="blk"><table><thead><tr><th>环节</th><th>大致时间</th></tr></thead><tbody><tr><td>高考报名</td><td>前一年 10 月下旬（2025 届：2024-10-23 至 10-28 网报，10-29 至 11-03 确认）</td></tr><tr><td>体检</td><td>次年 3—4 月</td></tr><tr><td>全国统考</td><td>6 月 7—9 日</td></tr><tr><td>成绩公布</td><td>6 月下旬（2025 届：6 月 24 日 13:22 公布成绩、16:30 公布控制线）</td></tr><tr><td>志愿填报</td><td>本科批常规志愿与提前批等按省考试院当年公告的分阶段时间表填报（2025 届本科批在成绩公布后，具体以《2026 年志愿填报公告》为准）</td></tr><tr><td>录取</td><td>6 月 30 日开始，8 月 15 日结束</td></tr><tr><td>征集志愿</td><td>各批次设常规+征求（本科批 2 次征求）</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：高校农村专项计划（高校专项）实施；地方专项计划须在我省户籍所在县（市、区）报名。国家、地方、高校专项按教育部规定实施（闽西北等原中央苏区县为实施区域特点）。</li><li><strong>综合评价录取</strong>：本科提前批含综合评价录取院校（如南方科技大学、上海纽约大学、昆山杜克大学、香港中文大学（深圳）、深圳北理莫斯科大学、北京外国语大学、上海科技大学等经教育部批准的综合评价试点高校）。</li><li><strong>强基计划</strong>：阳光高考平台报名。</li><li><strong>公费师范/免费医学定向/定向培养等</strong>：在提前批相关类型中安排。</li><li><strong>本省特色</strong>：高职分类考试、中职学考等。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>志愿单位</strong>：院校专业组为志愿单位，考生不得重复填报同一院校专业组。</li><li><strong>退档风险</strong>：平行志愿"分数优先、遵循志愿"，投档后高校不得以放弃志愿为由退档；但不服从调剂仍可能退档。</li><li><strong>随迁子女</strong>：父母近 3 年社保/纳税记录是关键，须 3 学年连续实际就读。</li><li><strong>防止高考移民</strong>：户籍迁入年限（满 3 年）要求严格，报名后迁出视为放弃。</li><li><strong>兼报规则</strong>：艺术/体育类可兼报普通类，普通类不可兼报艺术/体育。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>福建省教育考试院：https://www.eeafj.cn/</li><li>报名系统：www.eeafj.cn "数字服务大厅—高考高招"</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-江西">
+<h2>江西</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><p>实行"3+1+2"模式，分普通类（物理/历史科目组）、三校生类。志愿填报采用<strong>"院校专业组"</strong>模式，每个院校专业组内设 6 个专业志愿和是否服从专业调剂志愿。普通类<strong>本科批次平行志愿栏设 45 个院校专业组志愿</strong>（其中国家专项、地方专项、苏区专项及预科班仅限取得资格考生填报）；征集志愿每次 20 个。提前本科、高职（专科）等批次平行志愿栏亦设 45 个院校专业组（来源：江西省教育考试院《2025 年普通高考志愿填报及投档规则》jxeea.cn、阳光高考 gaokao.chsi.com.cn 2025-06-18）。</p></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《江西省 2025 年普通高等学校招生考试报名办法》（赣教考字〔2024〕18 号）：</p>
+<ul><li><strong>本省户籍</strong>：遵守宪法和法律；高中（普高、中专、职高、技校）毕业或同等学力；身体符合要求；且家庭户口不晚于 2024-09-30、集体户口不晚于 2023-09-30。</li><li><strong>随迁子女</strong>：外省户籍在赣就业人员随迁子女，已取得江西高中阶段学籍并实际就读一年以上（入学不晚于 2023-10）；外省户籍具江西中专/技校连续 3 年学籍的 2025 应届生。</li><li><strong>港澳台/外籍</strong>：在赣定居外国侨民或赣高中毕业的港澳台籍考生。</li><li><strong>不得报名</strong>：高校在校生/保留资格者；高中非应届在校生；弄虚作假应届生；停考期内；触犯刑法者等（来源：jxeea.cn 报名问答、人民网江西 2024-10-14）。</li><li>错过统一报名可于 2025 年 2 月 19—21 日补报名（不含艺术、体育生）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2024 年 11 月 1 日—7 日（江西普通高考网上报名），不受理借考。</li><li><strong>确定选考科目</strong>：报名时普通类考生须确定选考科目。</li><li><strong>资格审核/材料</strong>：应届在学籍地或县考试中心，往届在户籍地，随迁子女在毕业/居住地县考试中心。</li><li><strong>网上缴费</strong>。</li><li><strong>体检</strong>：次年 3—4 月（来源：jxeea.cn、今视频 2024）。</li></ol></div>
+<div class="subsec">四、时间节点（以当年公告为准）</div><div class="blk"><table><thead><tr><th>环节</th><th>大致时间</th></tr></thead><tbody><tr><td>高考报名</td><td>前一年 11 月上旬（2025 届：2024-11-01 至 11-07）</td></tr><tr><td>体检</td><td>次年 3—4 月</td></tr><tr><td>全国统考</td><td>6 月 7—9 日</td></tr><tr><td>成绩公布</td><td>6 月下旬</td></tr><tr><td>志愿填报</td><td>第一次 6 月 26 日 9:00—27 日 17:00（提前本科军警类）；第二次 6 月 30 日 9:00—7 月 4 日 17:00（其余志愿）</td></tr><tr><td>录取</td><td>7 月起</td></tr><tr><td>征集志愿</td><td>每批次录取后缺额征集</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划（江西特色"苏区专项"）</strong>：国家专项、地方专项、苏区专项均实施，本科批平行志愿栏内限资格考生填报；高校专项在本科批"特殊选拔单志愿栏"（1 个院校专业组）。</li><li><strong>公费师范生/优师专项</strong>：在提前本科"定向招生平行志愿栏"（45 个）。</li><li><strong>综合评价录取</strong>：提前本科批次含综合评价录取专业。</li><li><strong>强基计划</strong>：阳光高考平台报名。</li><li><strong>本省特色</strong>：三校生类对口报考（本科/高职各 45 个院校专业组）；高职分类考试。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险（重点）</strong>：院校专业组模式下，总分达投档线但所报专业未录且不服从调剂、身体/语种/单科/性别不符等均会退档；平行志愿只一轮投档，退档后只能征集合下一批（来源：阳光高考江西志愿填报问答）。</li><li><strong>志愿单位</strong>：院校专业组为独立志愿，选考科目须匹配，否则无法填报。</li><li><strong>尽量填满 45 个志愿</strong>增加录取机会；"冲稳保垫"拉开梯度。</li><li><strong>随迁子女</strong>：学籍+实际就读年限是资格核心，且申报专项须户籍、学籍、报名、实际就读均在实施区域同一县。</li><li><strong>体检结论</strong>：色弱等限制医学、体育教育等专业，须规避受限专业组。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>江西省教育考试院：https://www.jxeea.cn/</li><li>填报平台：江西省普通高考综合管理平台</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-湖北">
+<h2>湖北</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><p>实行"3+1+2"模式，全国统考科目（语数外，外省自选语种）+ 我省学考选择性考试（"1+2"）。志愿填报采用<strong>"院校专业组"</strong>模式，普通类本科普通批设 <strong>45 个院校专业组平行志愿</strong>，每个院校专业组志愿内可选报不超过 6 个专业及是否服从调剂；本科提前批设不超过 20 个院校专业组平行志愿（另设 1 个单设志愿栏）；高职高专提前批/普通批设 20 个（普通批部分来源记为 45 个，以当年为准）院校专业组志愿（来源：湖北省教育厅《2025 年普通高校阳光招生政策暨志愿填报问答》、hbea.edu.cn）。</p></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《湖北省 2025 年普通高等学校招生考试报名须知》（鄂高考〔2024〕25 号）：</p>
+<ul><li><strong>本省家庭户籍</strong>：出生后首次申报户口在我省；或外省迁入须符合父母户籍/年限要求（2027 年起外省迁入无我省高中经历者须满 2 年）。</li><li><strong>集体户籍</strong>：报名前登记须满 2 年，应届须具我省高中学籍并连续实际就读 3 年。</li><li><strong>随迁子女</strong>：具我省普通高中学籍或中职学籍，并在我省高中阶段学校连续实际就读 3 年的应往届毕业生；父（母）或法定监护人在我省有合法稳定职业、合法稳定住所（含租赁）。</li><li><strong>港澳台/外籍</strong>：持居住证的港澳台居民、持《外国人永久居留身份证》的外国侨民，在我省实际就读可申请。</li><li><strong>不得报名</strong>：高校在校生/保留资格者；高中非应届在校生（不含少年班）；一年制中职/非三年制技校毕业生；弄虚作假应届生；停考期内；触犯刑法者等。湖北不接收外省考生借考（来源：hbea.edu.cn/html/2024-10/14542.html、洪山区政府 2024-10-28）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>报名资格审查</strong>：由报名点/县考试机构审查。</li><li><strong>领取报名卡</strong>：2024 年 11 月 4 日—8 日。</li><li><strong>网上报名+缴费</strong>：艺术类 2024 年 11 月 11 日—13 日；非艺术类 11 月 11 日—22 日（网址 gkbm.hbea.edu.cn，首次网上缴费）。</li><li><strong>现场确认（采像）</strong>：艺术类 11 月 16 日前，非艺术类 12 月 31 日前，凭身份证读取信息、现场拍照、签字确认。</li><li><strong>体检</strong>：预计次年 3 月（来源：hbea.edu.cn 报名须知、襄阳/宜昌政府门户）。</li></ol></div>
+<div class="subsec">四、时间节点（以当年公告为准）</div><div class="blk"><table><thead><tr><th>环节</th><th>大致时间</th></tr></thead><tbody><tr><td>高考报名</td><td>前一年 11 月上旬（2025 届：艺术类 11-11 至 11-13，非艺术类 11-11 至 11-22）</td></tr><tr><td>体检</td><td>次年 3 月</td></tr><tr><td>全国统考</td><td>6 月 7—9 日</td></tr><tr><td>成绩公布</td><td>6 月下旬</td></tr><tr><td>志愿填报</td><td>本科提前批 6 月 29 日 8:00—30 日 17:00；其余 6 月 29 日 8:00—7 月 2 日 17:00</td></tr><tr><td>录取</td><td>7 月起</td></tr><tr><td>征集志愿</td><td>各批次安排征集</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项实施；本科普通批内混合填报，按志愿顺序检索投档；高校专项在本科普通批"单设志愿栏"。</li><li><strong>公费师范/优师/免费医学生</strong>：本科提前批单设志愿栏含农村订单定向免费医学生、荆楚优师计划等。</li><li><strong>综合评价录取</strong>：本科提前批单设志愿栏用于南方科技大学、上海科技大学、北京外国语大学、昆山杜克大学、上海纽约大学、北理莫斯科大学等综合评价高校。</li><li><strong>强基计划</strong>：阳光高考平台报名。</li><li><strong>本省特色</strong>：技能高考（中职生，满分 700 分）、高职单招、五年制高职转段、"一村多名大学生"等。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>志愿单位</strong>：院校专业组为整体，6 位代号（4 位院校+2 位专业组）；首选科目须匹配（物理组填物理要求组、历史组填历史要求组）。</li><li><strong>退档风险</strong>：平行志愿"一轮投档"，退档后参加征集或下批。</li><li><strong>随迁子女</strong>：须连续实际就读 3 年 + 监护人稳定职业/住所（社保或纳税、居住证/房产证）。</li><li><strong>户籍年限</strong>：外省迁入家庭户籍有满 1 年/满 2 年梯度要求，2027 年起更严。</li><li><strong>单设志愿</strong>：综合评价、农村订单定向医学生、荆楚优师等填在单设志愿栏，与普通平行志愿不同。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>湖北省教育考试院：https://www.hbea.edu.cn/</li><li>报名平台：gkbm.hbea.edu.cn</li><li>湖北省教育厅：https://jyt.hubei.gov.cn/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-湖南">
+<h2>湖南</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><p>实行"3+1+2"模式。志愿填报以<strong>院校或院校专业组</strong>为基本单位，每个院校/院校专业组志愿下设 6 个专业志愿和 1 个"专业服从"志愿。普通类本科批设"特殊类型志愿"栏（1 个院校志愿）和"普通志愿"栏（<strong>45 个院校专业组平行志愿</strong>）；本科提前批平行志愿 45 个、单个志愿 1 个；专科提前批平行 30 个；高职专科批 30 个院校专业组平行志愿（来源：湖南省人民政府《湖南 2025 年高考招生政策发布》hunan.gov.cn 2025-05-31、湖南省教育考试院考试问答 2025-06-23）。</p></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《关于做好 2025 年普通高等学校招生考试报名工作的通知》（湘教考普字〔2024〕12 号）：</p>
+<ul><li><strong>本省户籍</strong>：遵守宪法和法律；高级中等教育学校（普高/中职）毕业或同等学力；身体符合要求。</li><li><strong>随迁子女</strong>：普高应届/往届须"自高中一年级起在流入地普高就读、取得学籍并参加我省合格性考试"，且父母在当地居住 1 年期以上；中职毕业生须"在我省中职连续就读 2 年以上（含）并具有学籍"。</li><li><strong>不得报名</strong>：高校在校生/保留资格者（具普通高校学籍不能报名）；高中非应届在校生；弄虚作假者；停考期内；触犯刑法者等。</li><li>湖南<strong>不接受外省考生借考</strong>，且从 2025 年起<strong>取消高考补报名</strong>（来源：jyt.hunan.gov.cn 2024-09-06 提示、2024-10-11 解读、长沙晚报 2024-10-11）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名+缴费</strong>：2024 年 10 月 16 日—31 日（不含双休日），完成信息填报、确认并缴费，逾期不再受理（2025 起无补报）。</li><li><strong>艺术/体育统考报名</strong>：2024 年 11 月 1 日—8 日（艺术类、体育类须另报名缴费）。</li><li><strong>资格审核</strong>：考生须确保身份证有效且与户口簿一致。</li><li><strong>体检</strong>：次年 3—4 月。</li><li><strong>现场确认/考试</strong>（来源：jyt.hunan.gov.cn 报名提示及办法）。</li></ol></div>
+<div class="subsec">四、时间节点（以当年公告为准）</div><div class="blk"><table><thead><tr><th>环节</th><th>大致时间</th></tr></thead><tbody><tr><td>高考报名</td><td>前一年 10 月中旬（2025 届：2024-10-16 至 10-31，不含双休日）</td></tr><tr><td>艺术/体育统考报名</td><td>2024 年 11 月 1 日—8 日</td></tr><tr><td>体检</td><td>次年 3—4 月</td></tr><tr><td>全国统考</td><td>6 月 7—9 日</td></tr><tr><td>成绩公布</td><td>6 月下旬</td></tr><tr><td>志愿填报</td><td>特殊类型（高校专项/中南大学综评）6 月 26 日 8:00—27 日 17:00；本科批普通志愿/高水平运动队 6 月 29 日 8:00—7 月 2 日 17:00</td></tr><tr><td>录取</td><td>强基→飞行学员→本科提前批→本科批→专科提前批→高职专科批</td></tr><tr><td>征集志愿</td><td>各批次安排征集</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项实施，安排在本科批"普通志愿"栏内可兼报。</li><li><strong>楚怡工匠计划</strong>：湖南特色，安排在本科批普通志愿栏。</li><li><strong>公费定向师范生（含优师专项）</strong>：省内公费定向师范生（含优师专项）在本科提前批平行志愿"其他院校"类；初中起点六年制本科公费定向师范生须参加高考报名。</li><li><strong>农村订单定向免费本科医学生</strong>：在本科提前批"单个志愿"栏。</li><li><strong>中南大学综合评价</strong>：本科批"特殊类型志愿"栏（与高校专项、高水平运动队三选一）。</li><li><strong>强基计划</strong>：阳光高考平台报名。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>志愿单位</strong>：院校专业组为志愿单位，每志愿下设 6 专业+1 专业服从。</li><li><strong>退档风险</strong>：平行志愿一次投档；不服从调剂、身体/单科/语种不符会退档。</li><li><strong>随迁子女</strong>：普高生须高一始连续就读+合格考+父母居住 1 年；中职须连续 2 年就读。</li><li><strong>取消补报名</strong>：湖南 2025 起无补报，须在规定窗口完成，且身份证信息须与户籍一致。</li><li><strong>兼报限制</strong>：本科提前批平行志愿与单个志愿不能兼报；特殊类型志愿中高校专项/高水平运动队/中南大学综评只能选一类。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>湖南省教育考试院：https://jyt.hunan.gov.cn/sjyt/hnsjyksy/</li><li>湖南招生考试信息港：https://www.hneeb.cn/</li><li>微信公众号：hunan-zhaokao</li></ul>
+<p>---</p>
+<p>&gt; 说明：以上时间节点（报名、体检、统考、成绩、志愿、录取、征集）为按官方历年口径整理的"大致时间"，<strong>具体日期均以当年各省教育考试院发布的招生工作实施办法/报名通知/志愿填报公告为准</strong>。专项计划、综合评价、公费师范、免费医学生、定向培养等政策实施区域与具体名单以当年省考试院及教育、卫健、人社等部门联合发文为准。</p></div>
+</section>
+<h2 style="margin:26px 0 10px;color:var(--brand2)">▌新高考“3+1+2”模式（粤桂渝川黔 5 省）</h2>
+<section class="province" id="p-广东">
+<h2>广东</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>考试模式</strong>：实行"3+1+2"新高考模式。</li><li>"3"为语文、数学、外语（6 个语种任选）3 门全国统考科目；</li><li>"1"为首选科目，在物理、历史中任选 1 门；</li><li>"2"为再选科目，在思想政治、地理、化学、生物学中任选 2 门。</li><li>总分 750 分（依据广东省新高考改革方案）。</li><li><strong>志愿单位</strong>：以"<strong>院校专业组</strong>"为志愿填报单位。普通类（物理/历史）本科批、专科批均设 1 个平行志愿组，每组设 <strong>45 个院校专业组志愿</strong>；每个院校专业组设 6 个专业志愿和 1 个"是否服从专业调剂"选项（调剂仅在同专业组内进行，不跨组、不跨校）。来源：广东省教育考试院《2026 年普通高校招生志愿填报工作的通知》及广东省招生委员会办公室投档录取实施办法（eea.gd.gov.cn；阳光高考转载）。</li><li><strong>是否设专业服从调剂</strong>：设。每个院校专业组内均有"是否服从专业调剂"选项。</li><li><strong>投档规则</strong>：院校专业组平行志愿，遵循"分数优先、遵循志愿、一轮投档"原则。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《广东省 2026 年普通高校招生统一考试报名工作规定》（eea.gd.gov.cn 附件 PDF，文件号对应 4776227.pdf）：</p>
+<ul><li><strong>本省户籍基本条件</strong>：遵守宪法和法律，高中阶段学校毕业或具同等学力，身体状况符合要求，并符合下列条件之一：</li><li>具有广东省户籍，且出生后首次申报户口登记在广东（身份证号前两位为 44）。</li><li>父母一方属人才优粤卡持有人，或经省/地级以上市政府认定的高层次人才。</li><li>父母一方属驻粤部队现役军人，且考生具我省高中阶段学籍并实际就读。</li><li>户籍从外省迁入我省的考生须符合年限要求（如应届毕业生须具我省高中阶段学校连续 3 年学籍并实际就读，且报名时具我省户籍等）。</li><li><strong>进城务工人员随迁子女</strong>：按《广东省人民政府办公厅转发省教育厅等部门关于做好进城务工人员随迁子女接受义务教育后在我省参加升学考试工作意见的通知》（粤府办〔2012〕137 号）等规定执行，须满足学籍、就读年限及社保/居住证等条件（具体年限以当年文件为准）。</li><li><strong>不得报名情形</strong>：</li><li>具有普通高等学历教育资格的高校在校生或已被录取并保留入学资格者；</li><li>高中阶段学校非应届毕业的在校生；</li><li>在非应届毕业年份以弄虚作假手段报名并违规参加高考的应届毕业班学生；</li><li>因违反国家教育考试规定被给予暂停参加高考处理且在停考期内者；</li><li>因触犯刑法受刑事处罚、尚在处罚期内者；</li><li>不符合我省普通高考报名条件的其他人员。</li></ul>
+<p>来源：阳光高考《广东：2026 年普通高考报名百问百答（一）》（gaokao.chsi.com.cn/gkxx/zc/ss/202510/20251027/2293438634.html）。</p></div>
+<div class="subsec">三、报考流程</div><div class="blk"><p>依据广东省教育考试院 2026 年报名工作规定及补报名通知（eea.gd.gov.cn；gd.gov.cn）：</p>
+<ol><li><strong>报名时间</strong>：<strong>2025 年 11 月 1 日至 10 日</strong>。报名含系统注册、网上报名、确认报名 3 个步骤；系统注册和网上报名为 11 月 1—10 日，<strong>确认报名时间为 11 月 6—10 日</strong>。</li><li><strong>资格初核</strong>：考生准备身份证、户口簿、学籍学历等材料，到就读学校或县（市、区）招生办报名点进行资格初核；经初核符合条件者由报名点派发考生号。</li><li><strong>网上报名</strong>：凭考生号和密码登录广东省普通高考报名系统，阅读报考须知、签订《诚信考试承诺书》，录入基本信息（含选考科目）、上传材料、采集相片、缴纳报考费。</li><li><strong>确认报名</strong>：持身份证、户口簿、学籍学历证明等到报名点办理确认手续，校对核准报考信息。</li><li><strong>体检</strong>：由各市招生办在所辖医院组织，时间一般安排在报名后至次年规定时限前（具体以当年通知为准）。</li><li><strong>补报名</strong>：一般于次年初安排一次补报名，<strong>2026 年补报名为 3 月 2 日至 4 日</strong>；体育/艺术省统考、"3+证书"考试及依学考录取相关考试已结束者不列入补报名范围。</li><li>来源：广东省人民政府网《广东 2026 年高考报名时间定了：今年 11 月 1 日至 10 日》（gd.gov.cn/hdjl/hygq/content/post_4778738.html）；《广东 2026 年普通高考补报名将于 3 月 2 日开始》（gd.gov.cn/gdywdt/bmdt/content/post_4853676.html）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025 年 11 月 1 日—10 日</td><td>系统注册与网上报名同期</td></tr><tr><td>确认报名</td><td>2025 年 11 月 6 日—10 日</td><td>须到报名点现场确认</td></tr><tr><td>补报名</td><td>2026 年 3 月 2 日—4 日</td><td>体育/艺术省统考等不列入</td></tr><tr><td>高考体检</td><td>2026 年（具体以各地通知为准）</td><td>由地市招生办组织</td></tr><tr><td>全国统考</td><td>2026 年 6 月 7 日—9 日</td><td>6 月 7—8 日语数外+首选，6 月 9 日再选</td></tr><tr><td>成绩公布</td><td>2026 年 6 月 24 日（放榜）</td><td>以广东省教育考试院公告为准</td></tr><tr><td>志愿填报</td><td>第一时段 6 月 28 日 9:00—29 日 16:00；第二时段 6 月 29 日 19:00—7 月 4 日 16:00</td><td>提前批特殊类先填，其余后填</td></tr><tr><td>录取</td><td>2026 年 7 月起</td><td>分批次投档录取</td></tr><tr><td>征集志愿</td><td>如本科批 7 月 26 日 10:00 前填报</td><td>未被录取且达资格线考生参加；以当年通知为准</td></tr></tbody></table>
+<p>来源：广东省教育考试院《关于做好广东省 2026 年本科批次征集志愿和网上录取工作的通知》（eea.gd.gov.cn/ptgk/content/post_4933473.html）；深圳广电报道 2026 广东志愿时段（sztv.com.cn）。</p></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项计划按教育部及广东省规定实施（高校专项须登录阳光高考平台申报）。</li><li><strong>公费师范生 / 免费医学生 / 定向</strong>：国家公费师范生、地方公费师范生、农村订单定向免费医学生、卫生专项、教师专项等按相关计划录取；其中公费师范生、卫生专项等安排在提前批（院校专业组志愿）。</li><li><strong>军队、公安院校</strong>：安排在提前批军检类，须政审、面试、体检，志愿填报第一时段完成。</li><li><strong>强基计划</strong>：按教育部规定，在提前批前依序投档录取，由高校确定名单后报省招办录取。</li><li><strong>综合评价录取</strong>：在提前批特殊类型中投档，符合条件并填报志愿的考生一次性投档给高校择优录取。</li><li><strong>高职分类考试（春季高考）</strong>：包括"3+证书"考试、依学考成绩录取、高职自主招生、三二分段、五年一贯制等，报名与夏季高考同期进行（2025 年 11 月 1—10 日）。</li><li><strong>随迁子女门槛</strong>：严防"高考移民"，凡不符合广东高考报名条件者一律不予报名；只能报考高职（专科）批次院校的考生须明确被告知后果。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：实行一轮投档，进档后被退档（如不服从调剂、单科/体检不符等）只能参加征集志愿或下一批次，无法同批次二次投档。</li><li><strong>选科匹配</strong>：须严格对照院校专业组的选考科目要求（首选物理/历史、再选科目限制），不符则志愿无效。</li><li><strong>志愿梯度</strong>：本科批 45 个组容量充足，建议尽量填满、拉开"冲稳保"梯度；细读招生章程关注单科成绩、身体条件、外语语种等限制。</li><li><strong>随迁子女门槛</strong>：外省迁入户籍考生严格审核，严防高考移民；随迁子女须满足学籍与就读年限等条件。</li><li><strong>补报名/借考</strong>：错峰报名可参加次年补报名；广东省原则上不办理外省考生借考（以当年公告为准）。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>广东省教育考试院官网：https://eea.gd.gov.cn/</li><li>广东省普通高考报名/志愿填报系统：https://pg.eeagd.edu.cn/ks</li><li>广东省人民政府网高考政策：https://www.gd.gov.cn/</li><li>阳光高考（广东政策转载/百问百答）：https://gaokao.chsi.com.cn/</li><li>报名工作规定 PDF（官方）：https://eea.gd.gov.cn/attachment/0/594/594256/4776227.pdf</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-广西">
+<h2>广西</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：40</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>考试模式</strong>：实行"3+1+2"新高考模式（依据广西高考综合改革方案）。</li><li><strong>志愿单位</strong>：以"<strong>院校专业组</strong>"为志愿填报单位。2026 年《广西普通高校招生考试和录取工作方案》规定：</li><li>本科普通批（普通类物理/历史）实行平行志愿，设置 <strong>40 个院校专业组志愿</strong>，每个院校专业组内设置 <strong>20 个专业</strong>和 1 个"是否服从专业组内专业调剂"选项。</li><li>高职高专普通批同样为 40 个院校专业组志愿。</li><li>多数平行志愿小批次（如艺体类、提前批其他类）为 20 个院校专业组志愿；本科提前批部分小批次为单志愿（1 个院校专业组志愿）。</li></ul>
+<p>来源：广西壮族自治区人民政府网《广西 2026 年普通高校招生考试和录取工作方案公布》（gxzf.gov.cn/gxyw/t27757167.shtml）；南宁市人民政府网转发教育厅方案（nanning.gov.cn/ggfw/bmfw/jyfw1/ptgzjy/t6648339.html）。</p>
+<ul><li><strong>是否设专业服从调剂</strong>：设。每个院校专业组内均有"是否服从专业组内专业调剂"选项（调剂仅限同一专业组内）。</li><li><strong>投档规则</strong>：平行志愿遵循"分数优先、遵循志愿"；单志愿遵循"志愿优先、遵循分数"。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《自治区招生考试院关于做好广西 2026 年普通高校招生考试报名信息采集工作的通知》（gxeea.cn/view/content_1013_32206.htm）：</p>
+<ul><li><strong>统考报名基本条件</strong>：遵守宪法和法律；高级中等教育学校毕业或具同等学力；身体状况符合要求；户口条件满足下列之一：</li><li>出生后首次户口登记在我区，且高考报名时户口仍在我区；</li><li>外来务工人员随迁子女和外省户籍学籍迁入人员（外来人员），符合《自治区人民政府办公厅转发自治区教育厅等部门关于外来务工人员随迁子女和外省户籍学籍迁入人员在广西参加升学考试意见的通知》（桂政办发〔2012〕330 号）规定；</li><li>外来人员如上一年度在我区参加统考，且能提供上一年度统考结束后到本轮报名期间在我区实际工作（学习）和居住的证明；</li><li>在广西定居的外国侨民，持《中华人民共和国外国人永久居留证》。</li><li><strong>随迁子女条件</strong>：按桂政办发〔2012〕330 号及实施细则（桂招考委〔2013〕32 号）执行，须满足学籍、父母工作/住所、年限等要求（具体年限以文件为准）。</li><li><strong>不得报名情形</strong>：</li><li>具有普通高等学历教育资格的高校在校生或已被录取并保留入学资格者；</li><li>高级中等教育学校非应届毕业的在校生（少年班除外）；</li><li>在非应届毕业年份以弄虚作假手段报名并违规参加高考的应届毕业生；</li><li>因违反国家教育考试规定被暂停参加高考且在停考期内者；</li><li>因触犯刑法被采取强制措施或正在服刑者；</li><li>不符合在我区报考条件的外来人员；</li><li>已在区外参加高考报名且通过审核者。</li></ul>
+<p>来源：广西招生考试院报名通知（gxeea.cn/view/content_1013_32206.htm）。</p></div>
+<div class="subsec">三、报考流程</div><div class="blk"><p>依据广西招生考试院 2026 年报名通知及防城港市公告（gxeea.cn；gkq.gov.cn）：</p>
+<ol><li><strong>报名时间</strong>：<strong>2025 年 10 月 21 日 9:00 至 10 月 31 日 17:30</strong>（网上报名+现场核验）。</li><li><strong>网上报名</strong>：登录"广西招生考试院"网站（www.gxeea.cn），点击"系统导航—考试报名—2026 年高考网上报名系统"电脑端，或使用"广西普通高考信息管理平台"手机 App 报名。</li><li><strong>现场核验</strong>：<strong>2025 年 10 月 24 日至 10 月 31 日 17:30</strong>（以各地公告为准），考生到报名点交验身份证、户口簿、学籍/学历等材料。</li><li><strong>资格审核与公示</strong>：各级教育行政、招生考试机构对户籍、学籍、材料全面核查并公示（不少于 10 个工作日）。</li><li><strong>体检</strong>：由各市、县招生办在指定医院组织（具体时间以当年通知为准）。</li><li><strong>缴费</strong>：按自治区物价、财政部门标准缴纳报考费（具体标准以当年文件为准）。</li><li>注：各报名站不得办理外省借考考生报名核验手续。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025 年 10 月 21 日 9:00—31 日 17:30</td><td>广西招生考试院网站/App</td></tr><tr><td>现场核验</td><td>2025 年 10 月 24 日—31 日 17:30</td><td>到报名点交验材料</td></tr><tr><td>高考体检</td><td>2026 年（以各地通知为准）</td><td>指定医院组织</td></tr><tr><td>全国统考</td><td>2026 年 6 月 7 日—9 日</td><td>6 月 7—8 日语数外+首选，6 月 9 日再选</td></tr><tr><td>成绩公布</td><td>2026 年 6 月 25 日左右</td><td>以广西招生考试院公告为准</td></tr><tr><td>志愿填报</td><td>2026 年（成绩公布后，以公告为准）</td><td>分批次网上填报</td></tr><tr><td>录取</td><td>2026 年 7 月起</td><td>本科提前批→本科普通批→专科批</td></tr><tr><td>征集志愿</td><td>如本科普通批第四次征集 7 月 31 日 18:30—8 月 1 日 9:00</td><td>视计划缺额多次征集；以当年通知为准</td></tr></tbody></table>
+<p>来源：广西招生考试院《关于广西 2026 年普通高校招生本科普通批第四次征集志愿及高职高专提前批定向类征集志愿的说明》（gxeea.cn/view/content_619_33214.htm）；广西招生考试院报名通知。</p></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项计划按规定实施（高校专项须登录阳光高考平台申报）。</li><li><strong>公费师范生 / 免费医学生 / 定向</strong>：国家公费师范生、地方公费师范生、农村订单定向免费医学生、免费少数民族预科班等按相应计划录取（部分安排在提前批或其他预科批）。</li><li><strong>军队、公安院校</strong>：安排在本科提前批相应小批次，须政审、面试、体检（体测）。</li><li><strong>强基计划</strong>：按教育部规定在提前批前投档录取。</li><li><strong>高职分类考试（职教高考）</strong>：广西实施高等职业教育考试招生（职教高考），含对口考试（中职升高职）、单招考试（高中/中职/社会人员）等，依据《广西壮族自治区高等职业教育考试招生办法》（桂教规范〔2024〕19 号）。</li><li><strong>综合评价、少年班等</strong>：按教育部及自治区规定执行。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：投档后院校按章程录取，所填专业录满且不服调剂或不符合条件者将被退档；同批次征集志愿为补救机会。</li><li><strong>选科匹配</strong>：选考科目须符合院校专业组要求方可填报；物理/历史按首选科目分别划线、分别投档。</li><li><strong>志愿梯度</strong>：本科、专科普通批均 40 个院校专业组，建议拉开梯度、尽量填满。</li><li><strong>随迁子女门槛</strong>：严格按桂政办发〔2012〕330 号审核学籍、户籍、父母工作/住所及年限；空挂学籍、人籍分离将被查处。</li><li><strong>补报名/借考</strong>：广西不接受外省考生借考；补报名安排以当年公告为准。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>广西招生考试院官网：https://www.gxeea.cn/</li><li>广西 2026 年高考报名信息采集通知：https://www.gxeea.cn/view/content_1013_32206.htm</li><li>广西 2026 年招生考试和录取工作方案：http://gxzf.gov.cn/gxyw/t27757167.shtml</li><li>阳光高考（广西政策）：https://gaokao.chsi.com.cn/</li><li>广西普通高考信息管理平台（手机 App）：通过广西招生考试院官网扫码下载</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-重庆">
+<h2>重庆</h2>
+<span class="badge b">志愿单元：专业+院校</span><span class="badge">本科批志愿数：96</span><span class="badge">调剂：不设调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>考试模式</strong>：实行"3+1+2"新高考模式，总分 750 分，考试时间 6 月 7 日—9 日。</li><li><strong>志愿单位</strong>：以"<strong>专业（类）+院校</strong>"为志愿单位（专业平行志愿）。</li><li>普通类<strong>本科批</strong>设置 <strong>96 个专业平行志愿</strong>（"1 个专业/类 + 1 个学校"为 1 个志愿），<strong>不设是否服从专业调剂选项</strong>（因档案直接投到具体专业）。</li><li>普通类高职专科批同样设置 96 个专业平行志愿。</li><li>本科提前批 A 段（公安类）设 60 个专业平行志愿，其他类设 1 个院校顺序志愿；本科提前批 B 段（国家专项、高校专项、公费师范生、农村订单定向医学生等）设 60 个专业平行志愿。</li></ul>
+<p>来源：重庆市教育委员会《重庆市 2026 年普通高等学校招生工作实施办法》（cq.gov.cn/zwgk/zfxxgkml/zdlyxxgk/jy1/jyzt/gz2026nqggk/202606/t20260601_15718477.html）；《重庆市 2026 年普通高等学校招生工作实施办法解读》（cq.gov.cn/.../202606/t20260603_15725526.html）；重庆招考信息网志愿填报咨询精华（cqzk.com.cn）。</p>
+<ul><li><strong>是否设专业服从调剂</strong>：专业平行志愿（"专业+院校"）<strong>不设</strong>服从调剂选项；仅院校顺序志愿（如提前批其他类、高职专科提前批）设"是否服从专业调剂"选项。</li><li><strong>投档规则</strong>：专业平行志愿遵循"分数优先、遵循志愿、一轮投档"。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《重庆市 2026 年普通高校招生工作实施办法》及报名须知（cq.gov.cn；cqzk.com.cn）：</p>
+<ul><li><strong>普通类基本条件</strong>：遵守宪法和法律，高级中等教育学校毕业或具同等学力，身体状况符合要求，并符合下列之一：</li><li>考生自出生之日起至报考时户籍一直在我市久居；</li><li>具我市普通高中学籍并实际就读，且考生随父（母）将户籍落户我市符合相应条件者，或持《外国人永久居留身份证》在我市定居者；</li><li>原户籍非我市的考生（除第 2 项规定情形外），考生及父或母须落户我市 3 年及以上，且考生具我市普通高中连续完整 3 年学籍并实际就读；</li><li>非我市户籍的进城务工人员随迁子女，考生及父或母至少一方须持我市公安机关颁发的 3 年及以上且在有效期内的居住证，考生具 3 年我市普通高中连续完整学籍并实际就读，父或母须提供在渝 3 年及以上合法稳定就业和居住证明（须同时提供连续 3 年及以上在渝缴纳基本养老保险和基本医疗保险等材料）；</li><li>驻外使领馆工作人员随任子女，回国后户籍落户我市者。</li><li><strong>其他报考类型</strong>：高职对口类、中职直升类、单考单招类、高职专项类（退役军人）等，条件详见当年实施办法。</li><li><strong>不得报名情形</strong>：具有普通高等学历教育资格的高校在校生或已被录取并保留入学资格者；高级中等教育学校非应届毕业的在校生（少年班除外）；在非应届毕业年份弄虚作假报名并违规参加高考的应届毕业生；因违反国家教育考试规定被暂停参加高考且在停考期内者；因触犯刑法受刑事处罚尚在处罚期内者等。</li></ul>
+<p>来源：重庆招考信息网《2026 年普通高考报名须知》（cqzk.com.cn/PTGK/PTGK_news/1983088351940157440.html）。</p></div>
+<div class="subsec">三、报考流程</div><div class="blk"><p>依据重庆市教育考试院《2026 年普通高考报名事项》（cqzk.com.cn/PTGK/PTGK_news/1983093918318436352.html）：</p>
+<ol><li><strong>报名时间</strong>：<strong>2025 年 9 月 22 日至 10 月 14 日</strong>集中进行（其中 10 月 1—8 日网上报名系统正常开放）。在校生在就读学校所在区县招考机构报名点报名，其他考生在户籍或工作、生活所在区县报名点报名。</li><li><strong>身份信息采集</strong>：考生到报名点扫描身份证、电子摄像（蓝色背景一寸齐胸近照）。</li><li><strong>提交报名材料</strong>：身份证、户口簿、学力证明、综合素质评价报告、综合信息表、资格审核表等；随迁子女须填《重庆市务工随迁子女普通高考报名申请表》并提交居住证及在渝缴纳基本养老/医疗保险等证明。</li><li><strong>资格审核</strong>：区县招考机构严格审核，合格者发放网上报名密码；经复核不符条件者回户籍地报名。</li><li><strong>网上报名</strong>：登录"重庆市普通高校招生报名信息采集系统"（市教育考试院指定网站），阅读诚信承诺、修改密码、填报信息、选择选考科目、申报照顾及专项资格。</li><li><strong>交纳报考费</strong>：按财政、物价部门标准网上缴费（兼报高职分类与统一高考者，集中报名时暂不交统一高考费，4 月下旬补交）。</li><li><strong>信息确认与公示</strong>：生成考生号、打印《考生报名表》签字确认；报名信息公示不少于 10 个工作日；市教育考试院会同公安、教委复核。</li><li><strong>体检</strong>：由区县招考机构在指定医院组织（具体时间以当年通知为准）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025 年 9 月 22 日—10 月 14 日（每天 7:00—23:00）</td><td>含 10 月 1—8 日正常开放</td></tr><tr><td>高考体检</td><td>2026 年（以区县通知为准）</td><td>指定医院组织</td></tr><tr><td>全国统考</td><td>2026 年 6 月 7 日—9 日</td><td>6 月 7—8 日语数外+首选，6 月 9 日再选</td></tr><tr><td>成绩公布</td><td>2026 年 6 月 24 日左右</td><td>以重庆市教育考试院公告为准</td></tr><tr><td>志愿填报</td><td>2026 年 6 月 27 日 9:00—30 日 18:00</td><td>全市统一网上填报，逾期不能补报</td></tr><tr><td>录取</td><td>2026 年 7 月上旬—8 月中旬</td><td>提前批→本科批→专科批</td></tr><tr><td>征集志愿</td><td>以当年各批次通知为准</td><td>部分批次设 1—2 次征集</td></tr></tbody></table>
+<p>来源：重庆市教育委员会《招生工作实施办法》及解读；重庆招考信息网志愿填报咨询精华（cqzk.com.cn/PTGK/PTGK_guide/2064978018729435136.html）。</p></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、高校专项、地方专项按规定实施；高校专项须登录阳光高考平台申报。本科提前批 B 段纳入国家专项、高校专项、公费师范生、农村订单定向医学生等。</li><li><strong>公费师范生 / 定向</strong>：国家公费师范生、地方公费师范生（含优师专项、全科教师）、农村订单定向医学生等安排在本科提前批 B 段（60 个专业平行志愿）。</li><li><strong>军队、公安院校</strong>：军事、公安、消防等安排在本科提前批 A 段（有面试、体检/体测等特殊要求）。</li><li><strong>强基计划</strong>：在本科提前批 A 段前依序投档录取。</li><li><strong>综合评价录取</strong>：有关高校综合评价招生安排在本科提前批 A 段。</li><li><strong>高职分类考试</strong>：3 月组织的高职分类考试招生与 6 月统一高考并行；兼报考生如被高职分类录取不得再参加统一高考。</li><li><strong>其他</strong>：高水平运动队、保送生、体育单招、残疾单招、消防单招等按相应规定执行。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：专业平行志愿直接投档到具体专业，"一轮投档"，被退档只能参加征集或下一批次；因无服从调剂选项，务必合理设置梯度。</li><li><strong>选科匹配</strong>：选考科目须符合专业要求；同分排序依次比较语数总和、语数单科最高、外语、首选科目、再选科目等。</li><li><strong>志愿梯度</strong>：本科批 96 个专业平行志愿容量充足，但仍须按"冲稳保"拉开梯度，避免滑档。</li><li><strong>随迁子女门槛</strong>：须同时满足居住证 3 年及以上、连续 3 年我市普通高中学籍并实际就读、父母在渝连续 3 年养老和医疗保险等硬性条件。</li><li><strong>补报名/借考</strong>：重庆志愿填报逾期不能补报；借考按教育部及我市规定执行（以当年公告为准）。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>重庆市教育考试院门户网：https://www.cqksy.cn/</li><li>重庆招考信息网：https://www.cqzk.com.cn/</li><li>重庆市 2026 年招生工作实施办法：https://www.cq.gov.cn/zwgk/zfxxgkml/zdlyxxgk/jy1/jyzt/gz2026nqggk/202606/t20260601_15718477.html</li><li>阳光高考（重庆政策）：https://gaokao.chsi.com.cn/</li><li>志愿填报入口：重庆市教育考试院门户网 / 重庆招考信息网（指定报名信息采集系统）</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-四川">
+<h2>四川</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45（B段）</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>考试模式</strong>：四川省为第五批高考综合改革省份，<strong>2025 年首次落地"3+1+2"新高考模式</strong>，2026 届为落地后的第二届。总分 750 分（依据《四川省深化普通高等学校考试招生综合改革实施方案》）。</li><li><strong>志愿单位</strong>：以"<strong>院校专业组</strong>"为志愿填报单位。</li><li>普通类<strong>本科批次 B 段</strong>（本科提前批及本科批 A 段以外的本科招生专业）实行平行志愿，设置 <strong>45 个院校专业组志愿</strong>，每个院校专业组内设置 6 个专业志愿和 1 个"是否服从专业调剂"选项。</li><li>普通类高职（专科）批次同样设置 45 个院校专业组志愿。</li><li>本科提前批 B 段（公费师范生、定向医学生等）设 30 个院校专业组志愿；本科批次 A 段（国家专项、地方专项）各设 20 个；高校专项设 20 个；省属高校少数民族预科设 20 个。</li></ul>
+<p>来源：四川省教育考试院《关于做好四川省 2026 年普通高校招生工作的通知》及志愿设置说明（sceea.cn；sceeic.cn）；四川省教育厅《四川考生必看！关于志愿填报的 100 个问题①》（edu.sc.gov.cn/scedu/c100494/2025/6/16/...）。</p>
+<ul><li><strong>是否设专业服从调剂</strong>：设。每个院校专业组内均有"是否服从专业调剂"选项（调剂仅在同一专业组内进行）。</li><li><strong>投档规则</strong>：平行志愿遵循"位次优先、遵循志愿、一轮投档"；顺序志愿用于提前批部分段。</li><li><strong>2025 新高考首年变化提示</strong>：四川由"文科/理科"改为"物理类/历史类"，志愿由"院校+专业"改为"院校专业组"；高校往年录取分数仍有参考意义（以首选科目分物理组/历史组，专业组包含专业往年情况可参考）。来源：四川省教育考试院志愿填报问答（edu.sc.gov.cn）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《四川省 2026 年普通高校招生报名工作的通知》及市（州）招考机构公告（sceea.cn；sczwfw.gov.cn；scms.gov.cn）：</p>
+<ul><li><strong>普通高考基本条件</strong>：遵守宪法法律；高级中等教育学校毕业或具同等学力；身体状况符合要求。</li><li><strong>随迁子女</strong>：凡父母在我省有合法稳定职业和住所（含租赁），在父母就业和居住地具有高中阶段学籍和 <strong>3 年完整学习经历</strong>且符合其他报名条件的，可在就读地县（市、区）招考机构报名参加普通高考。申请者应于 <strong>2025 年 10 月 22 日 17:00 前</strong>向就读中学所在县级招考机构申请，提供父母暂（居）住证明、合法稳定职业证明、当地就读年限及学籍证明等。依据：《四川省人民政府办公厅关于转发教育厅等部门四川省进城务工人员随迁子女在当地参加升学考试实施方案的通知》（川办发〔2012〕77 号）。</li><li><strong>不得报名情形</strong>：具有普通高等学历教育资格的高校在校生或已被录取并保留入学资格者；高级中等教育学校非应届毕业的在校生；在非应届毕业年份弄虚作假报名并违规参加高考的应届毕业生；因违反国家教育考试规定被暂停参加高考且在停考期内者；因触犯刑法受刑事处罚尚在处罚期内者等。</li><li><strong>其他</strong>：外国侨民持《外国人永久居留身份证》在定居地报名；华侨港澳台考生按教学〔2018〕4 号执行；错过规定报名时间回川人员适时组织 1 次补报名（艺术类不再补报）。</li></ul>
+<p>来源：人民网四川《四川 2026 年高考报名启动，10 月 24 日至 11 月 6 日网上报名》（sc.people.com.cn）；宁南县教育考试中心通知（lsznnx.sczwfw.gov.cn）。</p></div>
+<div class="subsec">三、报考流程</div><div class="blk"><p>依据四川省教育考试院 2026 年报名工作通知及市（州）公告：</p>
+<ol><li><strong>报名时间</strong>：<strong>2025 年 10 月 24 日至 11 月 6 日</strong>，每日 9:00—22:00（艺术体育类专业统考报名与普通高考报名同时进行）。</li><li><strong>报名方式</strong>：采用网上报名，登录<strong>四川省招生考试综合报名系统</strong>（https://zhbm.sceea.cn）完成。</li><li><strong>报名点</strong>：原则上在户籍所在县（市、区）招考机构指定报名点；应届高中在校考生确需在学籍地报名的，经中学同意、县招办批准后可办；社会考生在户籍地报名。随迁子女在就读地报名。</li><li><strong>资格申报</strong>：拟申请民族地区加分、国家/地方专项、省级公费师范生、地方优师、乡村振兴计划、区域教育均衡发展专项、省属高校少数民族预科、"铁路就业帮扶"专项等，须在高考报名时主动申报；高校专项须登录阳光高考平台申报。</li><li><strong>信息确认与缴费</strong>：考生完成网上报名、信息确认（部分须现场确认）、网上缴费。</li><li><strong>体检</strong>：由县（市、区）招考机构在指定医院组织（具体时间以当年通知为准）。</li><li><strong>补报名</strong>：对错过规定报名时间的回川参考人员适时组织 1 次补报名，艺术类不再补报。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025 年 10 月 24 日—11 月 6 日（9:00—22:00）</td><td>四川省招生考试综合报名系统</td></tr><tr><td>高考体检</td><td>2026 年（以各地通知为准）</td><td>指定医院组织</td></tr><tr><td>全国统考</td><td>2026 年 6 月 7 日—9 日</td><td>6 月 7—8 日语数外+首选，6 月 9 日再选</td></tr><tr><td>成绩公布</td><td>2026 年 6 月 23 日左右</td><td>以四川省教育考试院公告为准</td></tr><tr><td>志愿填报</td><td>本科提前批国家专项/A段/高校专项、艺术本科提前批截止 6 月 28 日 17:00；其余本科截止 7 月 1 日 17:00；专科提前批/专科批截止 7 月 5 日 17:00</td><td>成绩公布后填报</td></tr><tr><td>录取</td><td>2026 年 7 月起</td><td>强基→提前批→本科批→专科批</td></tr><tr><td>征集志愿</td><td>以当年各批次通知为准</td><td>批次缺额补报</td></tr></tbody></table>
+<p>来源：四川省教育厅志愿填报问答（edu.sc.gov.cn）；宜宾发布《事关 2026 年高考志愿填报！》（toutiao.com/article/7633631248518218276）；今日头条转载《实施规定》。</p></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项计划按规定实施（高校专项须登录阳光高考平台申报）；本科批次 A 段含国家专项、地方专项（各 20 个院校专业组志愿，依次投档）。</li><li><strong>公费师范生 / 免费医学生 / 定向</strong>：国家公费师范生、国家优师专项、省级公费师范生、地方优师计划、农村订单定向医学生、乡村振兴计划等；其中农村订单定向医学生、省级公费师范生、地方优师计划第一轮志愿限实施区域内本县（市、区）合格考生填报（安排在本科提前批 B 段，30 个院校专业组志愿）。</li><li><strong>区域教育均衡发展专项计划</strong>：限实施区域内本市（州）合格考生填报（本科批次 B 段）。</li><li><strong>省属高校少数民族预科</strong>：设置 20 个院校专业组志愿（平行志愿）。</li><li><strong>军队、公安院校</strong>：军事类、公安类、司法类、航海类、消防救援等安排在本科提前批 A 段（顺序志愿）。</li><li><strong>强基计划</strong>：安排在本科提前批次前投档录取。</li><li><strong>综合评价、少年班、保送生等</strong>：按教育部及我省规定执行。</li><li><strong>高职分类考试（高职单招）</strong>：中职类对口招生、高职单招等按规定实施；拟报高职单招的考生须在规定时间报名。</li><li><strong>2025 新高考首年变化</strong>：四川自 2025 年起取消文理分科，实行"院校专业组"志愿；同分排序、投档规则已与新机制衔接，考生须以首选科目（物理/历史）分列计划、分列投档。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：平行志愿"一轮投档"，进档后被退档（不服从调剂、条件不符等）可关注本批次征集志愿；本科批 B 段退档后仍有征集机会。</li><li><strong>选科匹配</strong>：每所院校可设一个或多个专业组，同一专业组内各专业选考科目要求必须相同；考生须满足专业组选科要求方可填报，不符则志愿作废。</li><li><strong>志愿梯度</strong>：本科批 B 段 45 个院校专业组，建议按"冲 15% + 稳 50% + 保 35%"拉开梯度、尽量填满。</li><li><strong>随迁子女门槛</strong>：须满足父母合法稳定职业和住所、考生 3 年完整高中阶段学习经历；申请截止 2025 年 10 月 22 日 17:00。</li><li><strong>补报名/借考</strong>：错过报名时间回川人员可适时补报名（艺术类不补）；四川原则上不办理外省借考（以当年公告为准）。</li><li><strong>户籍关联计划</strong>：拟申请民族地区加分及报考与户籍关联的各类计划（专项、预科等）考生，须在户籍所在县（区）报名，否则不具备相应资格。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>四川省教育考试院官网：https://www.sceea.cn/</li><li>四川省招生考试综合报名系统：https://zhbm.sceea.cn</li><li>四川省招生考试指导中心：https://www.sceeic.cn/</li><li>四川省教育厅（政策解读）：https://edu.sc.gov.cn/</li><li>阳光高考（四川政策/高校专项）：https://gaokao.chsi.com.cn/</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-贵州">
+<h2>贵州</h2>
+<span class="badge b">志愿单元：专业+院校</span><span class="badge">本科批志愿数：96</span><span class="badge">调剂：不设调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>考试模式</strong>：实行"3+1+2"新高考模式（贵州为第四批高考综合改革省份，2024 年起落地）。</li><li><strong>志愿单位</strong>：以"<strong>专业（类）+院校</strong>"为志愿单位（专业平行志愿）。</li><li>普通类<strong>本科批</strong>（除本科提前批以外的其他本科招生专业，含预科、民族班、国家专项、地方专项）设置 <strong>96 个专业（类）平行志愿</strong>（"1 个专业/类 + 1 个院校"为 1 个志愿）。</li><li>普通类高职（专科）批同样设置 96 个专业（类）平行志愿。</li><li>本科提前批 C 段（国家公费师范生、优师专项、农村订单定向免费医学生等）设 60 个专业（类）平行志愿；本科提前批 A 段、B 段及高职专科提前批为院校顺序志愿（1 个院校 + 6 个专业，设服从调剂）。</li></ul>
+<p>来源：贵州省招生考试院《贵州省 2026 年高考志愿填报指南》（zsksy.guizhou.gov.cn/tzgg/202606/t20260624_90553090.html）；贵州省教育高质量发展委员会《关于做好 2026 年普通高校招生工作的通知》（zsksy.guizhou.gov.cn/ptgk/xgkzl/202604/t20260414_90003831.html）。</p>
+<ul><li><strong>是否设专业服从调剂</strong>：专业（类）平行志愿<strong>不设</strong>是否服从专业调剂选项（档案直接投到具体专业）；仅院校顺序志愿设"是否服从专业调剂"选项。</li><li><strong>投档规则</strong>：专业（类）平行志愿遵循"分数优先、遵循志愿、一轮投档"。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><p>依据《贵州省 2026 年普通高校招生考试报名工作实施方案》（黔教发〔2025〕24 号，zsksy.guizhou.gov.cn/tzgg/202510/t20251017_88704190.html）：</p>
+<ul><li><strong>普通高考基本条件</strong>：遵守宪法和法律；高级中等教育学校毕业或具同等学力；身体状况符合要求；户籍或学籍符合下列之一：</li><li>具有贵州省户籍；</li><li>户籍不在我省但符合《省人民政府办公厅关于转发省教育厅等部门贵州省外来人员随迁子女报考普通高等学校规定的通知》（黔府办发〔2020〕26 号）规定的外来人员；</li><li>持港澳居民身份证件及相应通行证/居住证，高中阶段在我省连续就读满 3 年、有我省高中 3 年完整学籍的港澳学生；</li><li>持台湾居民有效身份证明及相应证件、高中阶段在我省连续就读满 3 年、有 3 年完整学籍的台湾省籍学生；</li><li>在我省定居、高中阶段连续就读满 3 年、有 3 年完整学籍且持《外国人永久居留身份证》（签发地为贵州）的外国侨民。</li><li><strong>随迁子女条件</strong>：按黔府办发〔2020〕26 号执行，须满足学籍、父母工作/住所、年限等要求（具体以文件为准）；各级部门简化程序、为考生报考提供便利。</li><li><strong>不得报名情形</strong>：</li><li>具有普通高等学历教育资格的高校在校生或已被录取并保留入学资格者；</li><li>高级中等教育学校非应届毕业的在校生；</li><li>在非应届毕业年份弄虚作假报名并违规参加高考的应届毕业生；</li><li>因违反国家教育考试规定被暂停参加高考且在停考期内者；</li><li>因触犯刑法受刑事处罚尚在处罚期内者；</li><li>已在或拟在外省参加 2026 年高考报名的人员（不得跨省重复报名）；</li><li>不符合我省报名条件的其他人员；<strong>我省不接受外省考生借考</strong>。</li></ul>
+<p>来源：贵州省招生考试院报名实施方案及报名问答（zsksy.guizhou.gov.cn；gzlps.gov.cn 转载）。</p></div>
+<div class="subsec">三、报考流程</div><div class="blk"><p>依据《贵州省 2026 年普通高校招生考试报名工作实施方案》（zsksy.guizhou.gov.cn）：</p>
+<ol><li><strong>报名时间</strong>：<strong>2025 年 11 月 1 日 9:00 至 11 月 10 日 18:00</strong>，系统全天开放。将分别对普通高考、高职分类考生安排一次补报名（具体时间另行通知）。</li><li><strong>身份信息采集</strong>：考生到报名点采集二代居民身份证、个人近照、户籍等信息。</li><li><strong>实名认证</strong>：登录"贵州招考"手机 App 进行实名身份认证并设置密码。</li><li><strong>网上报名</strong>：通过电脑登录"贵州省普通高校招生考试考生综合信息平台"（https://gkks.eaagz.org.cn）或手机登录"贵州招考"App 填报信息，准确选择报名类型、考试类型（含选考科目：首选物理/历史 1 门、再选 2 门），确认无误后缴费。</li><li><strong>缴费</strong>：按省发改委、物价、财政部门标准网上缴费（普通高考全国统考及选择性考试 32.5 元/科，6 科共 195 元/生等）。</li><li><strong>信息确认</strong>：报名信息（含电子相片）须考生本人签字确认。</li><li><strong>体检</strong>：由县级招生考试机构在指定医院组织（具体时间以当年通知为准）。</li><li><strong>高职分类考试</strong>：高中类、中职类、专项类（退役军人、农民工、高素质农民、企业员工、基层农技人员等）按规定报名，与普通高考不得兼报。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025 年 11 月 1 日 9:00—11 月 10 日 18:00</td><td>系统全天开放</td></tr><tr><td>补报名</td><td>2026 年（具体时间另行通知）</td><td>普通高考、高职分类各一次</td></tr><tr><td>高考体检</td><td>2026 年（以各地通知为准）</td><td>指定医院组织</td></tr><tr><td>全国统考</td><td>2026 年 6 月 7 日—9 日</td><td>6 月 7—8 日语数外+首选，6 月 9 日再选</td></tr><tr><td>成绩公布</td><td>2026 年 6 月 24 日 16:22（已公布）</td><td>查分地址 gkks.eaagz.org.cn</td></tr><tr><td>志愿填报</td><td>2026 年 6 月 28 日 0:00—7 月 2 日 18:00</td><td>所有科类、所有批次同期填报</td></tr><tr><td>录取</td><td>2026 年 7 月 5 日起</td><td>本科提前批→本科批（拟 7 月 28 日完成）→专科批（拟 8 月 15 日完成）</td></tr><tr><td>征集志愿</td><td>以当年各批次通知为准</td><td>批次缺额补报</td></tr></tbody></table>
+<p>来源：贵州省招生考试院《贵州省 2026 年高考志愿填报指南》（zsksy.guizhou.gov.cn/tzgg/202606/t20260624_90553090.html）；贵州 2026 高考日程（gaokao.cn 汇总，标注查分 6 月 24 日 16:22）。</p></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项计划按规定实施（高校专项须登录阳光高考平台申报）；本科批含国家专项、地方专项计划。</li><li><strong>公费师范生 / 免费医学生 / 定向</strong>：国家公费师范生、优师专项师范生、农村订单定向免费医学生等安排在本科提前批 C 段（60 个专业平行志愿）。</li><li><strong>军队、公安院校</strong>：有政治考核、面试、体检（军检）、体能测评等特殊要求的军队、公安、司法院校本科专业安排在本科提前批 A 段（院校顺序志愿）。</li><li><strong>强基计划</strong>：按教育部规定投档录取。</li><li><strong>高职分类考试（春季高考）</strong>：高职院校分类考试招生（高中类、中职类、专项类）与普通高考并行，依据"文化素质+职业技能"评价；与普通高考不得兼报。</li><li><strong>综合评价、少年班、保送生、体育单招等</strong>：按教育部及我省规定执行。</li><li><strong>民族语言相关</strong>：民汉双语预科班、民族班须参加民族语言口语测试；少数民族加分按"三统一"（户籍、学籍、实际就读）条件认定。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：专业（类）平行志愿"一轮投档"，被退档只能参加征集或下一批次；因无服从调剂选项，务必合理拉开梯度、仔细核对专业录取要求。</li><li><strong>选科匹配</strong>：选考科目须符合专业要求；按物理、历史类别分别划定录取控制分数线。</li><li><strong>志愿梯度</strong>：普通类本科批、高职专科批均 96 个专业平行志愿，容量充足，仍须"冲稳保"拉开梯度。</li><li><strong>随迁子女门槛</strong>：按黔府办发〔2020〕26 号审核学籍、父母工作/住所及年限；严禁空挂学籍、人籍分离、高考移民。</li><li><strong>补报名/借考</strong>：贵州不接受外省考生借考；补报名具体时间以当年公告为准。</li><li><strong>志愿修改次数</strong>：考生共有 3 次提交机会、可修改 2 次，最后一次修改须在截止时间前完成；妥善保管"贵州招考"App 密码，防止账号被篡改。</li><li><strong>防骗提醒</strong>：警惕"内部数据""精准报志愿"等高价填报陷阱，以省招生考试院官网、高校招生办信息为准。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>贵州省招生考试院官网：https://zsksy.guizhou.gov.cn/</li><li>贵州省普通高校招生考试考生综合信息平台：http://gkks.eaagz.org.cn</li><li>"贵州招考"手机 App：通过华为应用市场 / 苹果 App Store / 腾讯应用宝下载</li><li>贵州省 2026 年招生工作通知：https://zsksy.guizhou.gov.cn/ptgk/xgkzl/202604/t20260414_90003831.html</li><li>阳光高考（贵州政策/高校专项）：https://gaokao.chsi.com.cn/</li></ul>
+<p>---</p></div>
+<div class="subsec">附录：五省核心信息速览（2026 届口径）</div><div class="blk"><table><thead><tr><th>省份</th><th>高考模式</th><th>志愿单位</th><th>本科批志愿数</th><th>是否服从调剂</th><th>报名时间（2025 年）</th><th>统考时间</th></tr></thead><tbody><tr><td>广东</td><td>3+1+2</td><td>院校专业组</td><td>本科批 45 个组（每组 6 专业）</td><td>设（组内）</td><td>11 月 1—10 日</td><td>6 月 7—9 日</td></tr><tr><td>广西</td><td>3+1+2</td><td>院校专业组</td><td>本科普通批 40 个组（每组 20 专业）</td><td>设（组内）</td><td>10 月 21—31 日</td><td>6 月 7—9 日</td></tr><tr><td>重庆</td><td>3+1+2</td><td>专业（类）+院校</td><td>本科批 96 个</td><td>不设（专业平行）</td><td>9 月 22 日—10 月 14 日</td><td>6 月 7—9 日</td></tr><tr><td>四川</td><td>3+1+2（2025 首年落地）</td><td>院校专业组</td><td>本科批 B 段 45 个组（每组 6 专业）</td><td>设（组内）</td><td>10 月 24 日—11 月 6 日</td><td>6 月 7—9 日</td></tr><tr><td>贵州</td><td>3+1+2</td><td>专业（类）+院校</td><td>本科批 96 个</td><td>不设（专业平行）</td><td>11 月 1—10 日</td><td>6 月 7—9 日</td></tr></tbody></table>
+<p>&gt; 说明：以上时间、志愿数量均来自各省教育考试院/招生考试机构及政府网 2026 届官方文件；个别未明确项（如部分省份具体体检日期、征集志愿时间）以当年公告为准。本文档仅整理夏季高考（普通高考）报考政策，不含强基、艺术校考等单独考试的全部细节，相关以官方正式文件为准。</p></div>
+</section>
+<h2 style="margin:26px 0 10px;color:var(--brand2)">▌新高考“3+1+2”模式（滇陕甘青宁豫 6 省）</h2>
+<section class="province" id="p-云南">
+<h2>云南</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：40（B段）</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+1+2"。3 门全国统考科目（语文、数学、外语）；1 门首选科目（物理或历史，2 选 1）；2 门再选科目（思想政治、地理、化学、生物学，4 选 2）。文化总成绩满分 750 分。</li><li><strong>志愿单位</strong>：实行 <strong>院校专业组</strong> 模式。本科批设置 A、B、C 三段：</li><li><strong>本科批 B 段</strong>（普通类考生主体）：设置 <strong>40 个院校专业组</strong>志愿，每个院校专业组内设置 10 个专业志愿及"是否服从专业调剂"选项（依团队下发提示与云南省招生考试院常规设置）。</li><li>本科批 A 段（国家专项、地方专项、高校专项、强基计划等特殊类型，约 10 个院校专业组）、本科批 C 段（预科、定向等，约 10 个院校专业组）另有安排。</li><li><strong>是否服从调剂</strong>：院校专业组模式下设"是否服从专业调剂"选项（组内调剂）。</li><li>官方依据：云南省招生考试院普通高考志愿填报相关公告（https://www.ynzs.cn）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>基本资格（云南户籍考生）</strong>：具有云南省户籍（身份证号 53 开头）且符合教育部普通高考报名基本条件（高级中等教育学校毕业或具有同等学力、身体状况符合相关要求）的考生可在滇报名。</li><li><strong>随迁子女（外省户籍进城务工人员随迁子女）</strong>：按《云南省招生考试委员会关于做好随迁子女接受义务教育后在滇参加升学考试工作的实施意见》（云招考〔2013〕6 号）等文件执行，分档限定报考范围（限报三档：可报高职专科、可报三本及以下、可报本科等），具体门槛以学籍年限、父母居住证/社保缴纳年限为准。</li><li><strong>不得报名情形</strong>：具有普通高等学历教育资格的高校在校生；高级中等教育学校非应届毕业年份以弄虚作假手段报名的应届毕业生；因违反国家教育考试规定被暂停参加高考处理期限内的人员；因触犯刑法被有关部门采取强制措施或正在服刑者等（依据教育部《2026 年普通高等学校招生工作规定》）。</li><li>官方依据：云南省招生考试院报名公告、云招考〔2013〕6 号。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025 年 10 月 25 日—11 月 5 日，登录云南省普通高校招生网上报名系统（https://gk.ynzs.cn）填报信息、选择首选/再选科目、上传材料。</li><li><strong>资格审核与现场确认</strong>：网上报名后由报名点进行资格审核、采集指纹/照片、考生签字确认。</li><li><strong>网上缴费</strong>：按系统提示完成报名考试费缴纳。</li><li><strong>选科确认</strong>：首选科目（物理/历史）与再选科目（2 门）于报名时确定，原则上不得更改。</li><li><strong>体检</strong>：由各县（市、区）招生考试机构组织在高考前完成，结论归入考生档案。</li><li><strong>打印准考证</strong>：考前在报名系统自行打印。</li><li>官方依据：云南省 2026 年普通高校招生考试报名公告（https://www.ynzs.cn）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025-10-25 ~ 11-05</td><td>系统 https://gk.ynzs.cn</td></tr><tr><td>资格审核/现场确认</td><td>报名后至 11 月上旬</td><td>以报名点通知为准</td></tr><tr><td>体检</td><td>高考前（约 3—4 月）</td><td>各县（市、区）组织</td></tr><tr><td>全国统考</td><td>2026-06-07 ~ 06-09</td><td>"3+1+2"模式</td></tr><tr><td>成绩公布</td><td>2026-06-25 约 10:40</td><td>云南省招生考试院官网</td></tr><tr><td>志愿填报演练</td><td>2026-06-26</td><td>模拟演练</td></tr><tr><td>网上填报志愿</td><td>2026-06-28 ~ 07-02</td><td>本科批等</td></tr><tr><td>录取</td><td>2026-07-07 起</td><td>分批次投档</td></tr><tr><td>征集志愿</td><td>各批次录取期间</td><td>缺额公开征集</td></tr></tbody></table>
+<p>&gt; 注：以上时间为云南省常规安排，具体以当年公告为准。</p></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项面向农村和脱贫地区考生；报考须满足"三统一"（户籍、学籍、实际就读）要求。</li><li><strong>公费师范生</strong>：国家公费师范生（部属师范大学）、地方公费师范生（省属师范），免学费、补助生活费、毕业后定向就业。</li><li><strong>免费医学生</strong>：农村订单定向免费医学生，本科/专科层次，毕业后到定向基层医疗卫生机构服务。</li><li><strong>强基计划</strong>：36 所试点高校在滇招生，单独报名、单独考核，在提前批次前录取。</li><li><strong>军队、公安院校</strong>：须参加政治考核、面试、体检（军检/警检）。</li><li><strong>高职分类考试（职教高考）</strong>：中职毕业生通过"文化素质+职业技能"考试升学，被录取者不再参加普通高考统一录取。</li><li>官方依据：云南省招生考试院官网招生政策栏目（https://www.ynzs.cn）。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：院校专业组模式下，如所填专业均未录且不服从专业调剂，可能被退档，平行志愿退档后只能参加征集志愿或下一批次。</li><li><strong>选科匹配</strong>：填报时必须核对院校专业组的首选、再选科目要求（如"物理+化学"），选科不符不予投档。</li><li><strong>志愿梯度</strong>：建议按"冲稳保"拉开梯度，本科批 B 段 40 个组尽量填满。</li><li><strong>随迁子女门槛</strong>：外省户籍考生须提前确认学籍、父母居住及社保年限是否达到对应报考档要求。</li><li><strong>补报名/借考</strong>：一般无补报名；符合条件的考生可在学籍或户籍所在地报名，具体以公告为准。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>云南省招生考试院：https://www.ynzs.cn</li><li>云南省普通高校招生网上报名系统：https://gk.ynzs.cn</li><li>阳光高考平台：https://gaokao.chsi.com.cn（地方站导航）</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-陕西">
+<h2>陕西</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+1+2"。3 门全国统考（语文、数学、外语）；首选科目物理或历史（2 选 1）；再选科目思想政治、地理、化学、生物学（4 选 2）。满分 750 分。</li><li><strong>志愿单位</strong>：实行 <strong>院校专业组</strong> 模式。</li><li><strong>本科批</strong>：设置 <strong>45 个院校专业组</strong>志愿，每个院校专业组内设置 6 个专业志愿及"是否同意专业调剂"选项。</li><li>其他批次（提前批、高职专科批等）按类别设置相应院校专业组志愿数。</li><li><strong>是否服从调剂</strong>：设"是否同意专业调剂"（组内调剂）选项。</li><li>官方依据：陕西省教育考试院《2026 年陕西省普通高等学校招生工作实施办法》及志愿填报公告（https://www.sneea.cn）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>基本资格</strong>：遵守中华人民共和国宪法和法律；高级中等教育学校毕业或具有同等学力；身体状况符合相关要求。</li><li><strong>户籍与学籍年限</strong>：截至 2026 年 8 月 31 日，考生须具有陕西省户籍且高级中等教育阶段学籍满 3 年并实际就读（即"户籍+学籍双满 3 年"），方可在陕报名参加普通高考。</li><li><strong>随迁子女</strong>：按《陕西省教育厅等关于印发〈进城务工人员随迁子女在陕参加高考实施细则〉的通知》（陕教规范〔2021〕3 号）执行，须满足：在陕高级中等教育阶段学籍满 3 年、父母一方在陕持有居住证满 3 年、在陕缴纳城镇企业职工基本养老保险满 3 年等条件。</li><li><strong>不得报名情形</strong>：同教育部统一规定（高校在校生、弄虚作假应届生、停考期内、服刑等）。</li><li>官方依据：陕教规范〔2021〕3 号；陕西省教育考试院报名公告（https://www.sneea.cn/info/1027/16684.htm）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025 年 11 月 1 日 9:00 — 11 月 7 日 17:00，登录陕西省教育考试院门户网站或陕西招生考试信息网填报。</li><li><strong>资格审核与现场确认</strong>：报名点进行资格审查、身份信息采集、考生确认签字。</li><li><strong>网上缴费</strong>：按标准缴纳报名考试费。</li><li><strong>选科</strong>：报名时确定首选及再选科目。</li><li><strong>体检</strong>：高考前由县级招生考试机构组织。</li><li><strong>准考证</strong>：考前自行打印。</li><li>官方依据：陕西省教育考试院 2026 年高考报名通知（https://www.sneea.cn/info/1027/16684.htm）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025-11-01 09:00 ~ 11-07 17:00</td><td>陕西省教育考试院官网</td></tr><tr><td>资格审核/现场确认</td><td>报名后</td><td>以报名点通知为准</td></tr><tr><td>体检</td><td>高考前（约 3—4 月）</td><td>县级机构组织</td></tr><tr><td>全国统考</td><td>2026-06-07 ~ 06-09</td><td>"3+1+2"模式</td></tr><tr><td>成绩公布</td><td>2026-06-25 左右</td><td>陕西省教育考试院</td></tr><tr><td>提前批/职教本科志愿填报</td><td>2026-06-25 12:00 ~ 06-27 12:00</td><td>提前批、职教本科</td></tr><tr><td>本科批志愿填报</td><td>2026-06-25 12:00 ~ 06-30 12:00</td><td>本科批 45 个院校专业组</td></tr><tr><td>录取</td><td>2026-07 月起</td><td>分批次投档</td></tr><tr><td>征集志愿</td><td>各批次录取期间</td><td>缺额公开征集</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项，面向农村和脱贫地区，须满足"三统一"。</li><li><strong>公费师范生</strong>：国家公费师范生、地方公费师范生，定向就业。</li><li><strong>免费医学生</strong>：农村订单定向免费医学生。</li><li><strong>强基计划</strong>：试点高校在陕招生，提前批前录取。</li><li><strong>综合评价录取</strong>：部分高水平大学在陕开展综合评价招生（如南方科技大学、上海纽约大学等特殊类型，按教育部批准执行）。</li><li><strong>军队、公安院校</strong>：政审、面试、体检。</li><li><strong>高职分类考试（职教高考）</strong>：中职毕业生通过分类考试录取后，不再参加普通高考统一录取。</li><li>官方依据：陕西省教育考试院招生政策栏目（https://www.sneea.cn）。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：不服从专业调剂且所填专业未录满可能被退档。</li><li><strong>选科匹配</strong>：严格对照专业组选考科目要求。</li><li><strong>志愿梯度</strong>：本科批 45 个专业组建议合理拉开梯度。</li><li><strong>随迁子女门槛</strong>：学籍、父母居住证、养老保险均须满 3 年，须提前准备证明。</li><li><strong>户籍学籍年限</strong>：截至 2026-08-31 须双满 3 年，户口迁移时间须符合规定。</li><li>官方依据：陕西省教育考试院公告。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>陕西省教育考试院：https://www.sneea.cn</li><li>陕西招生考试信息网：https://www.sneac.com</li><li>高考报名通知示例：https://www.sneea.cn/info/1027/16684.htm</li><li>阳光高考平台：https://gaokao.chsi.com.cn</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-甘肃">
+<h2>甘肃</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+1+2"。3 门全国统考（语文、数学、外语）；首选物理或历史（2 选 1）；再选思想政治、地理、化学、生物学（4 选 2）。满分 750 分。</li><li><strong>志愿单位</strong>：实行 <strong>院校专业组</strong> 模式。</li><li><strong>本科批</strong>：设置 <strong>45 个院校专业组</strong>志愿，每个院校专业组内设置 6 个专业志愿及"是否同意专业调剂"选项（依据《2026 年甘肃省普通高校招生工作的通知》甘招委发〔2026〕8号/甘招委发〔2025〕23号精神）。</li><li><strong>高职专科批</strong>：设置 45 个院校专业组志愿。</li><li><strong>是否服从调剂</strong>：设"是否同意专业调剂"（组内调剂）。</li><li>官方依据：甘肃省高等学校招生委员会《关于做好 2026 年甘肃省普通高校招生工作的通知》（甘招委发〔2026〕8 号）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>基本资格</strong>：遵守宪法和法律；高级中等教育学校毕业或同等学力；身体状况符合要求。</li><li><strong>户籍与学籍</strong>：具有甘肃省户籍并符合学籍要求；随迁子女按甘肃省规定，须父母一方在甘持有居住证并缴纳社会保险（养老/医疗等），考生具甘肃省高中阶段学籍并实际就读。</li><li><strong>不得报名情形</strong>：同教育部统一规定。</li><li>官方依据：甘肃省 2026 年普通高校招生工作规定（https://www.ganseea.cn）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025 年 10 月 21 日起，网上填报 2025 年 10 月 21 日—10 月 27 日，登录甘肃省国家教育考试综合管理平台（https://kw.ganseea.cn）报名。</li><li><strong>资格审核与现场确认</strong>：现场确认截至 2025 年 11 月 15 日前（艺术类专业截至 11 月 5 日），进行资格审查、信息采集、签字确认。</li><li><strong>网上缴费</strong>：按标准缴费。</li><li><strong>选科</strong>：报名时确定首选/再选科目。</li><li><strong>体检</strong>：高考前由县级机构组织。</li><li><strong>准考证</strong>：考前打印。</li><li>官方依据：甘肃省 2026 年高考报名公告（https://www.ganseea.cn）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025-10-21 ~ 10-27</td><td>系统 https://kw.ganseea.cn</td></tr><tr><td>现场确认</td><td>2025-11-15 前（艺术 11-05 前）</td><td>县级机构</td></tr><tr><td>体检</td><td>高考前（约 3—4 月）</td><td>县级机构组织</td></tr><tr><td>全国统考</td><td>2026-06-07 ~ 06-09</td><td>"3+1+2"模式</td></tr><tr><td>成绩公布</td><td>2026-06-25 左右</td><td>甘肃省教育考试院</td></tr><tr><td>第一次志愿填报</td><td>2026-06-26 20:00 ~ 07-01 14:00</td><td>本科提前批、本科批等</td></tr><tr><td>第二次志愿填报</td><td>2026-08-01 20:00 ~ 08-04 14:00</td><td>高职专科批等</td></tr><tr><td>录取</td><td>2026-07 月起</td><td>分批次投档</td></tr><tr><td>征集志愿</td><td>各批次录取期间</td><td>缺额公开征集</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项，面向农村和脱贫地区，须"三统一"。</li><li><strong>公费师范生</strong>：国家公费师范生、地方公费师范生，定向就业。</li><li><strong>免费医学生</strong>：农村订单定向免费医学生。</li><li><strong>强基计划</strong>：试点高校在甘招生，提前批前录取。</li><li><strong>高职分类考试（中职升学考试）</strong>：中职毕业生通过"文化素质+职业技能"考试升学，被录取者不再参加普通高考统考录取。</li><li><strong>军队、公安院校</strong>：政审、面试、体检。</li><li>官方依据：甘肃省教育考试院（https://www.ganseea.cn）。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：不服从专业调剂且专业未录可能被退档。</li><li><strong>选科匹配</strong>：对照专业组选考科目要求。</li><li><strong>志愿梯度</strong>：本科批 45 个专业组建议"冲稳保"搭配。</li><li><strong>随迁子女门槛</strong>：父母居住证及社保须符合要求、考生学籍须满规定年限。</li><li><strong>两次填报</strong>：甘肃分两次集中填报，注意各批次对应时段，避免错过。</li><li>官方依据：甘肃省教育考试院公告。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>甘肃省教育考试院：https://www.ganseea.cn</li><li>甘肃省国家教育考试综合管理平台（报名/志愿）：https://kw.ganseea.cn</li><li>阳光高考平台：https://gaokao.chsi.com.cn</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-青海">
+<h2>青海</h2>
+<span class="badge b">志愿单元：专业+院校</span><span class="badge">本科批志愿数：96</span><span class="badge">调剂：不设调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+1+2"。3 门全国统考（语文、数学、外语）；首选物理或历史（2 选 1）；再选思想政治、地理、化学、生物学（4 选 2）。满分 750 分。</li><li><strong>志愿单位</strong>：青海实行 <strong>"专业（类）+院校"</strong> 模式（以"1 个专业+1 个院校"为 1 个志愿填报单位）。</li><li><strong>本科批（⑦段）</strong>：设置 <strong>96 个</strong>"专业（类）+院校"平行志愿；<strong>不设是否同意专业调剂选项</strong>（录到所填专业，无组内调剂）。</li><li><strong>提前批</strong>（②③④⑤⑥⑨等段）：各段设置 <strong>60 个</strong>"专业（类）+院校"平行志愿。</li><li><strong>高职专科批（⑩段）</strong>：设置 96 个"专业（类）+院校"平行志愿。</li><li><strong>是否服从调剂</strong>：该模式不设"服从专业调剂"选项（考生直接填到具体专业）。</li><li>官方依据：青海省教育招生考试院《青海省 2026 年普通高等学校招生录取工作实施细则》（阳光高考：https://gaokao.chsi.com.cn/gkxx/zc/ss/202606/20260617/2293823401-6.html）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>基本资格</strong>：遵守宪法和法律；高级中等教育学校毕业或同等学力；身体状况符合要求。</li><li><strong>户籍与学籍</strong>：截至 2026 年 6 月 1 日，具有青海省户口且高中阶段在青实际就读满规定年限（一般要求青海省户籍并高中阶段学籍/实际就读满 3 年），方可在青报名；具体以《青海省普通高校招生报名录取条件》为准。</li><li><strong>随迁子女</strong>：按青海省招生委员会相关规定，符合条件的进城务工人员随迁子女可在青报考，门槛以学籍、父母居住/社保年限为准。</li><li><strong>不得报名情形</strong>：同教育部统一规定。</li><li>官方依据：青海省 2026 年普通高校招生报名规定（https://www.qhjyks.com）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025 年 11 月 3 日 9:00 — 11 月 16 日 17:00，登录青海省普通高校招生考试报名系统（https://zhptks.qhjyks.com/student）填报。</li><li><strong>资格审核与现场确认</strong>：报名点审查资格、采集信息、考生确认。</li><li><strong>网上缴费</strong>：按标准缴费。</li><li><strong>选科</strong>：报名时确定首选/再选科目。</li><li><strong>体检</strong>：高考前由县级机构组织。</li><li><strong>准考证</strong>：考前打印。</li><li>官方依据：青海省 2026 年高考报名公告（https://www.qhjyks.com）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025-11-03 09:00 ~ 11-16 17:00</td><td>系统 https://zhptks.qhjyks.com/student</td></tr><tr><td>资格审核/现场确认</td><td>报名后</td><td>以报名点通知为准</td></tr><tr><td>体检</td><td>高考前（约 3—4 月）</td><td>县级机构组织</td></tr><tr><td>全国统考</td><td>2026-06-07 ~ 06-09</td><td>"3+1+2"模式</td></tr><tr><td>成绩公布</td><td>2026-06-25</td><td>青海省教育招生考试院</td></tr><tr><td>网上填报志愿</td><td>2026-06-26 12:00 ~ 06-30 18:00</td><td>本科批 96 个、提前批 60 个</td></tr><tr><td>录取</td><td>2026-07 月起</td><td>分批次投档</td></tr><tr><td>征集志愿</td><td>各批次录取期间</td><td>缺额公开征集</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项，面向农村和脱贫地区，须"三统一"。</li><li><strong>公费师范生</strong>：国家公费师范生、地方公费师范生，定向就业。</li><li><strong>免费医学生</strong>：农村订单定向免费医学生。</li><li><strong>强基计划</strong>：试点高校在青招生，提前批前录取。</li><li><strong>高职分类考试（中职）</strong>：中职毕业生通过分类考试升学。</li><li><strong>军队、公安院校</strong>：政审、面试、体检。</li><li>官方依据：青海省教育招生考试院（https://www.qhjyks.com）。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>无专业调剂</strong>："专业（类）+院校"模式不设调剂，所填专业未录即退档，须注意专业冷热搭配、填满 96 个志愿以降低退档风险。</li><li><strong>选科匹配</strong>：所填专业有选考科目要求，不符不予投档。</li><li><strong>志愿梯度</strong>：96 个志愿应合理拉开梯度，切忌全部"冲"。</li><li><strong>随迁子女门槛</strong>：户口、学籍、父母居住/社保须满足青海规定年限。</li><li><strong>退档后仅征集</strong>：平行志愿退档后参加征集志愿或下一批次。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>青海省教育招生考试院：https://www.qhjyks.com</li><li>青海省普通高校招生报名系统：https://zhptks.qhjyks.com/student</li><li>阳光高考平台：https://gaokao.chsi.com.cn</li><li>录取实施细则（官方转载）：https://gaokao.chsi.com.cn/gkxx/zc/ss/202606/20260617/2293823401-6.html</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-宁夏">
+<h2>宁夏</h2>
+<span class="badge b">志愿单元：院校专业组</span><span class="badge">本科批志愿数：45</span><span class="badge">调剂：设组内调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+1+2"。3 门全国统考（语文、数学、外语）；首选物理或历史（2 选 1）；再选思想政治、地理、化学、生物学（4 选 2）。满分 750 分。</li><li><strong>志愿单位</strong>：实行 <strong>院校专业组</strong> 模式。</li><li><strong>本科批 B 段</strong>：设置 <strong>45 个院校专业组</strong>志愿（在"1—45 个"范围内填报），每个院校专业组内设置 6 个专业志愿及"是否同意专业调剂"选项。</li><li>提前批 B 段及其他批次按类别设置相应院校专业组志愿数（各批次均在该框架内）。</li><li><strong>是否服从调剂</strong>：设"是否同意专业调剂"（组内调剂）。</li><li>官方依据：宁夏教育考试院《宁夏 2026 年普通高等学校招生录取工作实施细则/志愿填报办法》（http://www.nxjyks.cn）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>基本资格</strong>：遵守宪法和法律；高级中等教育学校毕业或同等学力；身体状况符合要求。</li><li><strong>户籍与学籍</strong>：按《宁夏回族自治区普通高校招生考生报考条件规定》（宁教学〔2024〕157 号）等执行，设置多级门槛：具有宁夏户籍并满足相应学籍/实际就读年限的考生可在宁报考；随迁子女按对应等级条件（学籍、父母合法稳定职业与住所、社保/居住证等）报考。</li><li><strong>不得报名情形</strong>：同教育部统一规定。</li><li>官方依据：宁教学〔2024〕157 号；宁夏教育考试院报名公告（http://www.nxjyks.cn）。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：2025 年 11 月 1 日—11 月 5 日，登录宁夏普通高校招生报名系统（https://baoming.nxjyks.cn）填报。</li><li><strong>确认与缴费</strong>：2025 年 11 月 25 日前完成确认与缴费（艺术类专业 11 月 13 日前）。</li><li><strong>资格审核</strong>：2025 年 11 月 30 日前完成资格审查。</li><li><strong>选科</strong>：报名时确定首选/再选科目。</li><li><strong>体检</strong>：高考前由县级机构组织。</li><li><strong>准考证</strong>：考前打印。</li><li>官方依据：宁夏 2026 年高考报名通知（http://www.nxjyks.cn）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名</td><td>2025-11-01 ~ 11-05</td><td>系统 https://baoming.nxjyks.cn</td></tr><tr><td>确认与缴费</td><td>2025-11-25 前（艺术 11-13 前）</td><td>报名系统</td></tr><tr><td>资格审核</td><td>2025-11-30 前</td><td>县级机构</td></tr><tr><td>体检</td><td>高考前（约 3—4 月）</td><td>县级机构组织</td></tr><tr><td>全国统考</td><td>2026-06-07 ~ 06-09</td><td>"3+1+2"模式</td></tr><tr><td>成绩公布</td><td>2026-06-25</td><td>宁夏教育考试院</td></tr><tr><td>第一次志愿填报</td><td>2026-06-25 16:00 ~ 07-01 18:00</td><td>本科批等</td></tr><tr><td>第二次志愿填报</td><td>2026-08-01 09:00 ~ 08-05 18:00</td><td>高职专科批等</td></tr><tr><td>录取</td><td>2026-07 月起</td><td>分批次投档</td></tr><tr><td>征集志愿</td><td>各批次录取期间</td><td>缺额公开征集</td></tr></tbody></table></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项，面向农村和脱贫地区，须"三统一"。</li><li><strong>公费师范生</strong>：国家公费师范生、地方公费师范生，定向就业。</li><li><strong>免费医学生</strong>：农村订单定向免费医学生。</li><li><strong>强基计划</strong>：试点高校在宁招生，提前批前录取。</li><li><strong>高职分类考试（中职）</strong>：中职毕业生通过分类考试升学。</li><li><strong>军队、公安院校</strong>：政审、面试、体检。</li><li>官方依据：宁夏教育考试院（http://www.nxjyks.cn）。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>退档风险</strong>：不服从专业调剂且专业未录可能被退档。</li><li><strong>选科匹配</strong>：对照专业组选考科目要求。</li><li><strong>志愿梯度</strong>：本科批 B 段 45 个专业组建议"冲稳保"搭配。</li><li><strong>随迁子女门槛</strong>：按宁教学〔2024〕157 号多级条件准备学籍/居住/社保证明。</li><li><strong>两次填报</strong>：分两次集中填报，注意各批次时段。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>宁夏教育考试院：http://www.nxjyks.cn</li><li>宁夏普通高校招生报名系统：https://baoming.nxjyks.cn</li><li>阳光高考平台：https://gaokao.chsi.com.cn</li></ul>
+<p>---</p></div>
+</section>
+<section class="province" id="p-河南">
+<h2>河南</h2>
+<span class="badge b">志愿单元：院校专业组 / 专业+院校</span><span class="badge">本科批志愿数：48 / 64</span><span class="badge">调剂：组内调剂 / 不设调剂</span>
+<div class="subsec">一、高考模式与志愿单位</div><div class="blk"><ul><li><strong>模式</strong>："3+1+2"（河南 2025 年为新高考首年，2026 年为第二年）。3 门全国统考（语文、数学、外语）；首选物理或历史（2 选 1）；再选思想政治、地理、化学、生物学（4 选 2）。满分 750 分。</li><li><strong>志愿单位（两类并存）</strong>：</li><li><strong>普通本科批</strong>：实行 <strong>院校专业组</strong> 模式，设置 <strong>48 个院校专业组</strong>志愿，每个院校专业组内设置 6 个专业志愿及"是否同意专业调剂"选项。其中国家专项、高校专项、地方专项、定向西藏就业、少数民族预科班、边防军人子女预科班等仅限取得相应资格考生填报。</li><li><strong>普通本科提前批</strong>：实行 <strong>"专业+院校"</strong> 模式，设置 <strong>64 个"专业+院校"</strong>志愿（"1 个专业+1 个院校"为 1 个志愿单位，<strong>不设是否同意专业调剂选项</strong>）。高职（专科）层次公安类、司法类随该批录取，分别设置 12 个"专业+院校"志愿。</li><li><strong>普通高职（专科）提前批</strong>：64 个"专业+院校"志愿；<strong>普通高职（专科）批</strong>：48 个院校专业组志愿。</li><li><strong>是否服从调剂</strong>：院校专业组模式设"是否同意专业调剂"（组内）；"专业+院校"模式不设调剂。</li><li>官方依据：《河南省 2026 年普通高等学校招生工作规定》（河南省阳光高考信息平台：https://gaokao.haedu.cn/501/553/2026/0427/151635.html）；河南省教育考试院（https://www.haeea.cn）。</li></ul></div>
+<div class="subsec">二、报考条件</div><div class="blk"><ul><li><strong>基本资格</strong>：遵守宪法和法律；高级中等教育学校毕业或同等学力；身体状况符合要求。</li><li><strong>随迁子女</strong>：按《河南省人民政府办公厅转发教育厅等部门关于做好进城务工人员随迁子女接受义务教育后参加升学考试工作实施意见的通知》（豫政办〔2012〕180 号）执行，须为应届毕业生且具有河南省正式学籍，父母一方在豫有合法稳定职业、合法稳定住所（含租赁）并参加社会保险等。</li><li><strong>不得报名情形</strong>：同教育部统一规定。</li><li>官方依据：豫政办〔2012〕180 号；《河南省 2026 年普通高等学校招生工作规定》。</li></ul></div>
+<div class="subsec">三、报考流程</div><div class="blk"><ol><li><strong>网上报名</strong>：艺术类考生 2025 年 10 月 28 日—11 月 3 日；非艺术类考生 2025 年 11 月 5 日—11 月 17 日。登录河南省普通高校招生考生服务平台（通过 https://www.haeea.cn 进入）填报。</li><li><strong>资格审核与现场确认</strong>：报名点审查、信息采集、签字确认。</li><li><strong>网上缴费</strong>：按标准缴费。</li><li><strong>选科</strong>：报名时确定首选/再选科目（3+1+2）。</li><li><strong>体检</strong>：高考前由县级机构组织，结论通过考生服务平台推送。</li><li><strong>准考证</strong>：考前打印。</li><li>官方依据：河南省 2026 年普通高招报名通知、考生指南（https://www.haeea.cn）。</li></ol></div>
+<div class="subsec">四、时间节点</div><div class="blk"><table><thead><tr><th>环节</th><th>时间</th><th>备注</th></tr></thead><tbody><tr><td>网上报名（艺术类）</td><td>2025-10-28 ~ 11-03</td><td>考生服务平台</td></tr><tr><td>网上报名（非艺术类）</td><td>2025-11-05 ~ 11-17</td><td>考生服务平台</td></tr><tr><td>资格审核/现场确认</td><td>报名后</td><td>以报名点通知为准</td></tr><tr><td>体检</td><td>高考前（约 3—4 月）</td><td>县级机构组织</td></tr><tr><td>全国统考</td><td>2026-06-07 ~ 06-09</td><td>"3+1+2"模式</td></tr><tr><td>控制分数线公布</td><td>2026-06-24</td><td>河南省教育考试院</td></tr><tr><td>成绩公布</td><td>2026-06-25（零时/当日）</td><td>官网、考生服务平台、微信公众号</td></tr><tr><td>第一次志愿填报</td><td>2026-06-26 08:00 ~ 06-28 18:00</td><td>军队招飞、本科提前批、艺术本科提前批、体育本科批</td></tr><tr><td>第二次志愿填报</td><td>2026-06-30 08:00 ~ 07-03 18:00</td><td>普通本科批、艺术本科批</td></tr><tr><td>第三次志愿填报</td><td>2026-07-05 08:00 ~ 07-07 18:00</td><td>高职（专科）提前批、高职（专科）批等</td></tr><tr><td>录取</td><td>2026-07-08 起</td><td>分批次投档</td></tr><tr><td>征集志愿</td><td>各批次录取期间</td><td>缺额公开征集</td></tr></tbody></table>
+<p>&gt; 成绩查询渠道：河南省教育厅网站（https://jyt.henan.gov.cn）、河南省教育考试院网站（https://www.haeea.cn）、河南招生考试信息网（https://www.heao.com.cn）、考生服务平台（https://pzwb.haeea.cn）、"河南省教育考试院"微信公众号、"豫事办"。</p></div>
+<div class="subsec">五、特殊政策</div><div class="blk"><ul><li><strong>专项计划</strong>：国家专项、地方专项、高校专项，面向农村和脱贫地区，须"三统一"；均在普通本科批填报，资格可兼报。</li><li><strong>公费师范生</strong>：国家公费师范生、地方公费师范生、地方优师专项、国家优师专项，定向就业。</li><li><strong>免费医学生</strong>：农村订单定向免费医学生（含在普通本科提前批医学类）。</li><li><strong>强基计划</strong>：试点高校在豫招生，在录取工作全面开始前办理录取手续。</li><li><strong>综合评价录取</strong>：经批准高校在豫开展综合评价招生（安排在普通本科提前批"其他类"）。</li><li><strong>定向西藏就业</strong>：普通本科批设定向西藏就业计划，须为非西藏户籍应届高中毕业生并签承诺书。</li><li><strong>军队招飞</strong>：单设军队招收飞行学员志愿，安排在普通本科提前批之前录取。</li><li><strong>高职分类考试（职教高考）</strong>：中职毕业生通过分类考试升学。</li><li>官方依据：《河南省 2026 年普通高等学校招生工作规定》、河南省教育考试院考生指南。</li></ul></div>
+<div class="subsec">六、注意事项</div><div class="blk"><ul><li><strong>两类志愿模式并存</strong>：普通本科批用院校专业组（48 个，有调剂），普通本科提前批用"专业+院校"（64 个，无调剂），务必分清规则。</li><li><strong>退档风险</strong>：院校专业组不服从调剂可能退档；"专业+院校"无调剂，所填专业未录即退档，应拉开梯度、尽量填满。</li><li><strong>选科匹配</strong>：严格对照选考科目要求，不符不予投档。</li><li><strong>志愿梯度</strong>：本科批 48 个、提前批 64 个均应合理"冲稳保"。</li><li><strong>随迁子女门槛</strong>：须为应届、具河南正式学籍、父母居住及社保符合条件。</li><li><strong>违背志愿约定限制</strong>：对录取后不入学造成计划浪费的考生，下一年平行志愿批次允许填报数量不超过 24 个（诚信档案记录）。</li><li><strong>三次填报</strong>：河南分三次集中填报，注意各批次对应时段，勿错过。</li><li>官方依据：河南省教育考试院考生指南。</li></ul></div>
+<div class="subsec">七、官方信息源</div><div class="blk"><ul><li>河南省教育考试院：https://www.haeea.cn</li><li>河南招生考试信息网：https://www.heao.com.cn</li><li>河南省阳光高考信息平台（招生工作规定发布）：https://gaokao.haedu.cn</li><li>河南省普通高校招生考生服务平台（报名/志愿/成绩）：https://pzwb.haeea.cn</li><li>阳光高考平台：https://gaokao.chsi.com.cn</li></ul>
+<p>---</p>
+<p>&gt; 汇总说明：本文件覆盖 <strong>云南、陕西、甘肃、青海、宁夏、河南</strong> 6 省，均实行新高考"3+1+2"模式。其中志愿单位以"院校专业组"为主（云南、陕西、甘肃、宁夏、河南本科批），青海全省及河南提前批采用"专业（类）+院校"模式；河南为两类模式并存。各时间节点、志愿数量以各省当年官方公告为准。</p></div>
+</section>
+
+<h2 style="margin:26px 0 10px;color:var(--brand2)">▌跨省要点速查</h2>
+<section class="province" id="quick">
+<h2>跨省要点速查</h2>
+<table>
+<thead><tr><th>省份</th><th>模式</th><th>志愿单位</th><th>本科批数量</th><th>是否调剂</th></tr></thead>
+<tbody><tr><td>北京</td><td>3+3</td><td>院校专业组</td><td>30</td><td>设组内调剂</td></tr><tr><td>上海</td><td>3+3</td><td>院校专业组</td><td>24</td><td>设组内调剂</td></tr><tr><td>天津</td><td>3+3</td><td>院校专业组</td><td>A段50 / B段25</td><td>设组内调剂</td></tr><tr><td>浙江</td><td>3+3</td><td>专业+院校</td><td>80</td><td>不设调剂</td></tr><tr><td>山东</td><td>3+3</td><td>专业+院校</td><td>96</td><td>不设调剂</td></tr><tr><td>海南</td><td>3+3</td><td>院校专业组</td><td>30</td><td>设组内调剂</td></tr><tr><td>河北</td><td>3+1+2</td><td>专业+院校</td><td>96</td><td>不设调剂</td></tr><tr><td>辽宁</td><td>3+1+2</td><td>专业+院校</td><td>112</td><td>不设调剂</td></tr><tr><td>吉林</td><td>3+1+2</td><td>院校专业组</td><td>50</td><td>设组内调剂</td></tr><tr><td>黑龙江</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>山西</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>内蒙古</td><td>3+1+2</td><td>院校专业组</td><td>60</td><td>设组内调剂</td></tr><tr><td>江苏</td><td>3+1+2</td><td>院校专业组</td><td>40</td><td>设组内调剂</td></tr><tr><td>安徽</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>福建</td><td>3+1+2</td><td>院校专业组</td><td>50</td><td>设组内调剂</td></tr><tr><td>江西</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>湖北</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>湖南</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>广东</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>广西</td><td>3+1+2</td><td>院校专业组</td><td>40</td><td>设组内调剂</td></tr><tr><td>重庆</td><td>3+1+2</td><td>专业+院校</td><td>96</td><td>不设调剂</td></tr><tr><td>四川</td><td>3+1+2</td><td>院校专业组</td><td>45（B段）</td><td>设组内调剂</td></tr><tr><td>贵州</td><td>3+1+2</td><td>专业+院校</td><td>96</td><td>不设调剂</td></tr><tr><td>云南</td><td>3+1+2</td><td>院校专业组</td><td>40（B段）</td><td>设组内调剂</td></tr><tr><td>陕西</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>甘肃</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>青海</td><td>3+1+2</td><td>专业+院校</td><td>96</td><td>不设调剂</td></tr><tr><td>宁夏</td><td>3+1+2</td><td>院校专业组</td><td>45</td><td>设组内调剂</td></tr><tr><td>河南</td><td>3+1+2</td><td>院校专业组 / 专业+院校</td><td>48 / 64</td><td>组内调剂 / 不设调剂</td></tr></tbody>
+</table>
+</section>
+
+
+</main></div>
+
+<footer class="train-foot" style="padding:16px 16px 30px;font-size:12px;color:#9aa5b1;text-align:center">数据更新：2026-08-21 ｜ 全国29省报考逻辑培训手册</footer>
+
+<script>
+(function(){
+  // 阅读进度
+  var prog=document.getElementById('progress');
+  var toTop=document.getElementById('toTop');
+  function onScroll(){
+    var h=document.documentElement;
+    var sc=h.scrollTop||document.body.scrollTop;
+    var max=h.scrollHeight-h.clientHeight;
+    prog.style.width=(max>0?(sc/max*100):0)+'%';
+    toTop.style.display=sc>400?'block':'none';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  toTop.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+  onScroll();
+
+  // 复制链接
+  document.getElementById('copyLink').addEventListener('click',function(){
+    var txt=location.href;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){alert('链接已复制，可分享给同事/学员：\n'+txt);});
+    }else{
+      var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);
+      ta.select();try{document.execCommand('copy');alert('链接已复制');}catch(e){prompt('请手动复制：',txt);}
+      document.body.removeChild(ta);
+    }
+  });
+
+  // 搜索高亮 + 定位
+  var secs=[].slice.call(document.querySelectorAll('section.province'));
+  var search=document.getElementById('search');
+  var timer=null;
+  search.addEventListener('input',function(){
+    clearTimeout(timer);
+    timer=setTimeout(function(){
+      var q=search.value.trim();
+      // 清除旧高亮
+      document.querySelectorAll('mark').forEach(function(m){var p=m.parentNode;p.replaceChild(document.createTextNode(m.textContent),m);p.normalize();});
+      if(!q){return;}
+      var hits=[];
+      secs.forEach(function(s){
+        var name=(s.id||'').replace('p-','');
+        if(s.textContent.indexOf(q)>=0||name.indexOf(q)>=0){hits.push(s);}
+      });
+      // 高亮命中省份名（避免正则转义，使用分割拼接）
+      secs.forEach(function(s){
+        var h2=s.querySelector('h2');if(!h2)return;
+        if(h2.textContent.indexOf(q)>=0){
+          var t=h2.textContent, idx=t.indexOf(q);
+          h2.innerHTML=t.slice(0,idx)+'<mark>'+t.slice(idx,idx+q.length)+'</mark>'+t.slice(idx+q.length);
+        }
+      });
+      if(hits.length){hits[0].scrollIntoView({behavior:'smooth',block:'start'});}
+    },200);
+  });
+})();
+</script>
+
+</body>
+</html>

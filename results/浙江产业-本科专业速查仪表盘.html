@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>浙江产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#0f766e;
+  --brand-soft:#e3efed;
+  --accent:#1d4ed8;
+  --accent-soft:#e7edfb;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c3a6a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>浙江产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年浙江统计公报</b> · <b>415X先进制造业集群（4万亿级+15千亿级）</b> · <b>十五五AI核心产业1.2万亿目标</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">9.45万亿</div><div class="note">增长5.5%，全国第4</div></div>
+  <div class="stat"><div class="lab">三产占比</div><div class="val">59.5%</div><div class="note">全国最高，数字经济核心1.2万亿</div></div>
+  <div class="stat"><div class="lab">新能源汽车</div><div class="val">138万辆</div><div class="note">+49.8%，全国第4</div></div>
+  <div class="stat"><div class="lab">AI核心营收</div><div class="val">6294亿</div><div class="note">+21.6%，2030目标1.2万亿</div></div>
+  <div class="stat"><div class="lab">民营经济</div><div class="val">占规上92.7%</div><div class="note">增长贡献率77.7%</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-31.0%</div><div class="note">土建链承压、建筑业-1.6%</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="农学">农学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：计算机、AI、芯片、跨境、电商、义乌、机器人、眼视光、临床、法学、浙大、杭电、温医大、宁大、美院">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>具身智能（对应宇树/云深处）、半导体装备（对应浙江集成电路）、生物制造（对应生物医药）、低空经济（对应十五五未来产业）全部对得上浙江产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。浙江高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>浙江有万亿产业/国家级集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应浙江独有赛道（眼视光/电商/内容/外语），分数友好但需选对方向。适合想留浙、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>浙大及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>浙江大学（计算机/控制/光学/电气/临床/材料双一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>杭电（电子/计算机）、浙工大（化工/机械）、温医大（眼视光/临床）、中国美院（设计）、宁大（力学/水产/船舶）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴浙江产业链</td><td>浙江工商（电商/财经）、浙江师范（师范）、杭州师范（师范/外语）、中国计量（标准/材料）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的市属校，锁特色专业</td><td>浙江传媒（传媒/数字媒体）、浙江理工（服装设计）、浙江万里（电商/生物）、宁波/温州/绍兴/嘉兴院校</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在浙江读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>计算机/人工智能/电子/机器人/自动化/电气<br><span style="color:var(--ink-3);font-size:12.5px">（数字产业 + 具身智能硬科技）</span></td><td><b style="color:var(--green)">优先留浙</b></td><td>产业+高校双密集，浙大/杭电全国顶尖或特色独一，分数低于京沪苏但产业对口极强</td></tr>
+        <tr><td>眼视光/临床/电商/内容/外语/师范/会计/船舶</td><td><b style="color:var(--green)">留浙或出省</b></td><td>温医大眼视光、中国美院、杭电、浙商大在长三角认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-31.0%、建筑业-1.6%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#0f766e;border-left-color:var(--brand);margin-top:14px">
+      <b>浙江独有优势：数字经济核心产业1.2万亿 + 具身智能六小龙全球第一梯队 + 义乌跨境电商全国独一份 + 横店影视文创闭环 + 行业校壁垒。</b>浙江高教梯度分明（浙大985双一流 + 宁大/中国美院双一流 + 一众行业特色校），但<b>全省仅3所双一流</b>；<b>外省/河北考生来浙读「计算机·人工智能·电子·机器人·眼视光·电商·内容设计·外语·船舶」性价比极高</b>——产业对口、院校特色独一、且河北考生来浙读数字/跨境/内容赛道，正好对接外贸社媒拓客业务；土建·泛管理·传统代工不建议来浙；长期须算清「留浙 vs 出走」（常住人口+31万、自然增长率-1.18‰）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>浙江靠「数字产业 + 具身智能 + 跨境电商 + 生物医药 + 内容文创」五引擎，别被「体制内/土木」标签误导去挤泛管理。</li>
+      <li><b>A 档专业是压舱石。</b>计算机、人工智能、电子、机器人、自动化、电气六者覆盖浙江最有确定性的岗位，优先冲。</li>
+      <li><b>贴「杭州 + 宁波」双核心。</b>杭州（数字/AI/具身智能/生物医药）+ 宁波（绿色石化/磁性材料/港口）贡献最密集产业与院校重叠；嘉兴/绍兴/金华/台州是特色极点。</li>
+      <li><b>行业特色校是最大信息差。</b>杭电（电子/计算机）、浙工大（化工/机械）、温医大（眼视光）、中国美院（设计）、宁大（力学/水产/船舶）、浙工商（电商/财经）、浙师大（师范）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>具身智能是浙江最被低估的王牌。</b>宇树人形机器人全球第一、云深处四足全球第一、全省整机20余家；机器人工程/人工智能在浙江壁垒全国无对手。</li>
+      <li><b>跨境电商是河北考生最该盯的赛道。</b>义乌83万电商主体、1679.64亿、进口单量破亿、Yiwu Pay覆盖176国——是外贸社媒拓客业务的现成样板，来浙读电商/国贸/外语极对口。</li>
+      <li><b>眼视光是浙江独一档医科。</b>温医大眼视光全国第一，壁垒极强、全国就业通吃，分数友好于同档临床。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/跨境/国贸），否则被AI与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产-31.0%、建筑业-1.6%；除非浙大土木双一流或志在央企设计院/重大基建。</li>
+      <li><b>算清「留浙 vs 出走」。</b>浙江常住人口+31万但自然增长率-1.18‰，长期人才流动取决于产业；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：浙江省统计局《2025 年浙江省国民经济和社会发展统计公报》（2026-03-03）、浙江省政府「开局起步『十五五』」专场新闻发布会（2026）、浙江省经信厅「415X」先进制造业集群行动方案、义乌市政府跨境电商公开数据、中国网/中国日报关于「杭州六小龙」与宇树的报道、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增 38 种、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"计算机类（软件/人工智能/智驾）",c:"工学",ch:"数字产业",t:"A",h:5,s:"浙江大学（计算机A+）／杭州电子科技大学／浙江工业大学",j:"软件开发、AI算法、智驾系统、工业软件",
+  r:"数字经济核心1.2万亿、AI营收+21.6%、宇树六小龙在浙。",w:"工程能力大于文凭；杭电计算机性价比洼地。",city:"杭州 · 余杭 · 滨江"},
+ {n:"电子信息类（集成电路/通信/光电）",c:"工学",ch:"集成电路",t:"A",h:5,s:"杭州电子科技大学（电子B+）／浙江大学（光学A+）／绍兴嘉兴院校",j:"芯片设计、通信、光电、智能终端",
+  r:"415X集成集群、计算机电子+16.5%、舜宇海康集聚。",w:"本科多制造/封测，深造更有利。",city:"杭州 · 绍兴 · 嘉兴"},
+ {n:"人工智能（具身智能）",c:"工学",ch:"AI/六小龙",t:"A",h:5,s:"浙江大学（控制A+）／杭州电子科技大学／浙江工业大学",j:"具身智能、大模型、智能体、机器人算法",
+  r:"2030目标1.2万亿、宇树全球第一、云深处四足第一。",w:"数理编程要求高，宜本硕连读。",city:"杭州 · 余杭"},
+ {n:"机器人工程",c:"工学",ch:"具身智能",t:"A",h:4,s:"浙江大学／杭州电子科技大学／浙江工业大学",j:"人形/四足机器人、运动控制、灵巧手",
+  r:"整机20余家、零部件130余家、出口占全国六成。",w:"机械+电子+控制复合型，比普机械溢价。",city:"杭州 · 萧山"},
+ {n:"自动化/测控技术与仪器",c:"工学",ch:"工业智能体",t:"A",h:4,s:"浙江大学（控制A+）／杭州电子科技大学／浙江工业大学",j:"控制系统、工业智能体、汽车电子",
+  r:"高新产业占规上69.1%、新能源产线全需自动化。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"杭州 · 宁波"},
+ {n:"电气工程及其自动化（电网/新能源三电）",c:"工学",ch:"三电/电网",t:"A",h:4,s:"浙江大学（电气A类）／杭州电子科技大学／浙江工业大学",j:"电网、电气设备、新能源三电、储能",
+  r:"国网校招第一梯队、新能源三电刚需、光伏上行。",w:"电网方向需提前准备国网考试。",city:"杭州 · 宁波"},
+ {n:"电子商务/跨境电子商务",c:"管理学",ch:"跨境贸易",t:"B",h:4,s:"浙江工商大学（电商强）／杭州师范大学／浙江大学",j:"跨境运营、独立站、海外仓、数字营销",
+  r:"义乌1679.64亿、进口单量破亿、出口全国第6。",w:"须叠加外语/数据/供应链，避纯理论电商。",city:"金华 · 义乌"},
+ {n:"数字媒体技术/视觉传达设计",c:"艺术",ch:"内容产业",t:"B",h:4,s:"中国美术学院（双A+）／浙江传媒学院／杭州电子科技大学",j:"影视后期、游戏美术、短视频、数字内容",
+  r:"横店1/4电影、游戏科学悟空、直播电商全链在浙。",w:"需作品集，文科生在浙就业天花板更高。",city:"杭州 · 东阳 · 横店"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"半导体",t:"B",h:4,s:"杭州电子科技大学（微电子）／浙江大学／绍兴嘉兴院校",j:"芯片设计、功率半导体、半导体材料",
+  r:"杭州绍兴嘉兴集群成型、计算机电子+16.5%。",w:"数理要求高，深造路径清晰。",city:"杭州 · 绍兴 · 嘉兴"},
+ {n:"机械设计制造及其自动化",c:"工学",ch:"汽车装备",t:"B",h:4,s:"浙江工业大学（机械B+）／浙江大学／杭州电子科技大学",j:"汽车零部件、智能产线、模具",
+  r:"新能源+49.8%、台州模具占全国约10%。",w:"锁汽车/新能源装备方向，避泛机加工。",city:"杭州 · 台州 · 宁波"},
+ {n:"材料科学与工程（高端新材料/半导体材料）",c:"工学",ch:"高端新材料",t:"B",h:3,s:"浙江大学（材料双一流）／浙江工业大学／中国计量大学",j:"轻量化、半导体材料、化工新材料",
+  r:"绿色石化+半导体材料上行、高端新材料千亿级。",w:"锁半导体/新能源材料方向，避泛材料。",city:"宁波 · 湖州 · 衢州"},
+ {n:"统计学/数据科学",c:"理学",ch:"金融/AI",t:"B",h:3,s:"浙江大学（统计强）／浙江工商大学／杭州电子科技大学",j:"量化、数据分析、商业智能",
+  r:"金融8375亿+7.9%、AI与金融通用底座。",w:"数学要求高，是金融与AI通用底座。",city:"杭州 · 宁波"},
+ {n:"生物医学工程/药学",c:"工学",ch:"生物医药",t:"B",h:3,s:"温州医科大学／浙江大学（药学A）／浙江工业大学",j:"医疗器械、生物制剂、医药研发",
+  r:"415X生物医药千亿集群、杭州绍兴台州湖州布局。",w:"医工交叉比纯生物更对产业口。",city:"杭州 · 台州 · 绍兴"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"浙江大学（临床A+）／温州医科大学／浙江中医药大学",j:"三甲/地市医院、科研",
+  r:"健康需求长期刚性、留浙三甲比例高。",w:"学制长（5+3本博）、分数高。",city:"杭州 · 温州"},
+ {n:"眼视光医学",c:"医学",ch:"视觉健康",t:"C",h:5,s:"温州医科大学（眼视光全国第一）",j:"眼科医院、视光中心、医疗器械",
+  r:"温医大眼视光全国第一、视觉健康国重实验室。",w:"分数高但壁垒极强，全国就业通吃。",city:"温州"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:3,s:"浙江大学（法学A类）／宁波大学／浙江工商大学",j:"公检法、律所、企业法务、合规",
+  r:"民营经济活跃、企业法务/合规需求上行。",w:"须过法考，考公优势明显。",city:"杭州 · 宁波"},
+ {n:"外国语言文学",c:"文学",ch:"跨境",t:"C",h:3,s:"浙江大学／宁波大学／浙江工商大学",j:"跨境贸易、外事、涉外法务",
+  r:"义乌176国、380万采购商、跨境支付网络。",w:"须叠加贸易/国贸/数据，避纯语言内卷。",city:"金华 · 义乌 · 宁波"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"浙江师范大学（师范强）／杭州师范大学／浙江大学",j:"中小学教师、教研、心理咨询",
+  r:"师范考编优势、教育学/心理学B+学科。",w:"公费师范生包分配，考编优势大。",city:"杭州 · 金华"},
+ {n:"设计学/动画",c:"艺术",ch:"文创",t:"C",h:4,s:"中国美术学院（双A+）／浙江理工大学／浙江传媒学院",j:"文创、游戏美术、工业设计",
+  r:"中国美院双A+、对接横店与游戏科学。",w:"需校考，作品集大于文凭。",city:"杭州 · 东阳"},
+ {n:"会计学/财务管理",c:"管理学",ch:"财经",t:"C",h:3,s:"杭州电子科技大学（会计强）／浙江工商大学／浙江大学",j:"企业财务、审计、税务",
+  r:"民企377万、个体749万户，财务需求庞大。",w:"须考证（CPA等）。",city:"杭州 · 宁波"},
+ {n:"航海技术/船舶与海洋工程",c:"工学",ch:"船舶海工",t:"C",h:3,s:"宁波大学（船舶/航海国家一流）／浙江海洋大学",j:"港口运营、船舶设计、航运",
+  r:"宁波舟山港货物全球第一、集装箱全球第三。",w:"行业特色强，本省极稳。",city:"宁波 · 舟山"},
+ {n:"水产养殖学",c:"农学",ch:"海洋经济",t:"C",h:3,s:"宁波大学（水产全国前2）／浙江海洋大学",j:"水产技术、海洋牧场、渔业贸易",
+  r:"海洋强省、特色小而美赛道。",w:"宜深耕，全国前2壁垒强。",city:"宁波 · 舟山"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"浙江大学（土木双一流）",j:"设计院、施工、基建、智能建造",
+  r:"房地产-31%、建筑业-1.6%，土建链承压。",w:"仅浙大土木或志在央企设计院/重大基建。",city:"杭州 · 宁波"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"浙江工商大学／杭州电子科技大学",j:"职能管理、行政、咨询",
+  r:"民企为主、泛管理岗位稀缺内卷。",w:"叠加行业+管理，否则慎选。",city:"杭州 · 宁波"}
+];
+
+var CHAINS = [
+ {n:"数字产业/人工智能（含具身智能六小龙）",u:["算力","高质量语料库","AI芯片"],m:["大模型（DeepSeek）","智能体","具身智能本体（宇树/云深处）","工业软件"],d:["行业应用","内容生成","智能终端"],
+  mj:"人工智能、计算机、机器人、自动化、统计",
+  f:"2025AI核心营收6294亿+21.6%；机器人整机20余家、零部件130余家；宇树出货超5500台全球第一、海外超40%；2030目标1.2万亿。"},
+ {n:"集成电路/半导体",u:["硅片","化合物半导体材料"],m:["芯片设计（杭州/绍兴）","制造","封测（嘉善/海宁）","半导体设备"],d:["汽车电子","智能终端","工业控制"],
+  mj:"集成电路、微电子、电子、材料",
+  f:"415X集成电路千亿级集群；杭州滨江/富阳、绍兴越城/上虞、嘉兴南湖/嘉善核心区；计算机电子+16.5%。"},
+ {n:"新能源汽车及零部件",u:["锂电材料","车规芯片"],m:["动力电池","整车（吉利/零跑/比亚迪宁波）","电驱电控"],d:["充换电","智能网联","后市场"],
+  mj:"车辆、电气、自动化、机械、材料",
+  f:"2025新能源138万辆+49.8%全国第4；汽车增加值+19.7%；杭州宁波温州嘉兴湖州台州多点布局。"},
+ {n:"跨境电商/数字贸易（义乌）",u:["小商品供应链","3D打印打样"],m:["跨境平台（Amazon/TikTok/Temu）","独立站","海外仓（281个）"],d:["保税直播","跨境支付（Yiwu Pay）","国际物流"],
+  mj:"电商、跨境电子商务、国贸、外语、物流",
+  f:"义乌83万电商主体、2025跨境1679.64亿连续10年两位数、进口单量破亿；Chinagoods380万采购商、YiwuPay176国。"},
+ {n:"生物医药与医疗器械",u:["原料药","生物制剂"],m:["创新药","高端医疗器械"],d:["医疗服务","康养","美妆"],
+  mj:"药学、生医工、临床、生科",
+  f:"415X生物医药千亿集群；杭州绍兴台州湖州核心区；浙江医药、华海、华东医药、泰格医药集聚。"},
+ {n:"高端新材料/绿色石化",u:["油气","金属化工原料"],m:["绿色石化（宁波/舟山）","高端新材料","磁性材料（宁波）"],d:["新能源","半导体","航空航天","家电"],
+  mj:"材料、化工、冶金",
+  f:"宁波绿色石化、舟山浙石化国家级集群；高端新材料千亿级；化学原料+7.0%。"},
+ {n:"影视文创/内容产业（横店+直播+游戏科学）",u:["IP剧本","虚拟拍摄"],m:["影视拍摄（横店）","游戏研发（游戏科学）","直播电商"],d:["文旅","短剧出海","数字内容"],
+  mj:"数字媒体、视觉传达、动画、编导、新媒体",
+  f:"横店产出全国1/4电影、1/3电视剧、2/3古装剧；2025微短剧4016部；游戏科学悟空带动游戏出海。"},
+ {n:"高端船舶与海工/港口物流（宁波舟山港）",u:["船用钢材","动力系统"],m:["船舶制造（舟山）","海工装备"],d:["港口运营","航运","供应链金融"],
+  mj:"船舶与海洋工程、航海、交通运输、物流",
+  f:"宁波舟山港货物14.3亿吨连续17年全球第一、集装箱4387万标箱全球第三；舟山船舶海工国家级集群。"}
+];
+
+var CITIES = [
+ {c:"杭州（数字经济第一城）",i:"智能物联、高端软件、人工智能、集成电路、视觉智能、生物医药",l:"海康、阿里、网易、宇树、云深处、DeepSeek",m:"计算机、人工智能、电子、机器人、生科"},
+ {c:"宁波（智造+港口）",i:"绿色石化、磁性材料、汽车电子、小家电、集成电路材料",l:"宁波舟山港、吉利、方太、舜宇、均胜",m:"化工、材料、电子、机械、通信"},
+ {c:"温州",i:"乐清电气、智能传感、新能源汽车零部件",l:"正泰、德力西、瑞浦兰钧",m:"电气、电子、机械、车辆"},
+ {c:"绍兴",i:"集成电路、现代纺织、生物医药",l:"中芯绍兴、龙盛、新和成",m:"集成电路、材料、纺织、药学"},
+ {c:"金华（义乌）",i:"跨境电商、小商品、智能光伏、外贸综合服务",l:"义乌商贸城、Chinagoods、Yiwu Pay",m:"电商、国贸、外语、物流"},
+ {c:"嘉兴",i:"南湖微电子、嘉善集成电路、智能光伏、机器人/新能源汽车",l:"斯达半导、晶科、福莱特",m:"微电子、光伏、车辆、自动化"},
+ {c:"台州",i:"模具塑料、新能源汽车零部件、机床、医药",l:"吉利、杰克、海正",m:"机械、模具、车辆、药学"},
+ {c:"湖州",i:"高端新材料、生物医药、新能源汽车",l:"天能、超威、久立",m:"材料、生科、车辆"},
+ {c:"舟山",i:"高端船舶与海工、绿色石化、港口物流",l:"舟山船舶、浙石化（鱼山）",m:"船舶与海洋工程、化工、航海"},
+ {c:"衢州",i:"高端新材料",l:"华友钴业、巨化",m:"材料、化工"},
+ {c:"丽水",i:"高端新材料、集成电路协同区",l:"半导体材料企业",m:"材料、电子"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

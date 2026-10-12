@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>升学工具箱 · 博辰序</title>
+<meta name="description" content="博辰序升学工具箱：16 项升学工作成果与 31 省产业-本科专业速查仪表盘完整入口。">
+<meta property="og:title" content="升学工具箱 · 博辰序">
+<meta property="og:description" content="博辰序升学工具箱：16 项升学工作成果与 31 省产业-本科专业速查仪表盘完整入口。">
+<meta property="og:image" content="https://star-map-folder.app.workbuddy.host/og/index.png">
+<style>
+  :root{
+    --navy:#0A2A4A; --navy2:#0E3A66; --blue:#1B5FA8; --blue-l:#2E7BC4;
+    --ink:#13293D; --ink2:#3E5A73; --ink3:#7B93A8;
+    --orange:#F97316; --orange-d:#EA580C; --orange-bg:#FFF3EA;
+    --line:#DCE6F0; --bg:#F5F8FB; --card:#FFFFFF;
+    --shadow:0 6px 22px rgba(13,42,74,.08);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;}
+  a{text-decoration:none;color:inherit}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+
+  /* ===== 顶部导航 ===== */
+  .nav{position:sticky;top:0;z-index:50;background:var(--navy);color:#fff;
+    box-shadow:0 2px 14px rgba(7,26,47,.35)}
+  .nav-in{max-width:1160px;margin:0 auto;padding:0 18px;display:flex;align-items:center;gap:10px;height:58px}
+  .logo{display:flex;align-items:baseline;gap:8px;flex:none;margin-right:8px}
+  .logo b{font-size:19px;letter-spacing:2px;color:#fff;font-weight:800}
+  .logo span{font-size:10.5px;letter-spacing:2.5px;color:#8FB0D2}
+  .nav-links{display:flex;align-items:center;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;flex:1;min-width:0;white-space:nowrap}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{flex:none;padding:7px 13px;border-radius:8px;font-size:14.5px;font-weight:600;color:#C9DAEC;transition:.15s}
+  .nav-links a:hover{color:#fff;background:rgba(255,255,255,.10)}
+  .nav-links a.nav-cta{color:#fff;background:var(--orange);font-weight:700;margin-left:6px}
+  .nav-links a.nav-cta:hover{background:var(--orange-d)}
+
+  /* ===== Hero ===== */
+  .hero{background:linear-gradient(160deg,#071E36 0%,#0A2A4A 46%,#123E6B 100%);
+    color:#fff;padding:64px 0 58px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;left:-100px;bottom:-160px;width:420px;height:420px;
+    background:radial-gradient(circle,rgba(249,115,22,.10),transparent 70%);pointer-events:none}
+  .hero .wrap{position:relative;z-index:1}
+  .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:46px;align-items:center}
+  .kick{letter-spacing:5px;font-size:12.5px;font-weight:700;color:#9DBBDA}
+  .hero h1{margin:14px 0 8px;font-size:44px;line-height:1.22;letter-spacing:1px;font-weight:800;color:#fff}
+  .hero h1 .hl{color:#FFB27A}
+  .hero .sub{font-size:17px;font-weight:700;color:#D7E5F4;letter-spacing:1px;margin:0 0 10px}
+  .hero p.desc{margin:0;font-size:15.5px;color:#B9CFE5;max-width:640px;line-height:1.8}
+  .cta-row{display:flex;gap:14px;align-items:center;margin-top:26px;flex-wrap:wrap}
+  .cta{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;
+    background:var(--orange);color:#fff;font-weight:800;font-size:16px;
+    padding:13px 28px;border-radius:10px;box-shadow:0 10px 26px rgba(249,115,22,.35);transition:.18s}
+  .cta:hover{background:var(--orange-d);transform:translateY(-2px)}
+  .cta-outline{display:inline-flex;align-items:center;gap:10px;
+    background:rgba(255,255,255,.08);color:#fff;font-weight:700;font-size:16px;
+    padding:13px 24px;border-radius:10px;border:1px solid rgba(255,255,255,.38);transition:.18s}
+  .cta-outline:hover{background:rgba(255,255,255,.16);transform:translateY(-2px)}
+  .cta-outline svg{width:20px;height:20px}
+  /* hero 搜索 */
+  .hsearch{margin-top:26px;max-width:600px;position:relative}
+  .hsearch-box{display:flex;align-items:center;gap:10px;background:#fff;border-radius:12px;
+    padding:12px 18px;box-shadow:0 14px 40px rgba(4,18,33,.45)}
+  .hsearch-box svg{width:20px;height:20px;color:var(--ink3);flex:none}
+  .hsearch-box input{border:none;outline:none;flex:1;font-size:15.5px;color:var(--ink);
+    background:transparent;font-family:inherit;min-width:0}
+  .hsearch-box input::placeholder{color:#9BB0C2}
+  .hsug{position:absolute;left:0;right:0;top:calc(100% + 8px);background:#fff;border-radius:12px;
+    box-shadow:0 18px 48px rgba(4,18,33,.30);overflow:hidden;display:none;z-index:30}
+  .hsug.on{display:block}
+  .hsug a{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:14.5px;color:var(--ink);
+    border-bottom:1px solid #F0F4F8}
+  .hsug a:last-child{border-bottom:none}
+  .hsug a:hover{background:#F3F8FD}
+  .hsug .badge{flex:none;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;letter-spacing:1px}
+  .hsug .badge.p{background:#E8F1FA;color:var(--blue)}
+  .hsug .badge.w{background:var(--orange-bg);color:var(--orange-d)}
+  .hsug .badge.c{background:#FDF0E6;color:#C2570A}
+  .hsug .badge.m{background:#EAF7EE;color:#1E7B43}
+  .hsearch-hint{margin-top:10px;font-size:12.5px;color:#7E9CBA}
+  .hsearch-hint b{color:#C9DAEC;font-weight:600}
+  .hstart{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.14);
+    display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;font-size:13.5px;color:#A9C3DE;line-height:1.6}
+  .hstart b{color:#DCE9F6;font-weight:700}
+  .hstart .lnk{color:#FFB27A;font-weight:800;cursor:pointer;white-space:nowrap}
+  .hstart .lnk:hover{color:#fff}
+
+  /* ===== Hero 右侧：全国高校资源网络视觉 ===== */
+  .hero-map{min-width:0}
+  .hero-map{min-width:0}
+  .hero-map .stage{position:relative;max-width:520px;margin:0 auto}
+  .cnmap-svg{width:100%;display:block;overflow:visible}
+  /* 省份：低对比底色 + 细边界，hover 高亮 */
+  .cnmap-svg .hp{fill:rgba(232,240,248,.10);stroke:rgba(255,255,255,.28);stroke-width:.7;
+    stroke-linejoin:round;transition:fill .16s;cursor:pointer}
+  .cnmap-svg .hp:hover{fill:rgba(255,178,122,.22);stroke:rgba(255,178,122,.65)}
+  .cnmap-svg .hp-line{fill:none;stroke:rgba(255,255,255,.30);stroke-width:.7;pointer-events:none}
+  /* 高校节点 */
+  .cnmap-svg .hu{cursor:pointer}
+  .cnmap-svg .hu circle{fill:#7FB3E8;stroke:#0B2B4E;stroke-width:1}
+  .cnmap-svg .hu.hub circle{fill:#FFB27A;stroke:#0B2B4E;stroke-width:1.2}
+  .cnmap-svg .hu.hub circle::after{content:""}
+  .cnmap-svg .hu text{fill:rgba(255,255,255,.90);font-size:11.5px;font-weight:600;
+    font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif;paint-order:stroke;
+    stroke:rgba(7,26,48,.85);stroke-width:2.5;pointer-events:none}
+  .cnmap-svg .hu:hover circle{fill:#FFB27A;filter:drop-shadow(0 0 5px rgba(255,178,122,.6))}
+  /* 悬停提示 */
+  .hmtip{position:fixed;z-index:99;pointer-events:none;display:none;
+    background:#0F3458;color:#fff;border:1px solid rgba(255,178,122,.4);
+    padding:7px 11px;border-radius:8px;font-size:12.5px;line-height:1.5;
+    box-shadow:0 8px 22px rgba(2,12,26,.5)}
+  .hmtip b{color:#FFB27A}
+  .hmtip small{display:block;color:#A9C3DE;font-size:11.5px}
+  .hero-cap{margin-top:10px;text-align:center;font-size:12px;color:#7E9CBA;letter-spacing:1.5px}
+  .hero-more{display:table;margin:10px auto 0;padding:9px 22px;border-radius:9px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,178,122,.45);
+    color:#FFB27A;font-size:13.5px;font-weight:700;letter-spacing:.5px;transition:.16s}
+  .hero-more:hover{background:rgba(255,178,122,.16)}
+  .hero-stats{display:flex;justify-content:flex-end;gap:8px;margin:0 0 14px;flex-wrap:wrap}
+  .hero-stats .st{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    border-radius:9px;padding:9px 14px;text-align:center}
+  .hero-stats .st b{font-size:20px;font-weight:800;color:#fff;font-family:Georgia,"Microsoft YaHei",serif;line-height:1}
+  .hero-stats .st b i{font-style:normal;font-size:12px;color:#FFB27A;margin-left:1px}
+  .hero-stats .st span{font-size:12px;color:#A9C3DE}
+  .hero-tip{margin-top:12px;text-align:center;font-size:12.5px;color:#8FB0D2}
+  .hero-tip b{color:#FFB27A;font-weight:700}
+  .trust-note{text-align:center;margin:26px 0 0;font-size:15px;color:var(--ink2)}
+  .trust-note b{color:var(--ink);font-weight:800}
+  .chain-cta{display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+    font-size:15.5px;font-weight:800;color:var(--orange-d)}
+  .chain-cta:hover{color:var(--orange)}
+
+  /* ===== sections ===== */
+  section{padding:64px 0}
+  .sec-title{font-size:26px;font-weight:800;color:var(--ink);margin:0 0 6px}
+  .sec-sub{color:var(--ink2);font-size:15px;margin:0 0 26px;line-height:1.7}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+  .sec-head .t{max-width:72%}
+  .sec-head .sec-title{margin-bottom:4px}
+  .sec-head .sec-sub{margin-bottom:0}
+
+  /* ===== 四大核心入口 ===== */
+  .feats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 22px;
+    box-shadow:var(--shadow);transition:.18s;display:flex;flex-direction:column}
+  .feat:hover{transform:translateY(-4px);border-color:var(--blue-l);box-shadow:0 14px 34px rgba(13,42,74,.14)}
+  .feat-ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .feat-ic svg{width:24px;height:24px}
+  .fi-blue{background:#E8F1FA;color:var(--blue)}
+  .fi-orange{background:var(--orange-bg);color:var(--orange)}
+  .fi-green{background:#EAF7EE;color:#1E7B43}
+  .fi-navy{background:#E9EDF5;color:var(--navy)}
+  .feat h3{margin:0 0 8px;font-size:18px;color:var(--ink)}
+  .feat p{margin:0 0 18px;font-size:13.5px;color:var(--ink2);line-height:1.65;flex:1}
+  .feat-go{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--blue)}
+  .feat.go-orange .feat-go{color:var(--orange-d)}
+  .feat-go svg{width:15px;height:15px;transition:transform .15s}
+  .feat:hover .feat-go svg{transform:translateX(3px)}
+
+  /* ===== 信任数据卡 ===== */
+  .trust{background:linear-gradient(180deg,#FFFFFF,#EFF5FB)}
+  .tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .tcard{background:var(--card);border:1px solid var(--line);border-radius:14px;text-align:center;
+    padding:26px 12px;box-shadow:var(--shadow)}
+  .tcard b{display:block;font-size:34px;font-weight:800;color:var(--navy);font-family:Georgia,"Microsoft YaHei",serif;line-height:1.1}
+  .tcard b i{font-style:normal;font-size:16px;color:var(--orange);margin-left:2px}
+  .tcard span{display:block;margin-top:8px;font-size:13.5px;color:var(--ink2)}
+
+  /* ===== 专业×产业×就业 ===== */
+  .chain{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr 34px 1fr;gap:0;align-items:stretch;margin-top:8px}
+  .chain-node{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 18px;
+    box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.18s}
+  .chain-node:hover{border-color:var(--blue-l);transform:translateY(-3px)}
+  .chain-node .lab{font-size:11.5px;font-weight:800;letter-spacing:2px;color:var(--orange-d);margin-bottom:8px}
+  .chain-node .val{font-size:16px;font-weight:800;color:var(--ink);line-height:1.45;flex:1}
+  .chain-node .val small{display:block;font-size:12.5px;font-weight:400;color:var(--ink2);margin-top:6px;line-height:1.6}
+  .chain-node .lnk{margin-top:12px;font-size:12.5px;font-weight:700;color:var(--blue)}
+  .chain-arrow{display:flex;align-items:center;justify-content:center;color:var(--orange)}
+  .chain-arrow svg{width:22px;height:22px}
+  .chain-note{margin-top:18px;font-size:13.5px;color:var(--ink2);background:var(--orange-bg);
+    border-left:3px solid var(--orange);border-radius:0 10px 10px 0;padding:13px 16px;line-height:1.7}
+
+  /* ===== 五步决策 ===== */
+  .plan{background:linear-gradient(160deg,#071E36,#0E3A66);color:#fff}
+  .plan .sec-title{color:#fff}
+  .plan .sec-sub{color:#AFC8E2}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:6px}
+  .step{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:20px 16px;position:relative}
+  .step .no{font-size:12px;font-weight:800;color:#FFB27A;letter-spacing:1px}
+  .step h4{margin:8px 0 6px;font-size:16.5px;color:#fff}
+  .step p{margin:0;font-size:12.5px;color:#AFC8E2;line-height:1.65}
+  .plan-foot{margin-top:30px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .plan-foot .hint{font-size:13px;color:#8FAECF;line-height:1.6}
+
+  /* ===== 升学工具箱（首页只放 6 个最常用入口）===== */
+  .tbgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 30px;margin-top:4px}
+  .tbox{display:flex;align-items:flex-start;gap:14px;padding:17px 10px;
+    border-bottom:1px solid var(--line);transition:.15s}
+  .tbox:hover{background:#fff;border-radius:12px;transform:translateY(-1px);
+    box-shadow:0 8px 20px rgba(13,42,74,.08)}
+  .tbox-ic{flex:none;width:34px;height:34px;border-radius:10px;background:#E8F1FA;color:var(--blue);
+    display:flex;align-items:center;justify-content:center}
+  .tbox-ic svg{width:19px;height:19px}
+  .tbox-tx{min-width:0}
+  .tbox-tx b{display:block;font-size:15.5px;font-weight:800;color:var(--ink)}
+  .tbox-tx small{display:block;margin-top:3px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+  .viewall{display:inline-flex;align-items:center;gap:8px;margin-top:22px;
+    font-size:15px;font-weight:800;color:var(--blue);transition:.15s}
+  .viewall:hover{color:var(--navy)}
+  .viewall svg{width:16px;height:16px}
+
+  /* ===== 工具总览页（tools.html）共用样式 ===== */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;
+    box-shadow:var(--shadow);transition:.18s;display:flex;flex-direction:column;gap:10px}
+  .card:hover{transform:translateY(-3px);border-color:var(--blue-l);box-shadow:0 12px 30px rgba(13,42,74,.15)}
+  .card-ic{width:30px;height:30px;color:var(--blue)}
+  .card-t{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.5}
+  .card-go{margin-top:auto;font-size:13px;color:var(--blue);font-weight:700}
+  .group{margin-bottom:26px;border:1px solid var(--line);border-radius:16px;background:#fff;padding:18px 20px}
+  .group-h{display:flex;align-items:center;gap:12px;margin:0 0 16px;flex-wrap:wrap;cursor:pointer;user-select:none}
+  .group-h .gic{width:24px;height:24px;color:var(--blue);flex:none}
+  .group-h .tag{font-size:12px;font-weight:800;color:#fff;background:var(--blue);
+    padding:4px 11px;border-radius:20px;letter-spacing:1px}
+  .group-h .gname{font-size:18px;font-weight:800;color:var(--ink)}
+  .group-h .gdesc{font-size:13.5px;color:var(--ink2)}
+  .group-h .chev{margin-left:auto;width:20px;height:20px;color:var(--ink3);transition:transform .2s}
+  .group.collapsed .chev{transform:rotate(-90deg)}
+  .group.collapsed .grid{display:none}
+  .tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+    border-radius:24px;padding:9px 16px;box-shadow:var(--shadow)}
+  .search svg{width:16px;height:16px;flex:none;opacity:.55}
+  .search input{border:none;outline:none;font-size:14px;width:190px;background:transparent;color:var(--ink);font-family:inherit}
+  .btn{border:1px solid var(--blue);color:var(--blue);background:#fff;border-radius:24px;
+    padding:9px 16px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit}
+  .btn:hover{background:var(--blue);color:#fff}
+  .pgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  .pcard{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:14px 10px;
+    text-align:center;font-size:15px;font-weight:700;color:var(--ink);box-shadow:var(--shadow);
+    transition:.18s;display:flex;align-items:center;justify-content:center;gap:7px}
+  .pcard:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
+  .pdot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+  .pgrid .pcard:first-child{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none}
+  .pgrid .pcard:first-child .pdot{background:#fff}
+  .no-hit{color:var(--ink3);font-size:14px;padding:14px 2px;display:none}
+  .note{background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;font-size:13.5px;color:var(--ink2);line-height:1.7;margin-top:8px}
+  .pagehead{background:linear-gradient(160deg,#071E36,#0E3A66);color:#fff;padding:44px 0 40px}
+  .pagehead .kick{letter-spacing:5px;font-size:12.5px;font-weight:700;color:#9DBBDA}
+  .pagehead h1{margin:12px 0 8px;font-size:32px;font-weight:800;color:#fff}
+  .pagehead p{margin:0;font-size:14.5px;color:#B9CFE5;line-height:1.8}
+
+  /* ===== 联系区 ===== */
+  .contact{background:#fff;border-top:1px solid var(--line)}
+  .contact-in{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:54px 0}
+  .contact-in .t{max-width:540px}
+  .contact-card{background:linear-gradient(160deg,var(--navy),var(--blue));color:#fff;border-radius:18px;
+    padding:26px 30px;min-width:280px;box-shadow:0 14px 34px rgba(10,42,74,.28)}
+  .cc-name{font-size:16px;opacity:.9;margin-bottom:4px}
+  .cc-tel{display:flex;align-items:center;gap:10px;font-size:28px;font-weight:800;color:#fff;margin-bottom:8px}
+  .cc-tel svg{width:24px;height:24px}
+  .cc-sub{font-size:13px;opacity:.92}
+
+  /* ===== footer ===== */
+  footer{background:#071E36;color:#8FAECF;padding:38px 0;font-size:13px;line-height:1.8}
+  footer b{color:#D8E6F4}
+  footer a{color:#FFB27A}
+  footer a:hover{color:#fff}
+
+  /* ===== 移动端底部咨询条 ===== */
+  .mbbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 22px rgba(13,42,74,.12);
+    padding:9px 14px calc(9px + env(safe-area-inset-bottom));gap:10px}
+  .mbbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+    border-radius:10px;padding:11px 8px;font-size:14.5px;font-weight:800}
+  .mbbar .mb-tel{background:var(--navy);color:#fff}
+  .mbbar .mb-wx{background:var(--orange);color:#fff}
+  .mbbar svg{width:17px;height:17px;flex:none}
+
+  /* ===== 响应式 ===== */
+  @media(max-width:1080px){
+    .hero-grid{grid-template-columns:1fr;gap:34px}
+    .hero-map{max-width:430px;margin:0 auto;width:100%}
+  }
+  @media(max-width:980px){
+    .feats{grid-template-columns:repeat(2,1fr)}
+    .tgrid{grid-template-columns:repeat(2,1fr)}
+    .steps{grid-template-columns:repeat(2,1fr)}
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .pgrid{grid-template-columns:repeat(4,1fr)}
+    .chain{grid-template-columns:1fr;gap:0}
+    .chain-arrow{transform:rotate(90deg);height:34px}
+    .hero h1{font-size:34px}
+    .sec-head .t{max-width:100%}
+    .contact-in{flex-direction:column;align-items:flex-start}
+    .hero{padding:52px 0 46px}
+    .tbgrid{grid-template-columns:repeat(2,1fr);gap:0 22px}
+  }
+  @media(max-width:640px){
+    section{padding:46px 0}
+    .hero h1{font-size:28px}
+    .hero .sub{font-size:14.5px}
+    .hero p.desc{font-size:14px}
+    .hero-stats{gap:7px;margin-bottom:14px;justify-content:center}
+    .hero-stats .st{padding:7px 11px}
+    .hero-stats .st b{font-size:17px}
+    .hero-stats .st span{font-size:11px}
+    .hero-tip{font-size:12px}
+    .trust-note{font-size:13.5px;margin-top:20px}
+    .feats{grid-template-columns:repeat(2,1fr);gap:12px}
+    .feat{padding:18px 14px}
+    .feat h3{font-size:16px}
+    .feat p{font-size:12.5px}
+    .tbgrid{grid-template-columns:1fr;gap:0}
+    .pgrid{grid-template-columns:repeat(3,1fr)}
+    .grid{grid-template-columns:1fr}
+    .tcard b{font-size:27px}
+    .cta-row .cta,.cta-row .cta-outline{width:100%;justify-content:center}
+    .hsearch-box{padding:11px 14px}
+    .contact-card{min-width:auto;width:100%}
+    /* 五步流程：横向滑动，一屏一步 */
+    .steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;
+      padding-bottom:8px;-webkit-overflow-scrolling:touch}
+    .step{flex:0 0 76%;scroll-snap-align:start}
+    .pagehead h1{font-size:25px}
+    body{padding-bottom:62px}  /* 防底部固定咨询条遮挡 */
+    .mbbar{display:flex}
+    .logo span{display:none}
+  }
+
+  .cmodal{position:fixed;inset:0;background:rgba(6,24,39,.62);display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
+  .cmodal.on{display:flex}
+  .cmodal-box{background:#fff;border-radius:20px;max-width:360px;width:100%;padding:30px 28px 26px;text-align:center;position:relative;box-shadow:0 24px 64px rgba(6,24,39,.35)}
+  .cmodal-x{position:absolute;top:12px;right:14px;border:none;background:none;font-size:19px;color:#7A8B99;cursor:pointer;line-height:1}
+  .cmodal-x:hover{color:#123}
+  .cmodal-t{font-size:20px;font-weight:800;color:#0A2A4A;margin-bottom:14px}
+  .cmodal-qr{width:238px;height:auto;border-radius:14px;border:1px solid #E3ECF2;display:block;margin:0 auto}
+  .cmodal-wechat{font-size:13.5px;color:#4A6070;margin:12px 0 14px}
+  .cmodal-tel{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0A2A4A,#1B5FA8);color:#fff;text-decoration:none;font-weight:800;font-size:17px;padding:11px 24px;border-radius:26px}
+  .cmodal-tel svg{width:17px;height:17px}
+  .cmodal-sub{font-size:12.5px;color:#7A8B99;margin-top:12px}
+</style>
+
+</head>
+<body id="top">
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="logo"><b>博辰序</b><span>BOCHENXU</span></div>
+    <div class="nav-links">
+      <a href="index.html">返回首页</a>
+      <a href="map.html">找大学</a>
+      <a href="results/%E4%B8%93%E4%B8%9A%E4%BB%8B%E7%BB%8D%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F.html" target="_blank" rel="noopener">选专业</a>
+      <a class="nav-cta" href="#top">升学工具箱</a>
+    </div>
+  </div>
+</nav>
+
+<div class="pagehead">
+  <div class="wrap">
+    <div class="kick">升学工具箱 · TOOLKIT</div>
+    <h1>全部升学工具与成果</h1>
+    <p>16 项升学工作成果，按服务场景归为 6 类；下方附 31 省产业-本科专业速查仪表盘入口。点击直接打开（需联网）。</p>
+  </div>
+</div>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="t">
+        <h2 class="sec-title">工作成果 · 16 项</h2>
+        <p class="sec-sub">按服务场景归类，点击分组标题可折叠/展开。</p>
+      </div>
+      <div class="tools">
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="q1" placeholder="搜索成果 / 关键词"></div>
+        <button class="btn" onclick="expandAll(this)">全部展开</button>
+      </div>
+    </div>
+    <div class="no-hit" id="nh1">没有匹配的成果，换个关键词试试。</div>
+<div class="group">
+  <div class="group-h" onclick="toggleGroup(this)">
+    <span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg></span><span class="tag">01</span><span class="gname">产业 · 专业映射</span><span class="gdesc">把「产业在哪、对应什么专业」前置到志愿填报之前</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="grid">
+<a class="card" href="results/%E4%B8%AD%E5%9B%BD1054%E4%B8%AA%E5%9B%BD%E5%AE%B6%E7%BA%A7%E4%BA%A7%E4%B8%9A%E9%9B%86%E7%BE%A4%E5%85%A8%E6%99%AF%E8%A7%A3%E8%AF%BB%E4%B8%8E%E4%B8%93%E4%B8%9A%E5%88%86%E6%9E%90.html" target="_blank" rel="noopener" data-search="1054个国家级产业集群 · 解读与专业分析 中国1054个国家级产业集群全景解读与专业分析.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">1054个国家级产业集群 · 解读与专业分析</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/31%E7%9C%81%E4%BA%A7%E4%B8%9A-%E6%9C%AC%E7%A7%91%E4%B8%93%E4%B8%9A%E6%8B%A9%E6%A0%A1%E6%8C%87%E5%8D%97%E7%BD%91%E7%AB%99.html" target="_blank" rel="noopener" data-search="31 省产业-本科专业择校指南 31省产业-本科专业择校指南网站.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">31 省产业-本科专业择校指南</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E5%85%A8%E5%9B%BD144%E5%9F%8E%E4%BA%A7%E4%B8%9A%E8%B0%83%E7%A0%94%E5%9C%B0%E5%9B%BE.html" target="_blank" rel="noopener" data-search="全国 144 城产业调研地图 全国144城产业调研地图.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">全国 144 城产业调研地图</div>
+  <div class="card-go">打开 →</div>
+</a>
+  </div>
+</div>
+<div class="group">
+  <div class="group-h" onclick="toggleGroup(this)">
+    <span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></span><span class="tag">02</span><span class="gname">选科 · 选专业</span><span class="gdesc">从科目组合对路到专业目录查询</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="grid">
+<a class="card" href="results/2027%E6%B2%B3%E5%8C%97%E9%80%89%E7%A7%91%E4%B8%93%E4%B8%9A%E5%AF%B9%E7%85%A7%E8%A1%A8.html" target="_blank" rel="noopener" data-search="2027 河北选科专业对照表 2027河北选科专业对照表.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">2027 河北选科专业对照表</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E4%B8%93%E4%B8%9A%E4%BB%8B%E7%BB%8D%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F.html" target="_blank" rel="noopener" data-search="专业介绍查询系统 专业介绍查询系统.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">专业介绍查询系统</div>
+  <div class="card-go">打开 →</div>
+</a>
+  </div>
+</div>
+<div class="group">
+  <div class="group-h" onclick="toggleGroup(this)">
+    <span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6 7v6l-4 2v-8z"/></svg></span><span class="tag">03</span><span class="gname">志愿填报 · 报考决策</span><span class="gdesc">各省怎么报、投档数据怎么查</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="grid">
+<a class="card" href="results/31%E7%9C%81%E9%AB%98%E8%80%83%E6%8A%A5%E8%80%83%E9%80%BB%E8%BE%91%E8%AF%A6%E8%A7%A3.html" target="_blank" rel="noopener" data-search="31 省高考报考逻辑详解 31省高考报考逻辑详解.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">31 省高考报考逻辑详解</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E6%B2%B3%E5%8C%97%E9%AB%98%E8%80%83%E6%8A%95%E6%A1%A3%E6%95%B0%E6%8D%AE_%E6%80%BB%E6%9F%A5%E8%AF%A2%E5%8F%B0_2026vs2025.html" target="_blank" rel="noopener" data-search="河北高考投档数据总查询台 · 2026vs2025 河北高考投档数据_总查询台_2026vs2025.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">河北高考投档数据总查询台 · 2026vs2025</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E6%B2%B3%E5%8C%97%E7%9C%81%E9%99%A2%E6%A0%A1%E5%BD%95%E5%8F%96%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F.html" target="_blank" rel="noopener" data-search="河北省院校录取查询系统 河北省院校录取查询系统.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">河北省院校录取查询系统</div>
+  <div class="card-go">打开 →</div>
+</a>
+  </div>
+</div>
+<div class="group">
+  <div class="group-h" onclick="toggleGroup(this)">
+    <span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-5 9 5"/><path d="M5 10v8h14v-8"/><path d="M9 18v-5h6v5"/></svg></span><span class="tag">04</span><span class="gname">院校认知 · 择校</span><span class="gdesc">更名、特色院校、职业本科一本清</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="grid">
+<a class="card" href="results/%E5%B7%B2%E5%AE%A1%E6%89%B9%E6%9B%B4%E5%90%8D%E5%A4%A7%E5%AD%A6%E5%85%A8%E6%B1%87%E6%80%BB.html" target="_blank" rel="noopener" data-search="已审批更名大学全汇总 已审批更名大学全汇总.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">已审批更名大学全汇总</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E7%BA%A2%E5%AE%9D%E4%B9%A6-%E5%85%A8%E5%9B%BD%E5%88%86%E7%9C%81%E7%89%B9%E8%89%B2%E9%99%A2%E6%A0%A1%E5%85%A8%E6%99%AF%E6%A2%B3%E7%90%86%E4%B8%8E%E5%86%B3%E7%AD%96%E5%8F%82%E8%80%83%282026%E5%B9%B46%E6%9C%88%E7%89%88%29.docx" target="_blank" rel="noopener" data-search="全国分省特色院校全景红宝书（2026年6月版 · docx） 红宝书-全国分省特色院校全景梳理与决策参考(2026年6月版).docx">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">全国分省特色院校全景红宝书（2026年6月版 · docx）</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E8%81%8C%E4%B8%9A%E6%9C%AC%E7%A7%91%E9%99%A2%E6%A0%A1%E6%8B%A9%E6%A0%A1%E6%89%8B%E5%86%8C.html" target="_blank" rel="noopener" data-search="职业本科院校择校手册 职业本科院校择校手册.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">职业本科院校择校手册</div>
+  <div class="card-go">打开 →</div>
+</a>
+  </div>
+</div>
+<div class="group">
+  <div class="group-h" onclick="toggleGroup(this)">
+    <span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V9l7-5 7 5v10"/><path d="M12 8v8"/><path d="M9 11l3 3 3-3"/></svg></span><span class="tag">05</span><span class="gname">升学 · 就业路径</span><span class="gdesc">考研、选调、就业质量一眼看</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="grid">
+<a class="card" href="results/2026%E5%90%84%E7%9C%81%E9%80%89%E8%B0%83%E5%A4%87%E8%80%83%E8%A7%84%E5%88%92.html" target="_blank" rel="noopener" data-search="2026 各省选调备考规划 2026各省选调备考规划.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">2026 各省选调备考规划</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E6%9C%AC%E7%A7%91%E4%B8%93%E4%B8%9A%E5%AF%B9%E5%BA%94%E7%9A%84%E7%A0%94%E7%A9%B6%E7%94%9F%E4%B8%93%E4%B8%9A%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F.html" target="_blank" rel="noopener" data-search="本科→研究生专业查询系统 本科专业对应的研究生专业查询系统.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">本科→研究生专业查询系统</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E5%B0%B1%E4%B8%9A%E4%B8%8E%E6%95%99%E5%AD%A6%E8%B4%A8%E9%87%8F%E6%8A%A5%E5%91%8A%E5%86%B3%E7%AD%96%E5%8F%82%E8%80%83380%E6%89%80.html" target="_blank" rel="noopener" data-search="就业与教学质量报告 · 380 所决策参考 就业与教学质量报告决策参考380所.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">就业与教学质量报告 · 380 所决策参考</div>
+  <div class="card-go">打开 →</div>
+</a>
+<a class="card" href="results/%E6%B0%91%E8%90%A5%E4%BC%81%E4%B8%9A500%E5%BC%BA%E8%B0%83%E7%A0%94%E5%AE%8C%E6%95%B4%E6%8A%A5%E5%91%8A.html" target="_blank" rel="noopener" data-search="民营企业 500 强 · 调研完整报告 民营企业500强调研完整报告.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">民营企业 500 强 · 调研完整报告</div>
+  <div class="card-go">打开 →</div>
+</a>
+  </div>
+</div>
+<div class="group">
+  <div class="group-h" onclick="toggleGroup(this)">
+    <span class="gic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4-1 9-9-3-3-9 9z"/><path d="M14 6l3 3"/></svg></span><span class="tag">06</span><span class="gname">备考 · 提分</span><span class="gdesc">河北九科合订，临门一脚</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div class="grid">
+<a class="card" href="results/%E6%B2%B3%E5%8C%97%E9%AB%98%E8%80%83%E4%B9%9D%E7%A7%91%E5%90%88%E8%AE%A2%E6%9C%AC.html" target="_blank" rel="noopener" data-search="河北高考九科合订本 河北高考九科合订本.html">
+  <div class="card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h7"/></svg></div>
+  <div class="card-t">河北高考九科合订本</div>
+  <div class="card-go">打开 →</div>
+</a>
+  </div>
+</div>
+  </div>
+</section>
+
+<section style="background:linear-gradient(180deg,#fff,#EFF5FB);padding-top:0">
+  <div class="wrap" style="padding-top:0">
+    <div class="sec-head" style="padding-top:8px">
+      <div class="t">
+        <h2 class="sec-title">31 省产业-本科专业速查仪表盘</h2>
+        <p class="sec-sub">每省一张：支柱产业、匹配专业、报考提醒，一图看全。全国总览排在最前。</p>
+      </div>
+      <div class="tools">
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="q2" placeholder="筛选省份，如「河北」"></div>
+      </div>
+    </div>
+    <div class="pgrid">
+<a class="pcard" href="p/%E5%85%A8%E5%9B%BD%E6%80%BB%E8%A7%88.html" data-search="全国总览">
+  <span class="pdot"></span>全国总览
+</a>
+<a class="pcard" href="p/%E5%8C%97%E4%BA%AC%E5%B8%82.html" data-search="北京">
+  <span class="pdot"></span>北京
+</a>
+<a class="pcard" href="p/%E5%A4%A9%E6%B4%A5%E5%B8%82.html" data-search="天津">
+  <span class="pdot"></span>天津
+</a>
+<a class="pcard" href="p/%E6%B2%B3%E5%8C%97%E7%9C%81.html" data-search="河北">
+  <span class="pdot"></span>河北
+</a>
+<a class="pcard" href="p/%E5%B1%B1%E8%A5%BF%E7%9C%81.html" data-search="山西">
+  <span class="pdot"></span>山西
+</a>
+<a class="pcard" href="p/%E5%86%85%E8%92%99%E5%8F%A4%E8%87%AA%E6%B2%BB%E5%8C%BA.html" data-search="内蒙古">
+  <span class="pdot"></span>内蒙古
+</a>
+<a class="pcard" href="p/%E8%BE%BD%E5%AE%81%E7%9C%81.html" data-search="辽宁">
+  <span class="pdot"></span>辽宁
+</a>
+<a class="pcard" href="p/%E5%90%89%E6%9E%97%E7%9C%81.html" data-search="吉林">
+  <span class="pdot"></span>吉林
+</a>
+<a class="pcard" href="p/%E9%BB%91%E9%BE%99%E6%B1%9F%E7%9C%81.html" data-search="黑龙江">
+  <span class="pdot"></span>黑龙江
+</a>
+<a class="pcard" href="p/%E4%B8%8A%E6%B5%B7%E5%B8%82.html" data-search="上海">
+  <span class="pdot"></span>上海
+</a>
+<a class="pcard" href="p/%E6%B1%9F%E8%8B%8F%E7%9C%81.html" data-search="江苏">
+  <span class="pdot"></span>江苏
+</a>
+<a class="pcard" href="p/%E6%B5%99%E6%B1%9F%E7%9C%81.html" data-search="浙江">
+  <span class="pdot"></span>浙江
+</a>
+<a class="pcard" href="p/%E5%AE%89%E5%BE%BD%E7%9C%81.html" data-search="安徽">
+  <span class="pdot"></span>安徽
+</a>
+<a class="pcard" href="p/%E7%A6%8F%E5%BB%BA%E7%9C%81.html" data-search="福建">
+  <span class="pdot"></span>福建
+</a>
+<a class="pcard" href="p/%E6%B1%9F%E8%A5%BF%E7%9C%81.html" data-search="江西">
+  <span class="pdot"></span>江西
+</a>
+<a class="pcard" href="p/%E5%B1%B1%E4%B8%9C%E7%9C%81.html" data-search="山东">
+  <span class="pdot"></span>山东
+</a>
+<a class="pcard" href="p/%E6%B2%B3%E5%8D%97%E7%9C%81.html" data-search="河南">
+  <span class="pdot"></span>河南
+</a>
+<a class="pcard" href="p/%E6%B9%96%E5%8C%97%E7%9C%81.html" data-search="湖北">
+  <span class="pdot"></span>湖北
+</a>
+<a class="pcard" href="p/%E6%B9%96%E5%8D%97%E7%9C%81.html" data-search="湖南">
+  <span class="pdot"></span>湖南
+</a>
+<a class="pcard" href="p/%E5%B9%BF%E4%B8%9C%E7%9C%81.html" data-search="广东">
+  <span class="pdot"></span>广东
+</a>
+<a class="pcard" href="p/%E5%B9%BF%E8%A5%BF%E5%A3%AE%E6%97%8F%E8%87%AA%E6%B2%BB%E5%8C%BA.html" data-search="广西">
+  <span class="pdot"></span>广西
+</a>
+<a class="pcard" href="p/%E6%B5%B7%E5%8D%97%E7%9C%81.html" data-search="海南">
+  <span class="pdot"></span>海南
+</a>
+<a class="pcard" href="p/%E9%87%8D%E5%BA%86%E5%B8%82.html" data-search="重庆">
+  <span class="pdot"></span>重庆
+</a>
+<a class="pcard" href="p/%E5%9B%9B%E5%B7%9D%E7%9C%81.html" data-search="四川">
+  <span class="pdot"></span>四川
+</a>
+<a class="pcard" href="p/%E8%B4%B5%E5%B7%9E%E7%9C%81.html" data-search="贵州">
+  <span class="pdot"></span>贵州
+</a>
+<a class="pcard" href="p/%E4%BA%91%E5%8D%97%E7%9C%81.html" data-search="云南">
+  <span class="pdot"></span>云南
+</a>
+<a class="pcard" href="p/%E8%A5%BF%E8%97%8F%E8%87%AA%E6%B2%BB%E5%8C%BA.html" data-search="西藏">
+  <span class="pdot"></span>西藏
+</a>
+<a class="pcard" href="p/%E9%99%95%E8%A5%BF%E7%9C%81.html" data-search="陕西">
+  <span class="pdot"></span>陕西
+</a>
+<a class="pcard" href="p/%E7%94%98%E8%82%83%E7%9C%81.html" data-search="甘肃">
+  <span class="pdot"></span>甘肃
+</a>
+<a class="pcard" href="p/%E9%9D%92%E6%B5%B7%E7%9C%81.html" data-search="青海">
+  <span class="pdot"></span>青海
+</a>
+<a class="pcard" href="p/%E5%AE%81%E5%A4%8F%E5%9B%9E%E6%97%8F%E8%87%AA%E6%B2%BB%E5%8C%BA.html" data-search="宁夏">
+  <span class="pdot"></span>宁夏
+</a>
+<a class="pcard" href="p/%E6%96%B0%E7%96%86%E7%BB%B4%E5%90%BE%E5%B0%94%E8%87%AA%E6%B2%BB%E5%8C%BA.html" data-search="新疆">
+  <span class="pdot"></span>新疆
+</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec-title">使用与数据说明</h2>
+    <div class="note">
+      · <b>地图本体离线可看</b>：1403 所本科院校数据已内嵌，断网也能浏览地图。<br>
+      · <b>联网项</b>：点校名跳阳光高考官方页、打开上方成果/仪表盘需联网。<br>
+      · <b>数据口径</b>：院校数据含 2025–2026 更名/新设同步；成果内容来源于孟老师升学规划工具集，具体以原文件为准。<br>
+      · <b>成果分组</b>：按成果服务功能场景归类（产业-专业映射 / 选科选专业 / 报考决策 / 院校择校 / 升学就业 / 备考提分），便于按需取用。<br>
+      · 本页为完整工具总览，首页仅展示 6 个最常用入口。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>博辰序 · 高考升学决策地图</b><br>
+    内容来自孟老师升学规划工具集（资料库节点「集合全部升学规划工具平台」）。<br>
+    规划咨询：孟老师 · 电话 <a href="tel:18931577792">18931577792</a> · 本网站为内容展示用途，版权与相关权益归原作者所有。
+  </div>
+</footer>
+
+<div class="mbbar">
+  <a class="mb-tel" href="tel:18931577792"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.56 12.56 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.56 12.56 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>电话咨询</a>
+  <a class="mb-wx" href="#top" onclick="openContact();return false">微信咨询孟老师</a>
+</div>
+
+
+<div class="cmodal" id="cmodal" onclick="if(event.target===this)closeContact()">
+  <div class="cmodal-box">
+    <button class="cmodal-x" onclick="closeContact()" aria-label="关闭">✕</button>
+    <div class="cmodal-t">咨询孟老师</div>
+    <img class="cmodal-qr" src="assets/qr-wechat.jpg" alt="微信扫码添加孟老师">
+    <div class="cmodal-wechat">微信扫描二维码，添加孟老师为朋友（好友申请备注省份，优先发本省资料）</div>
+    <a class="cmodal-tel" href="tel:18931577792"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.56 12.56 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.56 12.56 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>18931577792</a>
+    <div class="cmodal-sub">高考志愿填报 · 产业选专业 · 院校择校 · 升学就业路径</div>
+  </div>
+</div>
+
+<script>
+  function toggleGroup(h){ h.closest('.group').classList.toggle('collapsed'); }
+  function expandAll(btn){
+    var gs = document.querySelectorAll('.group');
+    var anyCollapsed = [].some.call(gs, function(g){ return g.classList.contains('collapsed'); });
+    gs.forEach(function(g){ g.classList.toggle('collapsed', !anyCollapsed); });
+    btn.textContent = anyCollapsed ? '全部收起' : '全部展开';
+  }
+  function filterCards(q, sel, parentSel){
+    q = q.trim().toLowerCase();
+    document.querySelectorAll(sel).forEach(function(c){
+      var hit = c.getAttribute('data-search').toLowerCase().indexOf(q) !== -1;
+      c.style.display = hit ? '' : 'none';
+    });
+    if(parentSel){
+      document.querySelectorAll(parentSel).forEach(function(g){
+        var any = [].some.call(g.querySelectorAll(sel), function(c){ return c.style.display !== 'none'; });
+        g.style.display = any ? '' : 'none';
+      });
+    }
+    var nh = document.getElementById('nh1');
+    if(nh){
+      var anyVisible = [].some.call(document.querySelectorAll(sel), function(c){ return c.style.display !== 'none'; });
+      nh.style.display = anyVisible ? 'none' : 'block';
+    }
+  }
+  var q1 = document.getElementById('q1');
+  if(q1) q1.addEventListener('input', function(e){
+    filterCards(e.target.value, '.card', '.group');
+    document.querySelectorAll('.group').forEach(function(g){ g.classList.remove('collapsed'); });
+  });
+  var q2 = document.getElementById('q2');
+  if(q2) q2.addEventListener('input', function(e){
+    filterCards(e.target.value, '.pcard', null);
+  });
+  function openContact(){document.getElementById('cmodal').classList.add('on');document.body.style.overflow='hidden';if(window._hmt){try{_hmt.push(['_trackEvent','contact','open','tools'])}catch(e){}}}
+  function closeContact(){document.getElementById('cmodal').classList.remove('on');document.body.style.overflow='';}
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeContact();});
+</script>
+</body>
+</html>

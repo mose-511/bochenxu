@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海南产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f1f6f7;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e8ea;
+  --brand:#0d6b8a;
+  --brand-soft:#e4eef2;
+  --accent:#1a7a6e;
+  --accent-soft:#e3f1ee;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>海南产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年海南统计公报</b> · <b>「45432」现代化产业体系</b> · <b>自贸港全岛封关运作</b> · <b>27个百亿级重点产业集群</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">8108.85亿</div><div class="note">增长4.0%，全国第28</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+9.9%</div><div class="note">增速全国第2；高技术制造+28.1%</div></div>
+  <div class="stat"><div class="lab">旅游总花费</div><div class="val">2254亿</div><div class="note">+10.5%；游客1.06亿人次</div></div>
+  <div class="stat"><div class="lab">服务进出口</div><div class="val">692亿</div><div class="note">+22.1%，出口+81.0%</div></div>
+  <div class="stat"><div class="lab">乐城医疗旅游</div><div class="val">86.5万人次</div><div class="note">+109.2%，特许药械+139.9%</div></div>
+  <div class="stat"><div class="lab">固定资产投资</div><div class="val">-16.5%</div><div class="note">土建链承压，封关基建托底</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="经济学">经济学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：法学、自贸港、航天、南繁、种业、乐城、临床、药学、海洋、旅游、酒店、计算机、海大、海医、海师">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应洋浦/三亚低空经济）、生物制造（对应海南国家生物制造中试平台）、半导体装备（对应电子信息先进封测）、储能/氢能（对应洋浦绿电制氢）全部契合海南产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。海南高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>海南独有刚需 + 政策红利支撑，岗位多、省内认可度高。适合求稳、希望毕业即就业/考编的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应商业航天/深海/数字经济等战新，增速快但基数小。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应海南独有赛道（师范/护理/食品/外语/生态），分数友好但需选对方向。适合想留琼、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受投资/地产调整承压，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>海大线及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家级一流</td><td>海南大学（法学/作物学/酒店管理/计算机/海洋科学双一流与国一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>海南医科（临床/药学）、海南师大（师范）、海南热带海洋学院（海洋）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴海南产业链</td><td>海南大学（非热门专业组）、海南师大、海南医科特色专业</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属/市属校，锁特色专业</td><td>海南师大（师范/历史组）、琼台师范（学前/小学）、三亚学院（旅游/会展）、海南热带海洋学院</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在海南读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>法学/旅游酒店/临床药学/计算机/农学种业/海洋<br><span style="color:var(--ink-3);font-size:12.5px">（自贸港独有刚需）</span></td><td><b style="color:var(--green)">优先留琼</b></td><td>产业+政策双红利，海大/海医/海师特色独一，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>师范/护理/食品/外语/生态</td><td><b style="color:var(--green)">留琼或出省</b></td><td>海师/海医在华南认可度高，冲名校财经可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>固投-16.5%、泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#0d6b8a;border-left-color:var(--brand);margin-top:14px">
+      <b>海南独有优势：自贸港封关政策红利 + 商业航天三链 + 乐城医疗特区 + 南繁种业 + 国际旅游消费中心 + 热带海洋。</b>海南高教梯度分明（海大 211/双一流单核 + 海医/海师/热带海洋等行业特色校），但<b>全省仅 1 所双一流</b>；<b>外省/河北考生来琼读「法学·旅游酒店·临床药学·计算机·农学种业·海洋科学·师范·护理」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理不建议来琼；长期须算清「留琼 vs 出走」（常住人口仅 1055 万、高教资源薄弱）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>海南靠「旅游+自贸港开放+航天+种业+深海+医疗」六曲线，别被「椰风海韵」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>法学、旅游酒店、临床药学、计算机、农学种业五者覆盖海南最有确定性的岗位，优先冲。</li>
+      <li><b>贴「海口 + 三亚 + 儋洋 + 文昌」四极。</b>海口（金融/药谷/数字）、三亚（旅游/南繁/深海）、儋洋（石化/能源）、文昌（航天）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>海南大学（法学/酒店/作物学/海洋）、海南医科（临床/药学）、海南师大（师范）、热带海洋学院（海洋）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>商业航天是海南最被低估的王牌。</b>文昌七发七捷、700+ 航天企业、「出厂即发射」；航空航天/计算机（遥感）/机械在海南壁垒全国无对手，且处爆发前夜。</li>
+      <li><b>南繁种业是被忽视的「硬科技农业」。</b>三亚南繁 +99%、全球种企 10 强 4 家落户；农学/种子科学不是「种地」，是基因编辑与种源芯片，人才缺口极大。</li>
+      <li><b>乐城医疗特区是独有的医工交叉风口。</b>特许药械 +139.9%、真实世界数据应用；临床/药学/生医工在海南的壁垒全国独一份。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>固投 -16.5%、传统基建收缩；除非海大土木特色或志在封关重大基建（湛海高铁/三亚新机场）。</li>
+      <li><b>算清「留琼 vs 出走」。</b>海南仅 1 所双一流、人口 1055 万，长期人才外流压力仍在；选专业时规划深造路径与就业地，保研要早准备（海大保研率约 10%）。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：海南省统计局《2025 年海南省国民经济和社会发展统计公报》（2026-02）、海南省统计局《2025 年海南省经济运行情况》（2026-01-23）、海南省发展改革委计划草案（2026-02）、《海南省「十五五」高新技术产业发展规划》（2025）、海南省人民政府网自贸港及「45432」系列发布、人民日报/人民网文昌商业航天与乐城医疗特区报道、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"法学（自贸港法/涉外法治）",c:"法学",ch:"跨境贸易",t:"A",h:5,s:"海南大学（法学全国前12%、国家级一流、本硕博体系）",j:"公检法、律所、企业法务、合规、海关",
+  r:"海大法学全国前12%、深耕自贸港法/海洋法；离岸贸易、国际仲裁、海关岗位井喷。",w:"须过法考；涉外法治是海南独有增量赛道。",city:"海口"},
+ {n:"旅游管理/酒店管理（国际旅游消费中心）",c:"管理学",ch:"旅游免税",t:"A",h:5,s:"海南大学（酒店管理软科全国第一、旅游管理国家一流）／海南师范大学／三亚学院",j:"酒店集团、免税零售、景区运营、会展、文旅局",
+  r:"海大酒店管理2025软科全国第一、通过世界旅游组织认证；三亚免税/度假区本地就业90%+。",w:"优先选酒店管理/会展/数字化运营，避纯理论旅游管理。",city:"三亚 · 海口"},
+ {n:"临床医学（对接乐城+大病不出岛）",c:"医学",ch:"医疗健康",t:"A",h:5,s:"海南医科大学（临床ESI前5‰、国家级特色/一流、本硕博）／海南大学",j:"三甲医院、乐城国际医院、基层卫生院、卫健系统",
+  r:"海医临床ESI全球前5‰、本硕博完整链；乐城医疗特区与海口三亚三甲刚需。",w:"学制长（5+3本博）、分数高；热带医学是海南独有特色。",city:"海口 · 三亚"},
+ {n:"药学（南药黎药/生物医药）",c:"医学",ch:"生物医药",t:"A",h:4,s:"海南医科大学（药学国家一流、药理学毒理学ESI前1%）／海南大学",j:"药企研发、药监局、医院药房、乐城创新药械",
+  r:"海口药谷产值破215亿、打好千亿基础；乐城研用+海口生产催生研发岗。",w:"叠加生物制药/药物分析方向更有产业口。",city:"海口药谷"},
+ {n:"计算机类（数字经济/跨境数据）",c:"工学",ch:"数字经济",t:"A",h:4,s:"海南大学（计算机国家一流、ESI前1%）／海南师范大学／三亚学院",j:"软件开发、跨境数据、游戏出海、AI应用",
+  r:"生态软件园、复兴城双千亿集群；跨境数据流动、大模型出海政策独有。",w:"工程能力>文凭；贴跨境数据/来数加工比泛互联网更有壁垒。",city:"海口 · 澄迈"},
+ {n:"农学/种子科学（南繁硅谷）",c:"农学",ch:"南繁种业",t:"A",h:4,s:"海南大学（作物学双一流、种子科学王牌）",j:"种业央企、南繁科研院所、农业农村局、基因编辑CRO",
+  r:"三亚南繁产业+99.3%、2800+关联企业、全球种企10强4家落户；海大作物学双一流。",w:"国家种业振兴战略人才缺口极大；深造路径清晰。",city:"三亚崖州湾 · 海口"},
+ {n:"航空航天类（商业航天三链）",c:"工学",ch:"商业航天",t:"B",h:4,s:"海南大学（相关工科）／出省冲航天强校",j:"火箭/卫星设计、发射测控、遥感数据、航天+文旅",
+  r:"文昌商发七发七捷、700+航天企业、卫星超级工厂、年发射将超60发。",w:"海南本地Aerospace本科点仍在建设，可先读力学/机械/计算机再切入。",city:"文昌"},
+ {n:"生物医学工程（乐城+生医工）",c:"工学",ch:"医疗健康",t:"B",h:4,s:"海南大学（生医工省特色重点）／海南医科大学",j:"医疗器械、医工交叉、乐城创新平台",
+  r:"乐城医教研协同、真实世界数据应用硕博点（海大）；医疗器械本土化需求上行。",w:"医工交叉比纯生物更对产业口。",city:"海口 · 乐城"},
+ {n:"软件工程/人工智能（数字经济底座）",c:"工学",ch:"数字经济",t:"B",h:4,s:"海南大学（软件/AI国家一流培育）／海南师范大学",j:"软件、AI应用、数据标注、游戏出海",
+  r:"规上互联网服务业营收+9%、AI+行动、跨境数据政策独有；软件园聚集出海企业。",w:"项目经验是硬通货。",city:"海口 · 澄迈"},
+ {n:"海洋科学/水产（向海图强）",c:"理学",ch:"深海科技",t:"B",h:3,s:"海南大学（海洋科学国家一流、船舶海工世界百强）／海南热带海洋学院",j:"海洋科研、水产养殖、深海装备、海洋文旅",
+  r:"区域海洋创新指数全国第一梯次；崖州湾集聚涉海企业1300家、深海营收+69%。",w:"偏科研/技术岗，需深造。",city:"三亚崖州湾 · 海口"},
+ {n:"生物科学/生物技术（种业+生物制造）",c:"理学",ch:"种业/生物制造",t:"B",h:3,s:"海南大学（生物科学/生物技术强）",j:"育种研发、生物制造、基因检测",
+  r:"南繁育种、1家研究院入选国家生物制造中试平台；海大农学/食品/生科软科世界50强。",w:"深造路径为主。",city:"三亚崖州湾 · 海口"},
+ {n:"国际经济与贸易/金融（自贸港跨境）",c:"经济学",ch:"跨境金融",t:"B",h:3,s:"海南大学（应用经济学）／海南师范大学",j:"跨境贸易、离岸金融、供应链金融、国际仲裁",
+  r:"EF账户业务3500亿、免签86国、实际使用外资+19.9%；三亚CBD现代金融千亿集群。",w:"叠加外语+法律复合背景更有壁垒。",city:"海口 · 三亚"},
+ {n:"小学教育/汉语言师范（海南教育摇篮）",c:"教育学",ch:"教育",t:"C",h:4,s:"海南师范大学（小学教育/汉语言师范王牌）／琼台师范学院",j:"中小学编制、教研、教育培训",
+  r:"海师全省基础教育师资摇篮，小学教育国家级特色（全国A级）、全省超半数中小学教师来源。",w:"公费师范生包分配，考编入编率省内第一。",city:"海口"},
+ {n:"护理学（康养+乐城）",c:"医学",ch:"康养",t:"C",h:3,s:"海南医科大学（护理学国家一流）",j:"三甲医院、康养机构、国际医疗度假区",
+  r:"乐城、高端康养中心、三亚康养旅居需求旺盛；护理就业率近100%、缺口常年。",w:"实操性强、就业稳。",city:"海口 · 三亚 · 乐城"},
+ {n:"食品科学与工程（热带农业/健康食品）",c:"工学",ch:"热带农业",t:"C",h:3,s:"海南大学（食品科学与工程软科世界50强）",j:"食品加工、质检、热带农产品深加工",
+  r:"椰子/热带水果/橡胶加工、澳斯卡粮油等健康食品产值破百亿；海大食品世界50强。",w:"进名企技术岗而非泛食品。",city:"儋州洋浦 · 海口"},
+ {n:"电子信息类（先进封测/维修再制造）",c:"工学",ch:"封测/维修",t:"C",h:3,s:"海南大学（信息与通信工程省特色重点）",j:"电子封装、飞机船舶维修、智能制造",
+  r:"芯片设计带动、先进封测突破、维修制造延伸；约80架次境外飞机来琼维修、保税货值560亿。",w:"贴维修再制造/封测比泛电子更有海南场景。",city:"海口 · 洋浦"},
+ {n:"环境科学/生态学（生态绿岛/国家公园）",c:"理学",ch:"生态绿岛",t:"C",h:3,s:"海南大学（生态学全国前20%、环境科学ESI前1%）／海南师范大学",j:"环保单位、生态研究所、研学文旅、碳足迹",
+  r:"热带雨林国家公园、低碳岛/国家生态文明试验区；海大生态学全国前20%。",w:"体制内/科研岗为主，需深造。",city:"海口 · 三亚"},
+ {n:"外国语言文学（跨境/旅游）",c:"文学",ch:"跨境/旅游",t:"C",h:3,s:"海南大学（外语）／海南师范大学／三亚学院",j:"跨境贸易、涉外文旅、外事",
+  r:"免签86国、入境游客+41%（三亚）、跨境旅游与商贸需求；黎安教育试验区国际化场景。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"海口 · 三亚 · 陵水"},
+ {n:"会计学/财务管理（自贸港财经）",c:"管理学",ch:"财经",t:"C",h:3,s:"海南大学（会计/金融）／海南师范大学",j:"企业财务、审计、税务、跨境资金",
+  r:"自贸港EF账户、跨境资管、供应链金融催生财经岗；海大会计本地认可度高。",w:"须考证（CPA等）。",city:"海口 · 三亚"},
+ {n:"会展经济与管理（消博会/博鳌）",c:"管理学",ch:"旅游免税",t:"C",h:3,s:"海南大学（会展经济与管理本硕博）／三亚学院",j:"会展策划、活动运营、跨境商贸",
+  r:"消博会、博鳌论坛、大型演艺31场引爆市场；海大会展为文化旅游特色学科群。",w:"贴消博会/博鳌等国际会展场景更有前景。",city:"海口 · 琼海"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"海南大学（土木省特色重点）",j:"设计院、施工、基建、智能建造",
+  r:"2025固投-16.5%但房地产回暖（销售面积+8.2%）；封关基建（湛海高铁/三亚新机场）有增量。",w:"仅海大土木特色或志在封关重大基建；否则慎选。",city:"海口 · 儋州"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"海南大学（工商管理学省重点）",j:"企业职能管理、行政、咨询",
+  r:"海南以旅游/服务/农业为主，泛管理岗位稀缺、内卷严重。",w:"叠加行业+管理（医院/药企/景区/车企管理），否则慎选。",city:"海口"}
+];
+
+var CHAINS = [
+ {n:"商业航天（文昌三链协同，海南最亮新星）",u:["火箭研发","特种燃料/特燃特气"],m:["火箭总装总测复用","卫星超级工厂（年产1000颗）","发射测控"],d:["卫星数据服务","航天+旅游","遥感应用"],
+  mj:"航空航天、计算机、电子信息、机械",
+  f:"海南商发2024-11首发、2025七发七捷创十二连胜；超700家航天企业入驻文昌；卫星超级工厂即将投产、出厂即发射；年发射将超60发。"},
+ {n:"现代生物医药（海口药谷+乐城研用+生产）",u:["原料药","南药黎药"],m:["创新药","医疗器械","特许药械"],d:["医疗服务","康养","真实世界研究"],
+  mj:"药学、生医工、临床、生物科学",
+  f:"海口药谷生物医药产值破215亿、打好千亿基础；乐城引进超560种国际创新药械、2025特许药械使用12.33万人次+139.9%；乐城研用+海口生产模式落地。"},
+ {n:"热带特色高效农业/南繁种业（向种图强）",u:["种质资源（野生棉/稻圃）","全球引种"],m:["育种","基因编辑","CRO服务"],d:["种子交易","热带水果/橡胶加工","出岛农产品"],
+  mj:"农学、种子科学、园艺、生物科学",
+  f:"三亚南繁产业产值66.78亿+99.3%、占全省超1/3；累计注册南繁及关联企业超2800家、现代种业集群营收超160亿；海大作物学连续两轮双一流。"},
+ {n:"石化新材料（洋浦千亿级）",u:["原油","乙烯","芳烃"],m:["石化新材料","高性能材料"],d:["绿色化工","下游制品"],
+  mj:"化工、材料、能源化工",
+  f:"洋浦石化新材料产业园产值较2006年增长5倍、万元增加值能耗降30%；海南炼化百万吨乙烯为龙头；海上风电为石化注入绿电。"},
+ {n:"数字经济（软件园+跨境数据+AI+）",u:["绿色算力","数据要素"],m:["软件","游戏出海","来数加工","大模型"],d:["跨境电商","数字内容","行业垂类模型"],
+  mj:"软件、计算机、人工智能、统计",
+  f:"生态软件园、复兴城双千亿级数字经济集群；规上互联网服务业营收+9%；叠加自贸港数据安全有序流动政策，跨境数据服务、大数据出海成新业态。"},
+ {n:"旅游消费/离岛免税（国际旅游消费中心）",u:["文旅资源","景区/酒店"],m:["免税零售","演艺赛事","会展"],d:["跨境消费","医疗康养旅游"],
+  mj:"旅游管理、酒店管理、会展、市场营销",
+  f:"2025接待游客10607万人次+9.1%、旅游总花费2254亿+10.5%；离岛免税新政47大类、即购即提；海大酒店管理软科全国第一。"},
+ {n:"深海科技与海洋产业（向海图强）",u:["深远海养殖平台","科考船"],m:["深海装备","海洋生物医药"],d:["海洋渔业","海洋文旅","海洋数据"],
+  mj:"海洋科学、水产、船舶海工、环境",
+  f:"区域海洋创新指数全国第一梯次、海洋生产总值+10.4%；崖州湾集聚涉海企业1300家、深海营收+69%；海大海洋科学国家一流、船舶海工世界百强。"},
+ {n:"现代金融与跨境贸易（自贸港五自由便利）",u:["跨境资金池","EF账户"],m:["离岸贸易","跨境资管","供应链金融"],d:["企业出海","免税消费","国际仲裁"],
+  mj:"金融、国贸、法学（涉外）、会计",
+  f:"三亚CBD现代金融为千亿集群；EF账户业务量折3500亿；免签入境国达86个；实际使用外资+19.9%、服务进出口+22.1%。"}
+];
+
+var CITIES = [
+ {c:"海口（省会核心）",i:"现代金融、数字经济、生物医药（药谷）、消费精品、总部经济",l:"海口国家高新区、复兴城、江东新区、综保区",m:"法学、计算机、生医、金融、国贸"},
+ {c:"三亚（旅游+南繁+深海）",i:"旅游消费、南繁种业、深海科技、现代金融",l:"崖州湾科技城、三亚中央商务区",m:"种业、海洋、旅游、金融"},
+ {c:"儋州洋浦（工业重镇）",i:"石化新材料、清洁能源、海上风电、健康食品、低空经济",l:"海南炼化、洋浦石化新材料产业园",m:"化工、材料、能源、食品"},
+ {c:"文昌（国际航天城）",i:"商业航天（火箭/卫星/数据三链）、航天旅游",l:"海南商发、星际荣耀、卫星超级工厂",m:"航空航天、计算机、遥感"},
+ {c:"博鳌乐城（琼海）",i:"医疗健康、特许药械、医疗旅游",l:"乐城先行区（全国唯一医疗特区）",m:"临床、药学、生医工、护理"},
+ {c:"澄迈（老城科技新城）",i:"数字经济（生态软件园）、农副食品加工",l:"海南生态软件园",m:"软件、计算机、食品"},
+ {c:"陵水（黎安）",i:"国际教育创新试验区",l:"黎安教育试验区（师生超万人）",m:"教育、外语、涉外"},
+ {c:"三亚崖州湾科技城",i:"南繁种业+深海科技双核心",l:"崖州湾实验室、南山港",m:"种业、海洋科学、生科"},
+ {c:"海口药谷",i:"现代生物医药（千亿基础）",l:"先声再明、海口国家高新区",m:"药学、生医工、临床"},
+ {c:"三亚中央商务区",i:"现代金融（千亿集群）",l:"金融总部、跨境资管",m:"金融、会计、法学"},
+ {c:"琼海/万宁等东部",i:"康养、滨海旅游、休闲渔业",l:"康养机构、旅游度假区",m:"护理、旅游、食品"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

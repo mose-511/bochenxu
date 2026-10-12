@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>贵州产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#1a5e8c;
+  --brand-soft:#e7eef5;
+  --accent:#8a2e2e;
+  --accent-soft:#f6ecec;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#6b2222;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>贵州产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年贵州统计公报</b> · <b>六大产业集群（数智/能源/新能源新材料/资源精深加工/酱香白酒/先进装备）</b> · <b>中国数谷算力全国第一梯队</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">2.36万亿</div><div class="note">增长4.9%，全国第22</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+7.0%</div><div class="note">装备制造业+26.6%、汽车+94.9%</div></div>
+  <div class="stat"><div class="lab">算力规模</div><div class="val">150-160EFlops</div><div class="note">智算占比超98%、全国第一梯队</div></div>
+  <div class="stat"><div class="lab">新能源电池</div><div class="val">55GWh</div><div class="note">三元前驱体全球市占率第一</div></div>
+  <div class="stat"><div class="lab">白酒产值</div><div class="val">约1600亿</div><div class="note">仁怀1177亿、目标2027年3000亿级</div></div>
+  <div class="stat"><div class="lab">固定资产投资</div><div class="val">-3.7%</div><div class="note">房地产-1.6%、土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">地市产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：酿酒、白酒、算力、大数据、电池、磷、材料、电气、航空、临床、法学、贵大、贵医、茅台">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应安顺航空产业城/eVTOL）、生物制造（对应健康医药/苗药）、半导体装备（对应算力硬件）、储能/氢能（对应新型综合能源/新能源）全部对得上贵州产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。贵州高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>贵州有千亿级集群/国家级基地支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应贵州独有赛道（白酒/算力/航空/山地农业/文旅），分数友好但需选对方向。适合想留黔、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受投资/地产承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>贵州大学及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>贵州大学（酿酒/计算机/材料/电气/机械/植物保护双一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>贵医（临床）、贵师大（师范/教育）、贵财（财经）、茅台学院（酿酒）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴贵州产业链</td><td>贵州理工（能源/材料/机械订单班）、遵义医科（临床）、贵州中医药（苗药）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>贵州警察学院（入警）、贵州师范/铜仁/黔南师范（师范）、安顺学院（航空/旅游）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在贵州读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>酿酒/计算机/材料/电气/自动化/化工/机械<br><span style="color:var(--ink-3);font-size:12.5px">（白酒+数智+新能源材料硬科技）</span></td><td><b style="color:var(--green)">优先留黔</b></td><td>产业+高校双密集，贵大酿酒/计算机/材料全国独一或特色，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床/法学/食品/旅游/农学/外语/师范/航空</td><td><b style="color:var(--green)">留黔或出省</b></td><td>贵医/贵师大/贵财/茅台学院在西南认可度高，冲名校财经可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-1.6%、固定投资-3.7%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a5e8c;border-left-color:var(--brand);margin-top:14px">
+      <b>贵州独有优势：酱香白酒利润之王 + 中国数谷算力全国第一梯队 + 新能源电池材料全国领先（三元前驱体全球第一）+ 安顺航空产业城 + 山地特色农业/文旅流量。</b>贵州高教梯度为「贵大 211/双一流单核 + 一众行业特色校」，但<b>全省仅 1 所双一流</b>（贵州大学）；<b>外省/河北考生来黔读「酿酒工程·计算机·材料·电气·新能源·航空航天·临床·法学·旅游·农学」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理不建议来黔；长期须算清「留黔 vs 出省」（常住人口净流出约 8 万、城镇化率 57.66% 仍偏低）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>贵州靠「白酒 + 数智 + 新能源材料 + 能源 + 航空 + 文旅」六引擎，别被「山区/旅游」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>酿酒、计算机、材料、电气、自动化、化工六者覆盖贵州最有确定性的岗位，优先冲。</li>
+      <li><b>贴「贵阳贵安 + 黔南磷化工 + 安顺航空城」三极点。</b>贵安（算力/新能源电池）+ 福泉—瓮安（磷系材料）+ 安顺（航空）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>贵州大学（酿酒/计算机/材料/植物保护）、贵州理工（能源/材料订单班）、茅台学院（酿酒直属）、贵医（临床）、贵师大（师范）、贵州警察学院（入警）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>酱香白酒是贵州最被低估的「利润护城河」。</b>茅台一家占贵州上市公司利润约 90%、目标 2027 年 3000 亿级；酿酒工程（贵大全国第 1）是贵州唯一全国第一的专业，且分数友好。</li>
+      <li><b>数智产业要从「算力底座」看到「衍生应用」。</b>算力 150EFlops 全国第一梯队是底座，但真正上行在软件（破 1000 亿）、数据标注、行业大模型；选计算机/软件/数据科学而非纯硬件。</li>
+      <li><b>新能源电池材料是隐蔽硬核。</b>55GWh 产能、三元前驱体全球第一、宁德时代 200 亿基地；材料/化工/新能源在贵州壁垒强，全国每 3 辆磷系电池车 1 辆用「贵州磷」。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -1.6%、固定投资 -3.7%；除非贵大土木双一流或志在央企设计院/重大基建（桥梁/高铁）。</li>
+      <li><b>算清「留黔 vs 出省」。</b>常住人口净流出约 8 万、城镇化率 57.66% 偏低，长期人才外流压力；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：贵州省统计局、国家统计局贵州调查总队《贵州省 2025 年国民经济和社会发展统计公报》（2026-04-15）、贵州省发改委《2025 年计划执行与 2026 年计划草案报告》（2026-01-27）、贵州省委《十五五规划建议》、省工信厅解读、贵阳市大数据局/贵安新区管委会、仁怀市统计公报、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"酿酒工程（酱香白酒方向）",c:"工学",ch:"酱香白酒",t:"A",h:5,s:"贵州大学（酿酒工程国家一流、全国第1）／茅台学院（行业直属）",j:"酿酒工艺、品质控制、酒体设计、酒企技术管理",
+  r:"仁怀规上白酒1177亿、遵义1400亿+，白酒是贵州利润之王；贵大酿酒工程软科全国第1、与茅台共建研究中心。",w:"贴酿造+酒旅融合+数字化营销复合路线；行业调整期须关注龙头集中度提升。",city:"遵义 · 仁怀 · 贵阳"},
+ {n:"计算机类（算力/大数据/软件）",c:"工学",ch:"数智产业",t:"A",h:5,s:"贵州大学（计算机国家一流、B-）／贵州财经大学／贵州师范大学",j:"软件开发、云计算、数据工程、AI应用",
+  r:"贵安算力150-160EFlops居全国国产化智算第一梯队；软件收入破1000亿；华为云全球总部落地、苹果/腾讯集聚。",w:"工程能力>文凭；本地数智衍生产业尚弱，是缺口也是机会。",city:"贵阳 · 贵安"},
+ {n:"电气工程及其自动化（电网/新型综合能源）",c:"工学",ch:"新型综合能源",t:"A",h:4,s:"贵州大学（电气国家一流）／贵州理工学院（能源央企订单班）",j:"电网、发电、新能源电站、储能",
+  r:"电力装机突破1亿千瓦、原煤1.83亿吨，贵州是西电东送主力；南方电网校招第一梯队。",w:"电网方向需提前准备国网考试；能源央企签约率高。",city:"贵阳 · 六盘水 · 毕节"},
+ {n:"材料类（新能源电池材料/磷系/铝）",c:"工学",ch:"新能源材料",t:"A",h:4,s:"贵州大学（材料/冶金/矿物加工国家重点）／贵州理工学院／铜仁学院",j:"电池材料、磷化工、铝加工、半导体材料",
+  r:"新能源电池产能55GWh、磷酸铁锂56.2万吨、三元前驱体全球第一；宁德时代贵州基地产值破200亿。",w:"锁新能源/磷系/半导体方向，避泛材料。",city:"黔南 · 铜仁 · 贵阳"},
+ {n:"自动化/测控技术与仪器（智能制造/装备）",c:"工学",ch:"装备制造",t:"A",h:4,s:"贵州大学（自动化国家重点）／贵州理工学院",j:"控制系统、工业自动化、航空电子、机器人",
+  r:"装备制造业+26.6%、高技术制造业+17.3%；安顺航空产业城、贵飞/中航重机拉动测控需求。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"安顺 · 贵阳"},
+ {n:"化学工程与工艺（磷化工/新能源材料）",c:"工学",ch:"资源精深加工",t:"A",h:4,s:"贵州大学（化工国家一流）／贵州理工学院／黔南民族师范学院",j:"磷化工、新能源材料合成、精细化工",
+  r:"资源精深加工产值3300亿、化工+17%；磷化工向新能源跨界，每吨磷矿石附加值提升近10倍。",w:"选新能源/半导体材料方向，避传统煤化工。",city:"黔南 · 毕节 · 贵阳"},
+ {n:"电子信息类（智能终端/算力硬件）",c:"工学",ch:"数智硬件",t:"B",h:4,s:"贵州大学（电子科学与技术国家重点）／贵州理工学院",j:"智能终端、光电、半导体封测、算力硬件",
+  r:"计算机通信电子+35.9%，2025电子信息制造业约440亿、年均+13%；华为/腾讯硬件生态落地。",w:"本科多去制造/封测，深造更有利。",city:"贵阳 · 贵安"},
+ {n:"机械设计制造及其自动化（汽车装备/航空）",c:"工学",ch:"汽车/航空",t:"B",h:4,s:"贵州大学（机械国家重点）／贵州理工学院／安顺学院",j:"汽车零部件、航空零部件、高端装备",
+  r:"汽车制造业+42.3%、新能源汽车25万辆+147.7%；安顺航空产业城55亿+27%。",w:"锁新能源装备/航空方向，避泛机加工。",city:"贵阳 · 安顺 · 遵义"},
+ {n:"数据科学与大数据技术/统计学",c:"理学",ch:"AI/数据要素",t:"B",h:3,s:"贵州大学（数据科学与大数据）／贵州财经大学／贵州师范大学",j:"数据分析、数据标注管理、商业智能",
+  r:"数据标注从业破1万、数据交易超5000笔；贵阳大数据交易所为全国首个OID节点。",w:"数学要求高，是AI通用底座。",city:"贵阳 · 贵安"},
+ {n:"新能源科学与工程/车辆工程（电动贵州）",c:"工学",ch:"电动贵州",t:"B",h:3,s:"贵州大学（新能源科学与工程）／贵州理工学院",j:"电池系统、整车研发、储能",
+  r:"新能源汽车25万辆+147.7%、锂离子动力电池+90%；宁德时代/弗迪/吉利/奇瑞集聚。",w:"贴电动贵州全产业链，避传统燃油。",city:"贵阳 · 贵安 · 黔南"},
+ {n:"交通运输/物流工程（通道+文旅）",c:"工学",ch:"通道/文旅",t:"B",h:3,s:"贵州大学／贵州财经大学",j:"枢纽运营、供应链、文旅交通",
+  r:"旅游总花费+11.1%、市市通高铁、双龙航空港/保税物流中心封关。",w:"贴通道+供应链+文旅更有前景。",city:"贵阳 · 安顺"},
+ {n:"生物工程/药学（健康医药/苗药）",c:"理学",ch:"健康医药",t:"B",h:3,s:"贵州大学（制药工程）／贵州医科大学／贵州中医药大学",j:"民族药研发、生物制剂、质检",
+  r:"健康医药为三大特色产业，贵州百灵/益佰苗药特色鲜明、全国领先。",w:"医工/药交叉比纯生物更对产业口。",city:"安顺 · 贵阳 · 遵义"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"贵州医科大学（临床B-、ESI前1%）／遵义医科大学（麻醉全国知名）／贵州中医药大学",j:"三甲/地市医院、科研、公共卫生",
+  r:"健康需求长期刚性；贵医直属三甲4所、执业医师通过率超91%、留黔三甲比例高。",w:"学制长（5+3本博）、分数高；遵医麻醉全国知名。",city:"贵阳 · 遵义 · 黔东南"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:4,s:"贵州大学（法学C+、国家一流）／贵州警察学院（入警率98%+）",j:"公检法、律所、企业法务、合规",
+  r:"贵大法学国家一流；贵州警察学院入警率98%+，公检法/法务刚需。",w:"须过法考，考公优势明显。",city:"贵阳"},
+ {n:"食品科学与工程（生态食品/辣椒/刺梨）",c:"工学",ch:"生态食品",t:"C",h:3,s:"贵州大学（食品科学与工程国家一流）",j:"食品加工、技术岗、质检",
+  r:"生态食品为三大特色产业；辣椒产值288亿、刺梨全国第一。",w:"进名企技术岗而非泛食品。",city:"贵阳 · 黔东南 · 黔南"},
+ {n:"旅游管理（文旅/村超村BA）",c:"管理学",ch:"文旅康养",t:"C",h:4,s:"贵州大学（旅游管理国家一流）／贵州师范大学",j:"文旅运营、景区管理、康养旅居",
+  r:"旅游总花费+11.1%、入境过夜+50.1%；村超/村BA流量全国独一。",w:"须叠加数字营销/运营管理，避纯理论。",city:"黔东南 · 安顺 · 贵阳"},
+ {n:"农学/植物保护（山地农业/茶/辣椒）",c:"农学",ch:"山地农业",t:"C",h:4,s:"贵州大学（植物保护双一流、全国第5）／贵州师范大学",j:"农技推广、育种、植保、特色产业",
+  r:"贵大植物保护为双一流学科，支撑白酒原料、茶叶、辣椒等特色农业。",w:"贴山地特色高效农业更有前景。",city:"贵阳 · 遵义 · 黔南"},
+ {n:"航空航天类（航空产业城/无人机/eVTOL）",c:"工学",ch:"航空产业城",t:"C",h:3,s:"贵州大学（相关工科）／贵州理工学院／安顺学院",j:"航空零部件、无人机、低空经济",
+  r:"安顺航空产业城55亿+27%、贵飞/中航重机/中国商飞配套、亿航智能eVTOL落地。",w:"体量小于汽车/电子，属特色小而美赛道。",city:"安顺"},
+ {n:"外国语言文学（跨境/文旅）",c:"文学",ch:"跨境/文旅",t:"C",h:3,s:"贵州师范大学／贵州大学",j:"跨境贸易、外事、文旅外联",
+  r:"入境过夜游客+50.1%、西部陆海新通道连接东南亚南亚；涉外/文旅需求上行。",w:"须叠加贸易/旅游/法律，避纯语言内卷。",city:"贵阳 · 铜仁"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"贵州师范大学（师范龙头、教育学B-）／贵州大学",j:"中小学教师、教研、心理咨询",
+  r:"贵师大全省中小学70%骨干教师毕业于此，公费师范生考编优势断层。",w:"公费师范生包分配，考编优势大。",city:"贵阳 · 遵义 · 安顺"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"贵州大学（土木B-、桥梁技术顶尖）",j:"设计院、施工、基建、智能建造",
+  r:"房地产-1.6%、固定投资-3.7%、商品房销售-1.4%，土建链承压。",w:"仅贵大土木双一流或志在央企设计院/重大基建。",city:"贵阳"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"贵州财经大学／贵州大学",j:"企业职能管理、行政、咨询",
+  r:"制造业+资源型为主，泛管理岗位稀缺、内卷严重。",w:"叠加行业+管理（能源/酒企/医院），否则慎选。",city:"贵阳"}
+];
+
+var CHAINS = [
+ {n:"酱香白酒（贵州利润之王）",u:["红缨子糯高粱","小麦","赤水河水"],m:["制曲","发酵（12987工艺）","蒸馏","勾兑储存"],d:["经销","酒旅融合","数字化营销"],
+  mj:"酿酒工程、食品、营销、旅游",
+  f:"2025仁怀规上白酒1177亿、占工业95%以上；茅台营收1688亿、净利823亿（占贵州上市公司利润约90%）；目标2027年3000亿级；但全国酱酒产能-23%、茅台营收净利双降。"},
+ {n:"算力与大数据（中国数谷）",u:["数据中心","服务器/算力硬件","绿色电力"],m:["算力服务","数据标注","行业大模型"],d:["影视渲染","AI应用","数字政务","数据交易"],
+  mj:"计算机、软件、数据科学、人工智能、统计",
+  f:"重点数据中心50个、算力150-160EFlops、智算占比超98%；软件收入破1000亿（2020年6.7倍）；数据标注从业破1万、数据交易超5000笔；华为盘古/腾讯混元等10余个大模型落地。"},
+ {n:"新能源电池及材料（磷系正极）",u:["磷矿","锂","锰"],m:["磷酸铁锂/三元正极","电解液","电池（宁德时代/弗迪）"],d:["整车","储能","电池回收"],
+  mj:"材料、化工、新能源、车辆、电气",
+  f:"电池产能55GWh、锂离子动力电池+90%；磷酸铁锂56.2万吨、三元正极17.1万吨、负极47.5万吨年产能；三元前驱体全球市占率第一；宁德时代贵州基地产值破200亿、带动配套超800亿集群。"},
+ {n:"先进装备制造/航空航天（安顺航空产业城）",u:["航空材料","锻铸"],m:["零部件","大部件","整机（贵飞/教练机/无人机）"],d:["维修","低空经济","民机配套"],
+  mj:"航空航天、机械、材料、自动化",
+  f:"安顺航空产业城2025年规上航空及关联工业总产值55亿+、增速27%+；谋划项目151个、总投资约550亿；贵飞/中航重机/中国商飞配套；亿航智能eVTOL落地。"},
+ {n:"新型综合能源（煤电+风光水火储）",u:["煤炭","风光水资源"],m:["发电（火电/水电/新能源）","电网"],d:["供电","储能","工业用能"],
+  mj:"电气、能源与动力、新能源",
+  f:"电力装机突破1亿千瓦；2025原煤产量1.83亿吨；规模以上新能源发电量+15.8%、占比14.6%；推进水火互济、多能互补。"},
+ {n:"优势矿产资源精深加工（磷/铝/锰）",u:["磷矿","铝土矿","锰矿"],m:["磷化工（磷酸/磷肥）","铝加工","锰加工"],d:["新能源材料","化肥","建材"],
+  mj:"化工、材料、冶金、矿物加工",
+  f:"资源精深加工产值3300亿；黔南磷系材料从百亿跃升至五百亿级、福泉—瓮安园区680亿+；铜仁锰矿亚洲第一、新型功能材料十四五累计+155.7%。"},
+ {n:"生态食品与纺织服装（三大特色）",u:["辣椒","刺梨","茶叶","畜禽"],m:["食品加工（酸汤/刺梨/辣椒酱）","纺织服装"],d:["商超","电商","餐饮"],
+  mj:"食品、轻化、纺织",
+  f:"纺织业+27.1%、食品制造业+12.4%；辣椒种植500万亩+全国第一、产值288亿；刺梨种植/产量全国第一；生态食品、纺织服装为三大特色产业。"},
+ {n:"旅游与文化康养（村超/村BA流量）",u:["景区","非遗","民族文化"],m:["文旅运营","民宿","演艺"],d:["消费","康养","避暑旅居"],
+  mj:"旅游管理、文化产业、设计、体育",
+  f:"2025接待游客+8.8%、旅游总花费+11.1%、入境过夜+50.1%；村超/村BA引爆流量；黄果树、荔波、西江千户苗寨等IP；旅居/康养新业态勃发。"}
+];
+
+var CITIES = [
+ {c:"贵阳 · 贵安新区",i:"算力/大数据、新能源电池及材料、磷化工、铝加工、软件信息、健康医药",l:"华为云、腾讯、苹果、宁德时代、贵州磷化、吉利",m:"计算机、软件、材料、电气、新能源"},
+ {c:"遵义（仁怀酱酒核心）",i:"酱香白酒（茅台）、航天装备、能源化工、材料、特色农业",l:"茅台、习酒、国台、航天十院",m:"酿酒工程、食品、材料、机械"},
+ {c:"安顺（航空产业城）",i:"航空产业城、一流旅游城市、新型综合能源、绿色算力、医药食品",l:"贵飞、中航重机、安大、贵州百灵、亿航智能",m:"航空航天、旅游、能源、制药"},
+ {c:"黔南（福泉—瓮安）",i:"磷化工、新能源电池材料（磷酸铁锂）",l:"贵州磷化、贵州裕能、盛屯能源",m:"化工、材料、新能源"},
+ {c:"铜仁",i:"锰系/锂离子/钠离子电池材料、电池回收、生态食品、健康医药",l:"中伟、汇成、大龙开发区企业",m:"材料、新能源、化工"},
+ {c:"毕节",i:"能源、煤化工、装备制造、新能源电池及材料",l:"能源/煤化工企业",m:"能源、化工、机械"},
+ {c:"六盘水",i:"煤炭、煤电、煤化工、钢铁、新型综合能源",l:"水城钢铁、盘江煤电",m:"能源、材料、冶金、机械"},
+ {c:"黔西南",i:"能源、新能源电池及材料、黄金、特色食品、健康医药",l:"黄金/能源企业",m:"能源、材料、食品、医药"},
+ {c:"黔东南",i:"硅精深加工（玻璃）、再生资源循环材料、特色食品、民族医药、文旅",l:"炉碧经开区玻璃企业、文旅",m:"材料、食品、医药、旅游"},
+ {c:"仁怀（县级市·酱酒核心）",i:"酱香白酒（全国70%酱酒产能）",l:"茅台及28家产值超亿元酒企",m:"酿酒工程、食品、营销、旅游"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

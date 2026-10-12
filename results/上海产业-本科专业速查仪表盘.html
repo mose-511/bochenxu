@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上海产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f5f8;
+  --card:#ffffff;
+  --ink:#1a2230;
+  --ink-2:#46505f;
+  --ink-3:#7a8594;
+  --line:#e0e5eb;
+  --brand:#1a3a6e;
+  --brand-soft:#e8edf5;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(26,34,48,.05),0 4px 16px rgba(26,34,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(26,34,48,.06),0 8px 24px rgba(26,34,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#eef1f5;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#eef1f5;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#eef1f5;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#f9fafc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>上海产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年上海统计公报</b> · <b>「2+3+6+6」现代化产业体系（三大先导破 2 万亿）</b> · <b>三大先导（IC/生物医药/AI）+ 六大新兴支柱 + 航运金融双中心</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">5.67万亿</div><div class="note">+5.4%，经济总量稳居全国城市首位</div></div>
+  <div class="stat"><div class="lab">规上工业总产值</div><div class="val">4.07万亿</div><div class="note">迈上4万亿台阶，利润总额+23.0%</div></div>
+  <div class="stat"><div class="lab">三大先导产业</div><div class="val">破2万亿</div><div class="note">IC约5800亿/生物医药破万亿/AI 6370亿+39.5%</div></div>
+  <div class="stat"><div class="lab">信息服务业</div><div class="val">+15.3%</div><div class="note">增加值7139.93亿，服务业第一拉动力</div></div>
+  <div class="stat"><div class="lab">集装箱吞吐量</div><div class="val">5506万标箱</div><div class="note">自2010年起连续16年全球第一</div></div>
+  <div class="stat"><div class="lab">建筑业增加值</div><div class="val">-13.2%</div><div class="note">土建链承压；实际使用外资-9.2%</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="经济学">经济学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：集成电路、微电子、AI、船舶、大飞机、临床、金融、航运、华东理工、东华、上财、上海海事">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种，与上海产业高度对得上的：<b>半导体工艺与装备</b>（对应 IC 装备国产化、中微刻蚀机出货超 800 台）、<b>生物制造</b>（对应上海合成生物学创新中心）、<b>具身智能</b>（浦东重点方向）、<b>低空经济与管理</b>（2028 年核心产业约 800 亿目标、上海交大低空科学技术研究院）、<b>储能科学与工程</b>（奉贤新型储能、半固态电池量产装车）。但新专业无往年录取数据、无毕业生验证，建议首年观望、或选「母专业 + 新方向」组合。</li>
+      <li><b>大类招生被收紧，但上海是「院校专业组」投档，风险点不同。</b>2026 年招生新规要求高校原则上按专业招生。上海是「3+3」新高考、本科批次合并、以院校专业组为单位投档——同一所高校的不同专业组分数线可能相差几十分，务必逐个查清专业组内包含的具体专业与选科要求（理工医绝大多数要求物理+化学），避免被调剂到 D 档（土木、泛管理）。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>上海有先导产业/万亿集群支撑，岗位多、起薪稳、政策与落户倾斜。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应未来产业与新赛道，增速快但波动大、长周期。适合有冲劲、能持续学习、计划读研的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应上海独有赛道（航运/金融/法学/外语/设计/教育/化工），分数友好、行业资源强。适合想留沪、看重行业壁垒的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受建筑业/地产/外资承压拖累，或严重内卷、无技术壁垒。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>复旦/上海交大线及以上</td><td>学校优先 + 专业不将就，锁定双一流 A 类学科</td><td>复旦（临床 A/数学 A+/理论经济学 A+/新闻 A+）、上海交大（船舶 A+/机械 A+/临床 A+/计算机 A/生医工 A）、同济（土木 A+/建筑 A+/城乡规划 A+）、华东师大（教育学 A+/统计学 A+）</td></tr>
+        <tr><td><b>中高分</b><br>211 线及以上</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>华东理工（化工 A+）、东华（纺织 A+/材料 A+/设计 A+）、上海财经（应用经济学 A+/统计学 A+）、上海外国语（外文 A+）、上海大学（机械/材料）、海军军医大学（临床 A+，需军检政审）</td></tr>
+        <tr><td><b>中分</b><br>市属重点/行业强校</td><td>用行业校补分数差，贴上海八大产业链</td><td>上海海事（交通运输/航海/轮机/海商法）、上海海洋（水产 A+）、上海中医药（中医 A+/中药 A+）、华东政法（法学 A）、上海理工（光电/动力/测控）、上海工程技术大学（轨交/汽车/航空）、上海电力（电气）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的市属校，锁特色专业</td><td>上海立信会计金融学院（会计/金融）、上海海关学院（海关管理）、上海应用技术大学（香料香精/材料）、上海政法学院（法学）、上海商学院、上海视觉艺术学院（设计）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--ink-2)"><b>历史组建议：</b>法学（华东政法 A）、金融/会计（上财、上海立信、上海对外经贸）、外国语言文学（上外 A+）、教育学/心理学/汉语言文学（华东师大 A+、上海师大）、新闻传播（复旦 A）、设计学（东华）是历史组友好方向；<b>避开要求「物理+化学」的工科专业</b>；如确有志于医/药，可关注护理学、公共卫生与预防医学、健康服务与管理等选科要求相对宽松的方向，仍须以当年招生计划为准。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在上海读，还是出省读？（含外省/河北考生判断）</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>集成电路/微电子/计算机/AI/生物医药/生物医学工程<br><span style="color:var(--ink-3);font-size:12.5px">（三大先导产业，规模破 2 万亿）</span></td><td><b style="color:var(--green)">强烈推荐来沪</b></td><td>IC 占全国超 1/4、人才占全国约 40%；生物医药破万亿、BD 交易数量全国第一；AI 6370 亿 +39.5%；张江/临港/徐汇人才政策与落户倾斜力度最大</td></tr>
+        <tr><td>航空航天/船舶海工/车辆工程/自动化/材料<br><span style="color:var(--ink-3);font-size:12.5px">（大飞机、LNG 船、新能源车）</span></td><td><b style="color:var(--green)">推荐来沪</b></td><td>C919+C909 交付超 200 架、长兴岛 LNG 船年交付 14 艘、临港新能源车年产超 100 万辆；央企、大院大所与主机厂集聚</td></tr>
+        <tr><td>金融/会计/法学/外语/新闻传播</td><td><b style="color:var(--accent)">看分数与职业地</b></td><td>国际金融中心但岗位高度竞争、普通院校性价比低；若计划回北方发展，本地院校人脉更实用</td></tr>
+        <tr><td>土木/建筑/泛管理</td><td><b style="color:var(--red)">不建议专门来沪</b></td><td>建筑业增加值 -13.2%、房地产开发投资 -3.1%；且外省考生无本地资源与校友网络优势</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a3a6e;border-left-color:var(--brand);margin-top:14px">
+      <b>上海独有优势：三大先导产业规模破 2 万亿（IC 占全国超 1/4、生物医药破万亿、AI +39.5%）+ 大飞机/船舶/新能源车硬制造 + 航运金融双中心。</b><b>外省/河北考生必须算清三笔账：</b>①<b>分数溢价账</b>——冲产业（IC/AI/生物医药/大飞机/船舶/航运）值得溢价；冲学校牌子、毕业后回北方则同等分数在京外/沪外通常能上更高层次院校；②<b>落户门槛账</b>——上海高校应届硕士免打分直接落户，其余本科走 72 分打分制几乎需「博士级荣誉」全拉满，居转户要居住证+社保各满 7 年（临港/张江可缩短）；③<b>生活成本账</b>——2025 年人均消费支出 54765 元，按「毕业前 3 年每月补贴 × 36 个月」做预算。结论：想留沪就把「读到硕士」写进规划，单纯本科毕业留沪最难；只想读金融/会计/法学/外语/泛管理且回北方发展的，不值得专门来。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>上海靠「三大先导（IC/生物医药/AI）+ 六大新兴支柱 + 航运金融双中心」三大引擎，别被「魔都/外滩/陆家嘴」的标签误导去挤金融与泛管理。</li>
+      <li><b>A 档专业是压舱石。</b>集成电路/微电子、计算机/AI、生物医学工程/药学、电子信息、自动化/测控、临床医学，六者覆盖上海最有确定性的岗位，优先冲。</li>
+      <li><b>贴「张江 + 临港 + 徐汇」三核。</b>张江（IC + 生物医药 + AI 策源）、临港（IC 特色工艺 + 新能源车 + 大飞机总装 + 跨境数据）、徐汇（大模型与软件信息服务）；嘉定（汽车）、闵行（航空航天/生医工）、崇明长兴岛（船舶）是特色极点。</li>
+      <li><b>行业特色校是最大信息差。</b>华东理工（化工 A+）、东华（纺织 A+/材料 A+/设计 A+）、上海海事（航运/海商法）、上海海洋（水产 A+）、上海中医药（中医 A+/中药 A+）、华东政法（法学 A）、上海理工（光电/动力/测控）、上海电力（电气）、上海海关学院——分数远低于同档综合校，行业壁垒却极强。</li>
+      <li><b>大飞机是上海最被低估的王牌。</b>C919+C909 累计交付超 200 架、大飞机园导入 74 家企业总投资超 300 亿元、长三角大飞机集群集聚全国超 1/3 的配套供应商；航空航天类专业在沪分数相对友好，是长周期但确定性高的赛道。</li>
+      <li><b>生物医药要从「仿制」看到「创新 + BD 出海」。</b>破万亿、BD 交易 337.61 亿美元（数量全国第一）——岗位不只在研发，注册、临床、BD、医学事务、知识产权同样稀缺；药学与生医工比纯生物科学更对产业口。</li>
+      <li><b>别被「金融中心」四个字带偏。</b>金融业增加值确实近 9000 亿，但头部岗位高度集中在清北复交与上财；普通院校金融/会计毕业生必须叠加 CPA/CFA、数据分析与实习，否则就业质量不如同分的行业特色校工科。</li>
+      <li><b>土建链坚决回避传统方向。</b>建筑业增加值 -13.2%、总产值 -16.5%、房地产开发投资 -3.1%；除非同济土木/建筑/城乡规划（均为 A+）或明确转向智能建造与城市更新。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸/AI 工具），否则被 AI 与内卷双重挤压。</li>
+      <li><b>算清「分数溢价 + 落户门槛 + 生活成本」三笔账。</b>想留沪就把「读到硕士」写进规划（上海高校应届硕士免打分直接落户）；不想留沪就别为上海的品牌溢价买单，把分数用在产业同样强、成本更低的城市。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：上海市统计局、国家统计局上海调查总队《2025 年上海市国民经济和社会发展统计公报》（2026-03-30）、上海市统计局《2025 年上海市国民经济运行情况》（2026-01-21）、《上海市加快推进新型工业化构建现代化产业体系「十五五」规划》（2026-08）、上海市经信委《2025 年度上海重大装备产业发展十件大事》（2026-01-15）、上海港（上港集团）2025 年度运营数据、上海市企业服务云《上海落户办理全攻略（2026 最新版）》、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省（市）教育考试院当年公布的招生计划、院校招生章程及录取位次为准。「十五五」规划相关数值均为目标值而非已完成值，细分产值跨源或有差异，已采信官方公报口径，未做跨源估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"集成电路",t:"A",h:5,s:"上海交通大学（电子科学与技术 A-、信息与通信工程 A）／复旦大学（微电子国内顶尖）／华东师范大学（微电子）／上海大学（微电子）／上海科技大学（IC 方向强）",j:"芯片设计、晶圆制造与工艺、先进封装、半导体设备与材料、EDA/IP",
+  r:"产业规模约 5800 亿 +15.5%、占全国超 1/4；企业超 1000 家、汇聚全国约 40% 的 IC 人才；科创板上市企业超 35 家（国内第一）。",w:"对数理与英语文献能力要求高，强烈建议读到硕士；本科多进工艺/封测/设备，设计岗普遍要求硕士；细分方向要提前锁定。",city:"浦东张江 · 临港 · 嘉定"},
+ {n:"计算机科学与技术/人工智能",c:"工学",ch:"人工智能",t:"A",h:5,s:"上海交通大学（计算机 A、控制 A、信通 A）／复旦大学（计算机与人工智能强）／同济大学（计算机/软件）／华东师范大学（计算机/统计 A+）／上海科技大学",j:"大模型与算法、AI 应用工程、云计算与平台、智驾软件、AI+制造/医疗/金融",
+  r:"规上 AI 企业产业规模超 6370 亿 +39.5%；信息服务业 +15.3% 服务业第一拉动力；智能算力超 17 万 P、171 款大模型备案。",w:"工程能力>文凭，作品与实习决定起薪；纯 AI 算法岗高度内卷，建议叠加「AI+行业」（制造、医疗、金融、生物）。",city:"徐汇 · 浦东 · 闵行"},
+ {n:"生物医学工程/药学",c:"工学",ch:"生物医药",t:"A",h:5,s:"复旦大学（药学 A-、基础医学 A-、临床 A）／上海交通大学（生医工 A、生物学 A+）／华东理工大学（制药工程/生物工程强）／上海中医药大学（中药学 A+）／海军军医大学（药学 A+，军校）",j:"创新药研发、高端医疗器械、CXO（CRO/CDMO）、注册与临床、BD 与医学事务",
+  r:"生物医药产业规模首破 1 万亿元；获批国产 1 类新药 30 个（占全国 17%）；BD 交易 337.61 亿美元、数量全国第一。",w:"创新药研发岗普遍要求硕士/博士；药学与生医工比纯生物科学更对产业口；英语与临床试验规范（GCP）是隐性门槛。",city:"浦东张江 · 闵行 · 徐汇"},
+ {n:"电子信息类（通信/光电）",c:"工学",ch:"新一代电子信息",t:"A",h:4,s:"上海交通大学（信息与通信工程 A、电子科学与技术 A-）／复旦大学／同济大学／上海大学（通信工程）／上海理工大学（光电信息国家级一流本科专业）",j:"通信与网络设备、智能终端硬件、光电与显示、汽车电子、嵌入式系统",
+  r:"计算机通信电子产值 +7.7%、智能手机产量 2475 万台 +19.0%；「十五五」做强新一代电子信息万亿级集群。",w:"硬件方向周期长但抗替代；上海理工光电是分数友好的行业特色选择。",city:"浦东 · 松江 · 青浦"},
+ {n:"自动化/机器人工程/测控技术与仪器",c:"工学",ch:"智能工厂/具身智能",t:"A",h:4,s:"上海交通大学（控制科学与工程 A、仪器 A-）／同济大学（自动化/控制）／华东理工大学（自动化/测控）／上海大学（自动化）／上海理工大学（测控）",j:"工业自动化与产线集成、机器人与具身智能、汽车电子与电控、精密仪器与检测",
+  r:"「十五五」目标机器人密度 600 台/万人、建成 500 个先进级智能工厂；已培育 12 家国家卓越级智能工厂、254 家市先进级智能工厂。",w:"强电+控制+软件复合背景溢价最高；机器人工程为新增专业，须核对课程设置是否含控制与嵌入式。",city:"浦东 · 闵行 · 宝山"},
+ {n:"临床医学/口腔医学",c:"医学",ch:"大健康",t:"A",h:5,s:"复旦大学上海医学院（临床 A，三甲医院集群）／上海交通大学医学院（临床 A+）／海军军医大学（临床 A+，军校需军检政审）／同济大学（临床）／上海中医药大学（中医学 A+）",j:"三甲医院、专科医院、医学科研、公共卫生",
+  r:"户籍 60 岁及以上人口占 37.6%、65 岁及以上占 30.0%，老龄化全国最深之一；拥有全国最密集的三甲医院与医学中心。",w:"学制长（5+3/本博）、分数极高；执业医师资格与规培是必经路径；军医大须军检/政审。",city:"徐汇 · 黄浦 · 杨浦"},
+ {n:"航空航天类（飞行器设计/制造）",c:"工学",ch:"大飞机/商业航天",t:"B",h:4,s:"上海交通大学（航空宇航、低空科学技术研究院）／同济大学（航空宇航/力学）／上海工程技术大学（飞行器制造工程）",j:"大飞机设计与总装、航空发动机与机载系统、商业航天火箭/卫星、低空经济（eVTOL）",
+  r:"C919 与 C909 累计交付超 200 架；大飞机园导入 74 家企业、总投资超 300 亿元；铁路船舶航空航天产值 +15.8%。",w:"大飞机产能爬坡受供应链约束，长周期行业要有耐心；建议读到硕士。",city:"浦东祝桥 · 闵行 · 临港"},
+ {n:"船舶与海洋工程/轮机工程",c:"工学",ch:"船舶海工",t:"B",h:4,s:"上海交通大学（船舶与海洋工程 A+，全国第一）／上海海事大学（轮机工程、船舶电子电气）",j:"船舶设计、LNG 船与大型邮轮建造、海工装备、船级社与航运技术",
+  r:"长兴岛 2025 年交付大型 LNG 船 14 艘（我国单个造船基地纪录）；手持订单 270 余艘、高附加值船舶占比 95% 以上。",w:"造船是强周期行业，当前处于高景气订单周期；工作地点多在崇明长兴岛/外高桥，需接受郊区与现场环境。",city:"崇明长兴岛 · 浦东外高桥"},
+ {n:"材料科学与工程（半导体/复材/高分子）",c:"工学",ch:"先进材料/半导体材料",t:"B",h:4,s:"上海交通大学（材料 A+）／东华大学（材料 A+、纤维材料全国第一）／华东理工大学（材料 A+）／上海大学（材料 A+）／上海应用技术大学",j:"半导体材料、航空复合材料、特种冶金、新能源材料、高分子与精细化工",
+  r:"「十五五」六大新兴支柱含先进材料；大飞机复材、半导体硅片/光刻胶、固态电池材料全需材料底座；四校材料 A+。",w:"必须锁定方向（半导体/复材/新能源/高分子），避「泛材料」；本科多进工艺岗，研发岗需硕士。",city:"宝山 · 金山 · 浦东"},
+ {n:"数据科学/统计学/金融工程",c:"理学",ch:"AI 与金融科技",t:"B",h:4,s:"华东师范大学（统计学 A+）／上海财经大学（统计学 A+、应用经济学 A+）／复旦大学（统计/数学 A+）／上海交通大学（统计学 B+）",j:"量化研究、风险管理与合规科技、数据治理、商业分析、精算",
+  r:"金融业增加值 8979.66 亿、金融市场交易总额 4058.95 万亿；上交所成交额 +32.2%；黄浦布局金融科技、静安布局数据智能。",w:"数学与编程要求高；金融工程/精算须叠加金融实务与实习；纯统计不如「统计+计算机/金融」复合。",city:"浦东 · 黄浦 · 静安"},
+ {n:"新能源科学与工程/储能",c:"工学",ch:"新能源及绿色低碳",t:"B",h:3,s:"上海交通大学（能源与动力、电气）／同济大学（新能源/储能）／华东理工大学（新能源材料与器件）／上海电力大学（电气）／上海理工大学（动力工程）",j:"动力电池与储能系统、氢能与燃料电池、光伏与风电、船舶清洁能源",
+  r:"新能源产业产值 +12.9%；上汽第二代半固态电池全球首个量产装车；本地 10 万吨级绿色甲醇项目 2025 年底投产。",w:"储能科学与工程为近年新增专业，须核对培养方案；行业扩张快但竞争加剧，建议叠加电力/材料背景。",city:"奉贤 · 金山 · 临港"},
+ {n:"生物科学/生物技术（合成生物方向）",c:"理学",ch:"生物制造/合成生物",t:"B",h:3,s:"复旦大学（生物学 A+）／上海交通大学（生物学 A+）／华东理工大学（生物工程/生物化工强）／上海科技大学（生命科学）／上海海洋大学（水产 A+）",j:"合成生物学研发、基因与细胞治疗、生物制造工艺、科研",
+  r:"「生物制造」列入「十五五」未来产业重点赛道；上海合成生物学创新中心首创「虚拟公司」模式；生物医药破万亿需求上行。",w:"纯生物本科就业面窄，强烈建议读到硕士/博士；优先选「合成生物学/生物制造/生物信息」等产业对口方向。",city:"浦东 · 闵行"},
+ {n:"金融学类（金融/金融工程/精算）",c:"经济学",ch:"国际金融中心",t:"C",h:4,s:"上海财经大学（应用经济学 A+、统计学 A+）／复旦大学（理论经济学 A+）／上海交通大学（工商管理 A+）／华东师范大学（金融）／上海对外经贸大学／上海立信会计金融学院",j:"券商投行与研究、银行管培、资管与基金、保险精算、金融监管",
+  r:"金融业增加值 8979.66 亿 +9.7%；金融市场交易总额 4058.95 万亿；全年股票筹资 10415 亿元 +3.4 倍。",w:"行业周期性强、头部机构极度看重院校与实习；普通院校金融须叠加「CFA/CPA + 数据分析」。",city:"浦东陆家嘴 · 黄浦 · 静安"},
+ {n:"会计学/财务管理/审计学",c:"管理学",ch:"专业服务",t:"C",h:4,s:"上海财经大学（会计学全国顶尖）／上海交通大学（工商管理 A+）／复旦大学（工商管理 A）／上海对外经贸大学／上海立信会计金融学院（会计行业特色）",j:"审计、企业财务、税务与咨询、内控合规",
+  r:"租赁和商务服务业增加值 4980 亿；跨国公司地区总部密集（2025 年新认定 60 家）；四大会计师事务所华东总部集中。",w:"须考证（CPA/ACCA）；AI 对基础核算岗替代明显，须向「业财融合 + 数据分析 + 合规」转型。",city:"浦东 · 黄浦 · 静安"},
+ {n:"法学（含海商法/涉外法治/知产）",c:"法学",ch:"航运与涉外法治",t:"C",h:4,s:"华东政法大学（法学 A，五院四系）／复旦大学（法学 A-）／上海交通大学（法学 A-）／上海海事大学（海商法全国特色）／上海政法学院",j:"律所、公检法、企业法务与合规、知识产权、涉外仲裁",
+  r:"全国航运与跨境贸易中心，海商海事、涉外争议解决、知识产权服务需求密集。",w:"必须过法考（通过率有限），考公优势明显；建议叠加「法律+外语/金融/技术」复合背景。",city:"黄浦 · 浦东 · 虹口"},
+ {n:"交通运输/物流管理/物流工程",c:"工学",ch:"国际航运中心",t:"C",h:4,s:"上海海事大学（交通运输工程 B+、航海技术/轮机工程，行业认可度极高）／同济大学（交通运输工程）／上海工程技术大学（轨道交通/物流）／上海海洋大学",j:"港口与航运运营、国际货代与多式联运、供应链管理、跨境电商物流",
+  r:"集装箱吞吐量 5506.25 万标箱、连续 16 年全球第一；海通汽车滚装 398 万辆、蝉联全国滚装码头第一；临港离岸贸易 +32.1%。",w:"航海类（航海技术/轮机）就业对口但需上船、体检要求高；陆上岗位建议叠加数据分析与关务。",city:"浦东洋山 · 青浦 · 虹口"},
+ {n:"设计学类（服装/视觉/数字媒体）",c:"艺术",ch:"时尚消费品",t:"C",h:4,s:"东华大学（纺织科学与工程 A+、设计学 A+，服装设计国内顶尖）／同济大学（设计学/建筑老八校）／上海交通大学（设计学 B+）／上海大学／上海视觉艺术学院",j:"服装与时尚设计、品牌视觉、数字媒体与交互、会展与环境设计",
+  r:"时尚消费品为六大新兴支柱之一；东华纺织 A+ 设计 A+；2025 年举办各类展览 978 场、国际展 383 个，会展资源全国第一。",w:"需专业功底与作品集；纯艺术类就业波动大，建议叠加「设计+商业/技术」（时尚管理、交互设计、AI 辅助设计）。",city:"长宁 · 黄浦 · 静安"},
+ {n:"外国语言文学（翻译/商务英语）",c:"文学",ch:"跨境贸易",t:"C",h:3,s:"上海外国语大学（外国语言文学 A+，语种全国最全之一）／复旦大学（外国语言文学 A）／上海交通大学（外国语言文学 A）／上海对外经贸大学（商务外语）",j:"涉外商务、翻译与本地化、外事与国际组织、跨境电商运营",
+  r:"口岸货物进出口 113089.82 亿元、全国第一大口岸；新设外商投资企业 6361 家、在沪投资国家和地区达 197 个。",w:"纯语言内卷严重，必须叠加国贸/法律/金融/数据/区域国别，或走高端口笔译；AI 翻译替代低端岗位明显。",city:"徐汇 · 虹口 · 杨浦"},
+ {n:"教育学/心理学/汉语言（师范）",c:"教育学",ch:"基础教育",t:"C",h:3,s:"华东师范大学（教育学 A+、心理学全国前五，教育部直属师范）／上海师范大学（师范类市属龙头）",j:"中小学教师、教研与培训、心理咨询、教育科技",
+  r:"基础教育质量与教师待遇全国领先、编制吸引力强。",w:"出生率下行（2025 年出生率 4.31‰）长期影响教师岗位增量，须优先选公费师范/优师计划或学科教学紧缺方向；非师范方向慎选。",city:"杨浦 · 徐汇"},
+ {n:"化学工程与工艺（化工新材料/制药）",c:"工学",ch:"化工新材料/制药",t:"C",h:3,s:"华东理工大学（化学工程与技术 A+，全国前三）／上海交通大学（化学工程与技术 B+）／上海应用技术大学（香料香精全国特色）／上海大学",j:"化工新材料、精细与专用化学品、制药与生物化工、工艺与安全管理",
+  r:"「十五五」将化工列入传统优势产业转型首位，明确「降油增化」、向新型功能材料转；上海化工区为全国标杆。",w:"选「新材料/精细化工/制药/绿色低碳」方向，避传统大化工；行业安全与环保要求高，工作地多在化工园区（金山）。",city:"金山 · 奉贤"},
+ {n:"土木工程/建筑学/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"同济大学（土木 A+/建筑 A+/城乡规划 A+，志在央企设计院或城市更新）",j:"设计院、施工、基建、智能建造、城市更新",
+  r:"建筑业增加值 -13.2%、总产值 -16.5%、房屋施工面积 -14.2%；房地产开发投资 -3.1%、商品房销售面积 -4.6%。",w:"行业总量收缩、新开工不足；且上海生活成本高、土建岗收入优势被稀释；仅同济 A+ 或转向智能建造与城市更新方向。",city:"杨浦 · 中心城区旧改"},
+ {n:"工商管理/行政管理/旅游管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"上海财经大学／复旦大学／上海交通大学（仅名校平台，须规划硕士与校友资源）",j:"企业职能管理、行政、咨询、旅游与邮轮管理",
+  r:"上海以硬科技制造与专业服务为主，泛管理岗位供给稀缺且高度集中在名校与头部企业；落户打分与人才引进均不占优。",w:"无技术壁垒、可替代性高；除非明确叠加「行业+管理」（航运管理/邮轮管理/医院管理）或明确考公考编。",city:"中心城区"}
+];
+
+var CHAINS = [
+ {n:"集成电路（第一先导，「一体两翼」世界级集群）",u:["硅片/碳化硅衬底","光刻胶等电子化学品","EDA 工具与 IP 核"],m:["芯片设计（CPU/GPU/存储）","晶圆制造（中芯国际/华虹）","特色工艺、先进封装"],d:["AI 算力芯片","车规级芯片","消费电子"],
+  mj:"集成电路、微电子、电子信息、材料、光电",
+  f:"2025 年产业规模约 5800 亿元 +15.5%、占全国超 1/4；企业超 1000 家、汇聚全国约 40% 的 IC 人才；科创板上市企业超 35 家（国内第一）；世界集成电路协会全球城市排名上海全球第四、国内第一。"},
+ {n:"生物医药（首破万亿，创新药与 BD 出海双兑现）",u:["原料药","抗体及基因治疗核心材料","实验耗材"],m:["创新药研制","高端医疗器械（含脑机接口）","CXO 服务"],d:["临床与医疗服务","国际化授权（BD）","消费健康"],
+  mj:"生物医学工程、药学、生物技术、临床医学、化工（制药）",
+  f:"产业规模首破 1 万亿元；创新药械产值占比 8.1%→20.9%；获批国产 1 类新药 30 个（占全国 17%）；BD 交易 48 起、337.61 亿美元（数量全国第一）；全球前 20 药企械企 19 家在沪设总部或研发中心。"},
+ {n:"人工智能（算力—语料—模型—应用全链条）",u:["智算芯片与集群（算力超 17 万 P）","语料数据（1 万 TB 数据集）"],m:["基础大模型与垂类模型（171 款备案）","科学智能（AI4S）"],d:["AI+制造/医疗/金融/消费","具身智能与智能体"],
+  mj:"人工智能、计算机、软件工程、数据科学、自动化",
+  f:"394 家规上 AI 企业产业规模超 6370 亿元 +39.5%；每年发放 10 亿元算力券/模型券/语料券；模速空间与模力社区集聚大模型上下游企业超 800 家；「十五五」新增打造 AI 万亿级集群。"},
+ {n:"智能网联新能源汽车（每 10 台沪产车 6.5 台新能源）",u:["电池材料","车规级芯片","氢能与燃料电池"],m:["动力电池（半固态量产装车）","整车制造","智能座舱、智驾系统"],d:["充换电","智能网联测试与示范","汽车出口滚装物流"],
+  mj:"车辆工程、电气、自动化、计算机（智驾）、材料、机械",
+  f:"新能源汽车产量 116.11 万辆、占全市汽车产量 65.5%；累计推广突破 200 万辆、规模居全球城市第一；临港智能新能源汽车整车年产超 100 万辆、产值超 2900 亿元；测试里程超 3115 万公里。"},
+ {n:"民用航空与大飞机（含商业航天、低空经济）",u:["复合材料","航空发动机与机载系统","航电"],m:["整机设计（中国商飞）","总装制造（浦东祝桥基地）","大飞机园配套"],d:["交付运营","维修与飞行训练","适航与航空金融"],
+  mj:"飞行器设计与工程、飞行器制造工程、材料、自动化、交通运输",
+  f:"C919 与 C909 累计交付超 200 架、载客超 3300 万人次；大飞机园导入 74 家上下游企业、总投资超 300 亿元；长三角大飞机集群集聚全国超 1/3 装机配套供应商；铁路船舶航空航天产值 +15.8%。"},
+ {n:"船舶与海洋工程装备（长兴岛世界级造船基地）",u:["特种钢材","船用主机与动力系统","配套设备"],m:["大型 LNG 运输船","大型邮轮","高技术船舶、海工装备"],d:["航运运营","船舶维修与改装","船海服务"],
+  mj:"船舶与海洋工程、轮机工程、机械、材料、电气",
+  f:"2025 年长兴岛交付大型 LNG 船 14 艘，刷新我国单个造船基地年交付纪录；手持订单 270 余艘、高附加值船舶占比 95% 以上；目标 2027 年产业规模超 1200 亿元。"},
+ {n:"高端装备与先进材料（工业母机、机器人、特种冶金）",u:["数控系统与工业软件","特种冶金材料","基础化工原料"],m:["工业母机与机器人","先进材料（「四超」材料）","能源装备（发电机组）"],d:["产线集成","智能工厂","装备运维"],
+  mj:"机械、机器人工程、材料、化工、测控、能源动力",
+  f:"高端装备产业产值 +11.1%、新能源产业产值 +12.9%；12 家国家卓越级智能工厂、254 家市先进级智能工厂；600 兆瓦高温气冷堆压力容器等「全球首台」产品在沪发运。"},
+ {n:"现代航运、跨境贸易与金融（五个中心两大底座）",u:["港口与机场基础设施","航运要素（船舶/集装箱/船员）"],m:["港口运营","航运服务（保险/法律）","跨境电商与离岸贸易"],d:["供应链金融","大宗商品交易","总部经济与专业服务"],
+  mj:"交通运输、物流管理、国际经济与贸易、金融学、法学（海商法）",
+  f:"上海港集装箱吞吐量 5506.25 万标准箱、连续 16 年全球第一；金融业增加值 8979.66 亿元、金融市场交易总额 4058.95 万亿元；临港离岸贸易 327.37 亿美元 +32.1%。"}
+];
+
+var CITIES = [
+ {c:"浦东新区（张江·金桥·外高桥）",i:"集成电路、生物医药、人工智能（具身智能/垂类模型）、新一代电子信息、智能网联新能源汽车",l:"中芯国际、华虹、中微公司、张江药谷（全球前 20 药企械企 19 家在沪设总部或研发中心）",m:"微电子、生物医学工程、药学、人工智能、计算机"},
+ {c:"临港新片区（洋山·大飞机园）",i:"集成电路（特色工艺/存储）、智能新能源汽车、民用航空总装、商业航天、离岸贸易",l:"特斯拉上海超级工厂、上汽尚界、中国商飞总装制造基地（2025 年规上工业总产值突破 4500 亿元）",m:"车辆、微电子、航空航天、自动化、国际经济与贸易"},
+ {c:"徐汇（漕河泾·模速空间）",i:"人工智能（大模型）、软件和信息服务（元宇宙）、都市工业（仪器仪表/智能终端）、集成电路设计",l:"模速空间（带动集聚 1500 余家 AI 企业）、商汤科技、阶跃星辰",m:"人工智能、计算机、软件工程、统计学、测控"},
+ {c:"闵行（紫竹·大零号湾）",i:"生物医药（创新药/高端医疗器械）、航空航天、先进能源装备、工业母机、脑机接口",l:"中国航发商发研发基地、脑智天地（全国首个脑机接口未来产业集聚区）",m:"航空航天、生医工、机械、能源动力、生物科学"},
+ {c:"嘉定（汽车城·械谷）",i:"智能网联新能源汽车（「三港两园」）、集成电路（智能传感器）、高端医疗器械",l:"上汽大众、上汽乘用车、上海智能汽车软件园、上海汽车芯谷、上海械谷",m:"车辆、机械、自动化、微电子、生医工"},
+ {c:"松江（G60 科创走廊起点）",i:"新一代信息技术（智能终端/卫星互联网）、高端装备（新能源设施/仪器仪表）、先进材料",l:"G60 科创走廊沿线企业、高端科学仪器企业",m:"电子信息、测控技术与仪器、机械、材料"},
+ {c:"青浦（西虹桥）",i:"新一代信息技术（软件信息服务）、高端装备（北斗及低空经济）、现代物流（供应链物流）",l:"华为青浦研发中心、北斗导航与低空经济企业、快递物流总部",m:"计算机、电子信息、交通运输、物流工程"},
+ {c:"宝山（南大·吴淞口）",i:"高端新材料（先进金属材料、「四超」材料）、机器人及高端装备（工业母机）、邮轮经济",l:"宝武（特种冶金材料）、宝山工业机器人企业、吴淞口国际邮轮港",m:"材料、机械、自动化、冶金、旅游管理"},
+ {c:"金山（上海化工区）",i:"高端化工和新材料、智能出行及装备（低空经济/新能源汽车）、时尚轻工和精致食品",l:"上海化工区（全国标杆）、雷克萨斯新能源项目（规划年产 10 万台纯电整车）",m:"化工、材料、车辆、食品科学与工程"},
+ {c:"奉贤（东方美谷）",i:"美丽大健康（化妆品/食品/药品）、绿色新能源（新型储能/新能源汽车零部件）、通用新材料",l:"东方美谷化妆品与健康产业集群",m:"化工、药学、材料、机械、设计学"},
+ {c:"崇明（长兴岛）",i:"船舶与海洋工程装备（高技术船舶、LNG 运输船、大型邮轮）",l:"江南造船、沪东中华、外高桥造船、中远海运重工、振华重工",m:"船舶与海洋工程、机械、材料、电气"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

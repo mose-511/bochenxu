@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>江苏产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f2f6f5;
+  --card:#ffffff;
+  --ink:#1c2a28;
+  --ink-2:#465653;
+  --ink-3:#788884;
+  --line:#dfe8e6;
+  --brand:#1a5e5a;
+  --brand-soft:#e5efee;
+  --accent:#8a6a2f;
+  --accent-soft:#f4eede;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,42,40,.05),0 4px 16px rgba(28,42,40,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,42,40,.06),0 8px 24px rgba(28,42,40,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f4f3;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#5a4718;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f4f3;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f4f3;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>江苏产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年江苏统计公报</b> · <b>「1650」产业体系 + 「51010」战新集群 + 「10+X」未来产业</b> · <b>14个国家先进制造业集群（全国第一、13市全覆盖）</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">14.24万亿</div><div class="note">+5.3%，全国第2，继广东后第二个迈上14万亿</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+6.5%</div><div class="note">装备制造贡献率74.6%，二产占42.2%居主要经济大省第一</div></div>
+  <div class="stat"><div class="lab">造船完工量</div><div class="val">2403.8万载重吨</div><div class="note">占全国44.8%、全球25.1%，三大指标全国第一</div></div>
+  <div class="stat"><div class="lab">进出口</div><div class="val">5.95万亿</div><div class="note">+6.0%创历史新高，占全国13.1%</div></div>
+  <div class="stat"><div class="lab">高技术制造</div><div class="val">+11.9%</div><div class="note">高新产业产值占规上工业52.1%</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-21.6%</div><div class="note">固投-12.7%、建筑业-2.2%，土建链深度承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：船舶、海工、风电、芯片、软件、电气、车辆、药学、临床、审计、大气、南邮、江科大、南工程">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>半导体装备（对应江苏集成电路）、储能/氢能（对应海上风电/储能）、生物制造（对应苏州/泰州生物医药）全部对得上江苏产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。江苏高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>江苏有万亿产业/国家级集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大（含新能源分化）。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应江苏独有赛道（船舶/药学/审计/大气/食品/师范），分数友好。适合想留苏、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资/光伏制造承压，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略（含历史组）</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>南大/东大线及以上</td><td>学校优先 + 专业不将就，锁双一流/国家重点学科</td><td>南京大学（计算机/软工/天文/经济）、东南大学（建筑/电子/生医工/电气/交通），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属/211</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>南航（航空）、南理工（兵器/光电）、河海（水利/港航）、药大（药学）、南农（农学）、江南（食品/设计）、南邮（电子/通信/软件）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴江苏产业链</td><td>江苏大学（车辆/农机/农业工程）、南京工业大学（化工）、南京工程学院（电气/国网）、江苏科技大学（船舶）、南京审计（审计）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的市属校，锁特色专业</td><td>南京师范（师范）、南京财经（财经）、南京信息工程（大气）、扬州大学（农/兽）、徐州医科（麻醉/临床）、苏州科技（土木/环境）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--ink-2);margin-top:6px"><b>历史组建议：</b>法学（南大/南师）、教育学/心理学（南师）、外国语言文学（南大/南师）、审计/财经（南审/南财）、设计学（江南/南艺）、大气科学（南信工）是历史组友好方向；避开纯理科/工科强校的理科专业。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在江苏读，还是出省读？（含外省/河北考生判断）</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>船舶海工/电气/集成电路/计算机/材料/机械车辆/新能源<br><span style="color:var(--ink-3);font-size:12.5px">（硬制造 + 战新）</span></td><td><b style="color:var(--green)">优先留苏</b></td><td>产业+高校双密集，江科大/南工程/南邮/东大全国特色独一，分数低于京沪但高于部分中西部</td></tr>
+        <tr><td>临床/药学/生医工/食品/农学/设计/审计/师范/大气/外语</td><td><b style="color:var(--green)">留苏或出省</b></td><td>药大/江南/南审/南信工/南师在行业认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/光伏制造</td><td><b style="color:var(--accent)">考虑他省或转方向</b></td><td>房地产 -21.6%、建筑业 -2.2%、光伏制造连续九季度亏损，土建/泛管理承压明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a5e5a;border-left-color:var(--brand);margin-top:14px">
+      <b>江苏独有优势：制造业占比全国主要经济大省第一（二产 42.2%）+ 13 市产业错位分工无塌陷区 + 14 个国家级先进制造业集群全国第一 + 船舶海工三大指标全国第一 + 行业特色校壁垒。</b>江苏 16 所双一流（全国第二梯队），但<b>行业特色校（江科大船舶/南工程电气/南工大化工/南审审计/药大药学/徐医麻醉）才是最大信息差</b>；<b>外省/河北考生来苏读「船舶海工·电气·集成电路·计算机·材料·机械车辆·临床·药学·生医工·大气·审计·食品」性价比高</b>——产业对口、院校特色独一、就业机会密集；土建·泛管理·光伏制造不建议来苏。须算清落户门槛（南京/苏州有积分与社保要求，非苏籍留苏多需硕士或重点企业）；因 13 市全部进百强、产业均衡，外省考生也可考虑苏中/苏北院校+对口产业的「定向就业」路径。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>江苏靠「船舶海工 + 集成电路 + 新能源 + 生物医药 + 高端装备 + 软件」六引擎，别被「苏南富/综合排名」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>船舶海工、电气、集成电路、计算机、材料、机械车辆六者覆盖江苏最有确定性的岗位，优先冲。</li>
+      <li><b>贴「行业特色校」是江苏最大信息差。</b>江科大（船舶）、南工程（电气/国网）、南工大（化工）、南审（审计）、药大（药学）、徐医（麻醉）、江苏大学（车辆/农机）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>船舶海工是江苏最被低估的王牌。</b>三大指标全国第一、出口占全国 1/3 以上、订单排至 2029 年；江科大船舶在江苏壁垒全国无对手，且分数友好。</li>
+      <li><b>新能源必须「拆开看」。</b>光伏装机（分布式双冠、累计 8968 万千瓦）是上行，但光伏制造连续九季度亏损；选海上风电/储能/氢能而非光伏组件制造。</li>
+      <li><b>集成电路从「制造」看到「设计+第三代半导体」。</b>无锡 2512 亿产值、出口 +32.9%、「10+X」第三代半导体；选微电子/集成电路设计而非纯封装。</li>
+      <li><b>苏大/南邮/南理工是电子信息隐形主力。</b>无锡物联网、苏州纳米、南京通信全需电子与软件；南邮通信/软件校招极强，分数低于同档综合校。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -21.6%、建筑业 -2.2%、新签合同 -17.2%；除非东南大学土木建筑双一流或志在央企设计院/重大基建。</li>
+      <li><b>算清「留苏 vs 出走」。</b>江苏 13 市产业均衡、无塌陷区，但南京/苏州落户有门槛；选专业时规划深造路径与就业地，16 所双一流意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：江苏省统计局、国家统计局江苏调查总队《2025 年江苏省国民经济和社会发展统计公报》（2026-01-28 / 2026-03-19）、江苏省政府门户网站经济运行解读、江苏省工信厅「1650/51010/10+X」产业体系文件、江苏省自然资源厅海洋经济数据、南京海关出口数据、中国光伏行业协会、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"船舶与海洋工程",c:"工学",ch:"船舶海工",t:"A",h:5,s:"江苏科技大学（船舶王牌、原镇江船院）／南京航空航天大学（飞行器+船舶交叉）／江苏大学（流体机械）",j:"船体设计、海工装备、船舶电气、航运管理",
+  r:"三大造船指标全国第一（44.8%/29.7%/39.0%）、出口1427.5亿+37%占全国1/3以上、订单排至2028—2029年；通泰扬为国家级集群，认知度低=分数洼地。",w:"锁「船舶/海工」方向，避泛机械；江科大为全国船舶对口第一校，分数远低于同档综合校。",city:"南通 · 扬州 · 泰州 · 镇江"},
+ {n:"电气工程及其自动化（电网/新能源三电）",c:"工学",ch:"电网/三电",t:"A",h:4,s:"南京工程学院（电气/国网首选、原电力高专）／东南大学（电气强）／河海大学（电力）／江苏大学",j:"电网、电气设备、新能源三电、储能",
+  r:"海上风电装机1348.9万千瓦全国第一、智能电网（南瑞）全国领先、国网/南网校招规模大。",w:"电网方向需提前准备国网考试；南工程电气是江苏性价比最高的「行业直通车」。",city:"南京 · 盐城 · 常州"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"半导体",t:"A",h:5,s:"南京邮电大学（电子科学与技术双一流、华为中兴校招）／东南大学（集成电路）／苏州大学（材料）／江南大学",j:"芯片设计、功率半导体、封测、车规芯片",
+  r:"无锡集成电路2024产值2512亿全省领先、2025集成电路出口+32.9%；第三代半导体列入「10+X」未来产业。",w:"对数理要求高，深造路径清晰；无锡/苏州产业密集，留苏就业便利。",city:"无锡 · 南京 · 苏州"},
+ {n:"计算机类（软件/人工智能/智驾）",c:"工学",ch:"软件/AI",t:"A",h:5,s:"南京大学（计算机A+）／东南大学（软件/计算机）／南京邮电大学（软件强）／苏州大学",j:"软件开发、工业软件、智驾算法、AI大模型",
+  r:"南京软件和信息服务冲刺万亿级、规上软件+8.7%；人工智能列入「10+X」、南京「人工智能+」标杆城市。",w:"工程能力>文凭；南邮软件在信息产业校招极强，分数低于同档综合校。",city:"南京 · 苏州 · 无锡"},
+ {n:"材料科学与工程（先进材料/半导体/轻量化）",c:"工学",ch:"先进材料",t:"A",h:4,s:"东南大学（材料双一流）／南京理工大学（材料、兵工背景）／江南大学（高分子/包装）／苏州大学",j:"半导体材料、新能源材料、复合材料、工艺工程",
+  r:"高端新材料为「1650」集群之一、苏南特钢国家级集群；半导体材料、新能源材料需求上行。",w:"锁「半导体/新能源/复合材料」方向，避泛材料。",city:"南京 · 苏州 · 无锡"},
+ {n:"机械设计制造及其自动化/车辆工程",c:"工学",ch:"工程机械/汽车",t:"A",h:4,s:"江苏大学（车辆/农业工程王牌）／南京航空航天大学（车辆/机械）／东南大学（机械双一流）／中国矿业大学（机械）",j:"工程机械、汽车零部件、农业装备、高端装备",
+  r:"铁路船舶航空航天制造+15.8%、制造业投资中该领域+29.1%；徐工全球工程机械巨头；新能源汽车产量增幅超20%。",w:"锁「工程机械/新能源车辆/农机」方向，避泛机加工。",city:"徐州 · 镇江 · 南京"},
+ {n:"自动化/测控技术与仪器",c:"工学",ch:"智能制造",t:"B",h:4,s:"东南大学（自动化）／南京理工大学（控制）／南京邮电大学（测控）／江苏大学",j:"控制系统、汽车电子、工业自动化、机器人",
+  r:"工业机器人产量增幅超20%、设备购置投资+9.1%；汽车电子、产线自动化全需自动化/测控。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"南京 · 无锡 · 苏州"},
+ {n:"电子信息类（通信/物联网/光电）",c:"工学",ch:"通信/物联网",t:"B",h:4,s:"南京邮电大学（通信国家重点）／南京理工大学（光电）／东南大学（信息通信）／苏州大学",j:"通信、物联网、光电、智能终端",
+  r:"无锡物联网国家示范基地、2025电子制造+13.5%；卓胜微/华虹支撑。",w:"本科多去制造/封测，深造（微电子/集成电路）更有利。",city:"无锡 · 南京"},
+ {n:"新能源科学与工程（海上风电/储能/氢能）",c:"工学",ch:"新能源",t:"B",h:4,s:"河海大学（新能源+水利）／常州大学（能源）／江苏大学（流体）／南京工程学院（电气）",j:"风电场运维、储能系统、氢能、电网接入",
+  r:"海上风电装机1348.9万千瓦全国第一、盐城「海上风电第一城」；储能/氢能列入「10+X」未来产业；但光伏制造连续九季度亏损。",w:"锁「海上风电/储能/氢能」，明确绕开光伏组件制造。",city:"盐城 · 南通 · 常州"},
+ {n:"生物医学工程（医疗器械/生医工）",c:"工学",ch:"生物医药",t:"B",h:4,s:"东南大学（生医工A+）／中国药科大学（生医工）／南京医科大学／江苏大学",j:"医疗器械、生物制剂、医工交叉",
+  r:"苏州I类创新药占全国14%、泰州中国医药城；东大生医工A+；医疗器械国产替代上行。",w:"医工交叉比纯生物更对产业口。",city:"苏州 · 泰州 · 南京"},
+ {n:"化学工程与工艺（新材料/精细化工）",c:"工学",ch:"化工新材料",t:"B",h:3,s:"南京工业大学（化工强校、原南京化工学院）／常州大学（石油化工）／中国矿业大学（化工）／江南大学（生物化工）",j:"材料合成、化工新材料、精细化工",
+  r:"南工大化工全国前列；半导体材料、新能源材料制备依赖化工；连云港/泰州化工集群。",w:"选「新能源/半导体材料」方向，避传统煤化工。",city:"南京 · 连云港 · 泰州"},
+ {n:"交通运输/港口航道与海岸工程（江海联运）",c:"工学",ch:"江海联运",t:"B",h:3,s:"河海大学（港口航道A+）／南通大学（交通/航运）／江苏科技大学（船舶航运）",j:"港口运营、航道设计、航运管理",
+  r:"江苏港口货物吞吐量37.2亿吨（+3.0%）、集装箱2952万TEU；河海港航全国顶尖；南通/苏州太仓港创新高。",w:"贴「江海联运+港口」比纯运输更有前景。",city:"南京 · 南通 · 苏州"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"南京医科大学（公共卫生双一流）／苏州大学／徐州医科大学／南京大学（医学）",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化+健康需求长期刚性；南医大公共卫生双一流、苏大临床、徐医临床，留苏三甲比例高。",w:"学制长（5+3本博）、分数高。",city:"南京 · 苏州 · 徐州"},
+ {n:"药学",c:"医学",ch:"生物医药",t:"C",h:5,s:"中国药科大学（药学A+全国第一）／南京医科大学／中国矿业大学（制药）",j:"药物研发、注册、临床、生产",
+  r:"药学A+全国第一；恒瑞/扬子江/药明集聚；泰州中国医药城全国首个国家级医药高新区。",w:"研发岗须深造，药大是行业天花板。",city:"南京 · 泰州 · 连云港"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:4,s:"南京大学（法学A-）／南京师范大学／苏州大学",j:"公检法、律所、企业法务、合规",
+  r:"南大法学A-、南京师范法学强，公检法/律所/企业法务认可度高。",w:"须过法考，考公优势明显。",city:"南京 · 苏州"},
+ {n:"食品科学与工程",c:"工学",ch:"绿色食品",t:"C",h:3,s:"江南大学（食品A+全国第一、发酵工程顶尖）／南京农业大学／江苏大学",j:"食品加工、技术岗、质检",
+  r:"江南大学食品科学与工程A+全国第一；洋河/今世缘/海天供应链。",w:"进名企技术岗而非泛食品。",city:"无锡 · 淮安 · 宿迁"},
+ {n:"农学/园艺/植物保护",c:"农学",ch:"现代农业",t:"C",h:3,s:"南京农业大学（作物学/植保/园艺A+、农业资源与环境A+）／江苏大学（农业工程）／扬州大学",j:"种业、农技、植保、农业装备",
+  r:"南农作物学/植保/园艺A+；江苏大学农业工程全国前列；种业振兴背景。",w:"选「种业/农业工程」方向，避泛农学。",city:"南京 · 扬州 · 镇江"},
+ {n:"设计学/动画（工业设计/数字媒体）",c:"艺术",ch:"文创",t:"C",h:4,s:"江南大学（设计A+、工业设计全国顶尖、包装工程A+）／南京艺术学院／南京邮电大学（数字媒体）",j:"工业设计、文创、数字媒体",
+  r:"江南设计学（工业设计）全国顶尖；数字媒体对接软件与智造。",w:"作品集>文凭，需专业功底。",city:"无锡 · 南京"},
+ {n:"审计学/会计学",c:"管理学",ch:"财经",t:"C",h:3,s:"南京审计大学（全国唯一以「审计」命名大学）／南京财经大学／苏州大学",j:"审计、企业财务、税务",
+  r:"南审审计学专业全国顶尖；四大/国企审计认可度高。",w:"须考证（CPA等）。",city:"南京"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"南京师范大学（教育学/心理学/地理A+）／江苏师范大学／苏州大学",j:"中小学教师、教研、心理咨询",
+  r:"南师教育/心理A+、江苏基础教育龙头、公费师范生考编优势断层。",w:"公费师范生包分配，考编优势大。",city:"南京 · 徐州 · 苏州"},
+ {n:"外国语言文学",c:"文学",ch:"跨境",t:"C",h:3,s:"南京大学（外语A）／南京师范大学／苏州大学",j:"跨境贸易、外事、涉外法务",
+  r:"进出口5.95万亿创历史新高、实际使用外资全国首位，涉外需求上行。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"南京 · 苏州"},
+ {n:"大气科学",c:"理学",ch:"气象/双碳",t:"C",h:3,s:"南京信息工程大学（大气A+全国第一、应用气象学全国第一）",j:"气象局、气候服务、新能源并网",
+  r:"南信大大气科学A+全国第一；「双碳」与新能源并网调度需求上行。",w:"全国独一档，分数友好，体制内气象岗稳定。",city:"南京"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"东南大学（土木/建筑A+、建筑老八校）／苏州科技大学",j:"设计院、施工、基建、智能建造",
+  r:"房地产投资-21.6%、建筑业-2.2%、新签合同额-17.2%，土建链深度承压。",w:"仅东南大学土木建筑双一流或志在央企设计院/重大基建；否则慎选。",city:"南京 · 苏州"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"南京审计大学／南京财经大学",j:"企业职能管理、行政、咨询",
+  r:"制造业为主、固投-12.7%，泛管理岗位稀缺、内卷严重。",w:"叠加「行业+管理」或冲名校，否则慎选。",city:"南京"}
+];
+
+var CHAINS = [
+ {n:"高技术船舶与海洋工程装备（江苏最硬产业链）",u:["钢材/特种钢","船用主机","曲轴","甲板机械"],m:["船体建造","舾装","海工平台（FLNG/养殖工船）","LNG装备"],d:["航运","船舶维修","港口服务"],
+  mj:"船舶与海洋工程、机械、电气、材料、自动化",
+  f:"2025造船完工量2403.8万载重吨（全国44.8%、全球25.1%），新接/手持订单占全国29.7%/39.0%，三大指标全部第一；出口1427.5亿元（+37%）占全国1/3以上；订单排至2028—2029年；通泰扬海工船舶为国家级集群。"},
+ {n:"集成电路与新型显示（长三角芯片重镇）",u:["硅片","光刻胶","第三代半导体衬底"],m:["芯片设计（无锡/南京）","制造（华虹/SK海力士）","封测"],d:["消费电子","车规芯片","新型显示"],
+  mj:"集成电路、微电子、光电、电子信息",
+  f:"无锡集成电路2024产值2512亿、全省领先；2025集成电路出口+32.9%；南邮电子科学与技术双一流、东大电子A；规上高技术制造+11.9%。"},
+ {n:"新能源（必须拆开看：装机↑ 制造↓）",u:["硅料/硅片","锂/钠","风机叶片"],m:["光伏组件（承压）","动力电池（常州强）","海上风电机组"],d:["电站运营","储能系统","氢能"],
+  mj:"新能源科学与工程、电气、材料",
+  f:"分布式光伏新增+累计「双冠」全国第一，累计装机8968万千瓦、发电破千亿千瓦时（+60%）；海上风电1348.9万千瓦全国第一；但光伏制造连续九季度亏损、A股31家前三季度净亏超310亿；电动汽车出口+140.9%。"},
+ {n:"生物医药（苏州/南京/泰州中国医药城）",u:["原料药","CRO/CDMO"],m:["创新药（恒瑞/扬子江/信达）","医疗器械"],d:["医疗服务","康养","医药流通"],
+  mj:"药学、生物医学工程、临床、生科",
+  f:"苏州2025上半年新增I类创新药占全国14%、江苏54.5%；泰州中国医药城为全国首个国家级医药高新区；中国药科大学药学A+全国第一。"},
+ {n:"高端装备与工程机械（徐州徐工为核）",u:["液压件","齿轮","轴承"],m:["挖掘机/起重机/盾构机（徐工）","农机装备"],d:["基建","矿山","农业服务"],
+  mj:"机械、车辆、农业工程、电气",
+  f:"徐工为全球工程机械巨头；铁路船舶航空航天制造+15.8%、制造业投资中该领域+29.1%；江苏大学农业工程/车辆、江苏科技大学船舶配套。"},
+ {n:"物联网与智能制造（无锡物联网+苏州智造）",u:["传感器","工业软件"],m:["智能装备","机器人","PLC"],d:["产线集成","工业互联网"],
+  mj:"自动化、测控、机器人工程、软件",
+  f:"无锡物联网国家示范基地、苏南特钢/高端装备国家级集群；工业机器人产量增幅超20%；设备工器具购置投资+9.1%。"},
+ {n:"新能源汽车（苏州/南京/常州）",u:["电池材料","车规芯片"],m:["整车（蔚来南京/理想苏州）","动力电池（常州4家前十）"],d:["充换电","智能网联"],
+  mj:"车辆工程、电气、自动化、计算机（智驾）",
+  f:"新能源汽车产量增幅超20%、出口+140.9%；常州「新能源之都」动力电池装机全国前十占4；东大/南航车辆与智驾。"},
+ {n:"软件与信息服务（含南京智能电网）",u:["工业软件","AI大模型"],m:["软件服务","智能电网装备（南瑞）"],d:["数字政府","企业数字化","信创"],
+  mj:"软件工程、计算机、人工智能、电气（智能电网）",
+  f:"南京软件和信息服务冲刺万亿级；规上互联网和相关服务+11.9%、软件+8.7%；南大计算机A+、东大软件、南邮软件。"}
+];
+
+var CITIES = [
+ {c:"苏州",i:"新一代信息技术、生物医药、纳米、人工智能（「1030」体系）",l:"博世、强生、信达、苏州纳米城",m:"电子信息、生物、纳米、软件、人工智能"},
+ {c:"南京",i:"软件和信息服务、智能电网、集成电路、新能源汽车、生物医药（「1026」体系）",l:"南瑞、台积电（南京）、蔚来、恒瑞（南京）",m:"软件、电气、微电子、车辆、生科"},
+ {c:"无锡",i:"集成电路、物联网、生物医药（「人工智能+」标杆）",l:"华虹、SK海力士、卓胜微、药明",m:"微电子、物联网、生科、光电"},
+ {c:"常州",i:"新能源（「新能源之都」，动力电池前10有4家）、高端装备、智能制造",l:"宁德时代（常州）、中创新航、天合",m:"新能源、材料、机械、电气"},
+ {c:"南通",i:"船舶海工（全国约1/4）、新材料、海上风电、高端纺织",l:"中远海运川崎、招商局重工、中天",m:"船舶海工、材料、电气、纺织"},
+ {c:"徐州",i:"工程机械（徐工）、绿色低碳能源（「535」体系）",l:"徐工集团、徐矿、协鑫",m:"机械、车辆、能源、电气"},
+ {c:"扬州",i:"高端装备、新型电力装备、汽车及零部件、高技术船舶",l:"扬力、亚普、中远海运重工（扬州）",m:"机械、电气、车辆、船舶"},
+ {c:"泰州",i:"中国医药城（生物医药）、海工船舶、电气、化工",l:"扬子江、济川、中海油气（泰州）",m:"药学、生医工、船舶、化工"},
+ {c:"盐城",i:"海上风电第一城（接近全省一半）、汽车、钢铁、新能源",l:"金风、远景、悦达起亚、德龙",m:"新能源、电气、车辆、材料"},
+ {c:"连云港",i:"医药（恒瑞等）、新材料、新能源、智能装备",l:"恒瑞、豪森、中复神鹰",m:"药学、材料、化工、生医工"},
+ {c:"淮安/宿迁",i:"绿色食品、机电装备、纺织服装、食品饮料、新一代信息技术（「619」体系）",l:"今世缘、鹏鼎、淮钢、洋河、双星",m:"食品、电子、机械、纺织"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c.indexOf(fCat)<0) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

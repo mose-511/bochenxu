@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天津产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f2f6f9;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#0e5a8a;
+  --brand-soft:#e6eef5;
+  --accent:#1f8a6d;
+  --accent-soft:#e6f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>天津产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年天津统计公报</b> · <b>12条重点产业链</b> · <b>信创第一城（PK体系市占率80%）</b> · <b>天津港全球第8大港</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">1.85万亿</div><div class="note">增长4.8%，全国第24</div></div>
+  <div class="stat"><div class="lab">信创产业</div><div class="val">PK占80%</div><div class="note">第一城，2024年1468亿+21%</div></div>
+  <div class="stat"><div class="lab">天津港</div><div class="val">2403万标箱</div><div class="note">全球第8、货物第9</div></div>
+  <div class="stat"><div class="lab">航空航天</div><div class="val">+9.7%</div><div class="note">机箭星站全产业链</div></div>
+  <div class="stat"><div class="lab">生物医药</div><div class="val">破千亿</div><div class="note">医药制造+7.3%</div></div>
+  <div class="stat"><div class="lab">常住人口</div><div class="val">1363万</div><div class="note">9年减80万，承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：信创、芯片、飞腾、港口、航天、化工、电气、临床、民航、南开、天大、天理、天医">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应天津低空经济联盟）、生物制造（对应天津合成生物/生物医药）、半导体装备（对应天津集成电路）、储能/氢能（对应天津新能源）全部对得上天津产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。天津高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>天津有万亿/千亿产业或国家集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但规模仍在爬坡。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应天津独有赛道（信创/航天/民航/港口/医科/师范），分数友好但需选对方向。适合想留津、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>南开/天大及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>天津大学（化工A+/建筑/机械/电气/计算机）、南开（数学/化学/统计/金融/法学），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>天津医科（临床）、河北工大（电气/材料）、中国民航大学（空管/机务）、天津工业（纺织/计算机）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴天津产业链</td><td>天津理工（计算机/电气/机械）、天津科技（食品/化工）、天津财经（会计）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的市属校，锁特色专业</td><td>天津师范（师范/心理）、天津外国语（外语）、天津中医药（中医）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在天津读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>计算机/电子信息/集成电路/电气/化工/航空航天/机械/车辆/自动化/材料/交通运输<br><span style="color:var(--ink-3);font-size:12.5px">（信创+石化+航天+港口硬科技）</span></td><td><b style="color:var(--green)">优先留津</b></td><td>产业+高校双密集，信创/航天/港口全国独一，分数低于京沪苏浙 15–30 分</td></tr>
+        <tr><td>临床/法学/金融/外语/师范/中医/食品</td><td><b style="color:var(--green)">留津或出省</b></td><td>天医/南开/天财/天外/天师范/天中医在华北认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产 -0.7%、建筑业 -12.9%、商品房销售 -13.5%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#0e5a8a;border-left-color:var(--brand);margin-top:14px">
+      <b>天津独有优势：信创「第一城」（PK 体系市占率 80%）+ 机箭星站全产业链（空客/火箭/空间站）+ 北方国际航运核心区（全球第 8 大港）+ 生物医药千亿 + 中国民航大学唯一部属。</b>天津高教梯度分明（南开/天大双 985 + 4 所双一流 + 民航大等行业特色校）；<b>外省/河北考生来津读「计算机·电子信息·集成电路·化工·航空航天·电气·车辆·交通运输·临床·法学·外语·中医·民航」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理·传统代工不建议来津；长期须算清「留津 vs 出走」（常住人口 9 年减 80 万、自然增长连续 5 年为负）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>天津靠「信创 + 绿色石化 + 航空航天 + 港口枢纽 + 生物医药」五引擎，别被「老工业基地」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>计算机、电子信息、电气、化工、航空航天、交通运输六者覆盖天津最有确定性的岗位，优先冲。</li>
+      <li><b>贴「滨海新区 + 信创谷 + 南港 + 空港」核心极。</b>滨海集中了信创、航天、石化、港口、生物医药最密集产业与院校重叠；武清/西青/北辰/宝坻/东丽是特色极点。</li>
+      <li><b>行业特色校是最大信息差。</b>河北工大（电气/材料）、中国民航大学（空管/机务）、天津工业（纺织A+/计算机）、天津科技（食品A-）、天津财经（会计）、天津师范（心理A-）、天津外国语（外语）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>信创是天津最被低估的王牌。</b>PK 体系市占率 80%、京津冀信创集群国家唯一、信息软件 +18.6%；计算机/电子信息/集成电路在天津壁垒全国无对手，且分数友好。</li>
+      <li><b>航空航天要从「总装」看到「复材+载荷+商业航天」。</b>空客 760 架、火箭 33 枚、空间站核心舱是底座，但真正上行在航空复材、卫星载荷、商业航天；选材料/通信/自动化而非纯理论。</li>
+      <li><b>港口枢纽经济是隐形富矿。</b>全球第 8 大港、东疆租赁 1.7 万亿、航运金融全国第 7；交通运输/物流/国贸/外语贴「港口+供应链金融」比纯运输更有前景。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -0.7%、建筑业 -12.9%、商品房销售 -13.5%；除非天大建筑双一流或志在央企设计院/重大基建（港口、轨道交通）。</li>
+      <li><b>算清「留津 vs 出走」。</b>天津常住人口 9 年减 80 万、自然增长连续 5 年为负，长期人才外流压力；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：天津市统计局《2025 年天津市国民经济和社会发展统计公报》（2026-03-23）、天津市人民政府统计公报解读（2026-03-25）、天津市「十五五」规划纲要及新闻发布会、市工信局信创产业答复（2025-10）、市交通运输委《港产城融合发展「十五五」规划》（2026-08）、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。河北工业大学为河北省属、校区在天津，属准确表述。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"计算机类/软件工程（信创/AI）",c:"工学",ch:"信创",t:"A",h:5,s:"南开大学（计算机/软件国家一流）／天津大学／天津工业大学／天津理工大学",j:"信创软件开发、AI大模型、工业软件、网络安全",
+  r:"信创第一城，京津冀信创集群国家先进制造业集群（唯一）、规模超2万亿；2024年信创产业1467.76亿+21%，PK体系市占率80%；信息软件+18.6%。",w:"锁信创/工业软件/AI方向，避纯应用开发；津内校企（麒麟/曙光/360/联想）校招极密。",city:"滨海信创谷 · 华苑 · 西青"},
+ {n:"电子信息类/集成电路",c:"工学",ch:"信创/半导体",t:"A",h:5,s:"天津大学（集成电路）／南开大学（微电子）／天津理工大学／天津工业大学",j:"芯片设计、半导体制造、封测、电子元器件",
+  r:"拥有飞腾、海光两大CPU及麒麟OS，中芯国际8英寸晶圆线全球单体最大，华海清科抛光机份额24%，中环领先半导体单晶全国第一；电子元件+15.0%。",w:"对数理要求高，深造（微电子/集成电路）更有利；津半导体链条全国独一。",city:"滨海 · 西青 · 津南"},
+ {n:"电气工程及其自动化（电网/三电）",c:"工学",ch:"三电/电网",t:"A",h:4,s:"河北工业大学（电气国家重点、校址天津）／天津大学／天津理工大学",j:"电网、电气设备、新能源三电、储能",
+  r:"河北工大电气为国家重点学科，国家电网/发电集团校招大户（60%进电力央企）；汽车三电、储能、港口电气全需电气底座。",w:"电网方向需提前准备国网考试；河北工大电气是津内电力黄埔洼地。",city:"北辰 · 天津 · 滨海"},
+ {n:"化学工程与工艺（绿色石化/新材料）",c:"工学",ch:"绿色石化",t:"A",h:4,s:"天津大学（化工A+全国第一）／河北工业大学／天津科技大学",j:"炼化、精细化工、电子化学品、化工新材料",
+  r:"绿色石化为全市工业第一大产业，南港大乙烯、渤化基地支撑；化学原料和化学制品制造+10.1%；天大化工A+全国第一。",w:"选精细化工/电子化学品/新材料方向，避传统煤化工；天大化工壁垒顶尖。",city:"滨海南港 · 大港"},
+ {n:"航空航天类（机箭星站）",c:"工学",ch:"航空航天",t:"A",h:4,s:"中国民航大学／天津大学／天津工业大学",j:"飞机/火箭总体、航空复材、发动机、卫星载荷",
+  r:"空客天津累计交付超760架、航天一院长征火箭33枚、航天五院空间站核心舱7个；2025增加值+9.7%、产值增速10.3%。",w:"体量小于汽车电子但壁垒极深、分数友好；民航大学空管/机务全国独一。",city:"滨海空港 · 东丽 · 保税区"},
+ {n:"交通运输/物流工程（天津港枢纽）",c:"工学",ch:"港口枢纽",t:"A",h:4,s:"天津理工大学（港口/交通运输）／中国民航大学／南开/天大",j:"港口运营、多式联运、供应链、航运金融",
+  r:"天津港集装箱2403万标箱全球第8、货物5.95亿吨全球第9，国际航运中心全球第18；五大临港产业产值超5000亿。",w:"贴港口+供应链金融+临港产业比纯运输更有前景。",city:"滨海港城 · 东疆 · 河西"},
+ {n:"机械设计制造及其自动化（高端装备/海工）",c:"工学",ch:"高端装备",t:"B",h:4,s:"天津大学（机械A）／河北工业大学／天津理工大学／中国民航大学",j:"海工装备、智能产线、机床、机器人",
+  r:"专用设备制造+14.9%、高端装备为三大支柱之一，做强工业母机、海工装备、机器人；天津为重要海洋工程装备制造基地。",w:"锁海工/机器人/智能装备方向，避泛机加工。",city:"滨海 · 北辰 · 津南"},
+ {n:"车辆工程（智能网联新能源）",c:"工学",ch:"新能源汽车",t:"B",h:4,s:"河北工业大学／天津科技大学／天津理工大学",j:"整车研发、三电、智能网联、车联网",
+  r:"汽车制造+6.3%、车联网产业链+25.3%为12链最快；一汽丰田销售总部、长城汽车在津布局，京津冀汽车联盟企业1000余家。",w:"锁新能源/智能网联/车联网方向，避传统燃油车研发。",city:"西青车联网 · 滨海 · 武清"},
+ {n:"生物医学工程/药学（生物医药千亿）",c:"工学",ch:"生物医药",t:"B",h:3,s:"天津医科大学／天津大学／天津工业大学／天津科技大学",j:"医疗器械、创新药、CXO、医院工程",
+  r:"2025生物医药规模破千亿、医药制造+7.3%、产业链+9.6%，医药材及药品出口+69.7%；化学药+现代中药大单品密集。",w:"医工交叉比纯生物更对产业口；药学需深造。",city:"滨海 · 北辰京津医药谷 · 武清"},
+ {n:"材料科学与工程（半导体/复材/先进材料）",c:"工学",ch:"新材料",t:"B",h:4,s:"天津大学／河北工业大学（材料双一流）／天津工业大学（纺织A+）／南开",j:"半导体材料、航空复材、化工新材料、轻量化",
+  r:"新材料产业链+9.3%；中环领先半导体区熔单晶硅全国第一全球第三，航空碳纤维复材突破国外垄断；天工纺织A+（航天服材料）。",w:"锁半导体/复材/化工新材料方向，避泛材料。",city:"滨海 · 东丽 · 西青"},
+ {n:"自动化/测控技术与仪器（智能制造）",c:"工学",ch:"智能制造",t:"B",h:4,s:"天津大学（测控/精密仪器）／河北工业大学／天津理工大学",j:"控制系统、工业自动化、机器人、仪器",
+  r:"信创硬件、工业机器人、智能产线全需自动化/测控；天大精密仪器全国顶尖，测控为传统王牌。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"天津 · 北辰 · 滨海"},
+ {n:"统计学/数据科学（金融/AI底座）",c:"理学",ch:"金融/AI",t:"B",h:3,s:"南开大学（统计A）／天津财经大学／天津大学",j:"量化、数据分析、商业智能、精算",
+  r:"南开统计学A类、数学A类，金融AI与政务大数据均依赖统计底座；应用软件与信创场景扩张。",w:"数学要求高，是金融与AI通用底座。",city:"南开 · 河西 · 天津"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"天津医科大学（临床双一流）／南开大学／天津中医药大学",j:"三甲/地市医院、科研、公共卫生",
+  r:"天医为独立建制医科211、临床双一流，附属肿瘤医院全国前十，留津三甲比例高；老龄化健康需求长期刚性。",w:"学制长（5+3本博）、分数高；须过执业医师。",city:"和平 · 津南 · 南开"},
+ {n:"飞行器动力工程/交通运输（空管方向）",c:"工学",ch:"航空航天/民航",t:"C",h:4,s:"中国民航大学（民航唯一部属）",j:"空管、机务、飞行器动力、航空维修",
+  r:"中国民航大学为民航唯一部属高校，空管人才国内供给占比约60%，飞行器动力、航空维修校招率极高。",w:"须体检/政审（飞行技术、空管）；就业极稳但赛道窄。",city:"东丽 · 滨海空港"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:3,s:"南开大学（法学）／天津财经大学",j:"公检法、律所、企业法务、合规",
+  r:"南开法学B+，本地公检法律所认可度高；天津为京津冀法务节点。",w:"须过法考，考公优势明显。",city:"南开 · 河西"},
+ {n:"金融学/会计学",c:"管理学",ch:"财经",t:"C",h:3,s:"南开大学（金融/会计）／天津财经大学",j:"银行、证券、租赁、企业财务",
+  r:"河西金融总部+航运金融，东疆租赁资产1.7万亿；南开金融/应用经济强势，天财会计华北知名。",w:"须考证（CPA/CFA）；航运金融是天津特色切口。",city:"河西 · 和平"},
+ {n:"外国语言文学",c:"文学",ch:"港口涉外",t:"C",h:3,s:"天津外国语大学",j:"跨境贸易、外事、航运商务",
+  r:"天津港联通180+国家、跨境电商进出口破650亿；涉外/航运/外贸岗位需求上行。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"河西 · 滨海港城"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"天津师范大学（心理学A-）",j:"中小学教师、教研、心理咨询",
+  r:"天津师范心理学A-、本地中小学教师考编上岸率常年领跑。",w:"公费师范生包分配，考编优势大。",city:"西青 · 天津"},
+ {n:"食品科学与工程",c:"工学",ch:"绿色食品",t:"C",h:3,s:"天津科技大学（食品A-）",j:"食品加工、技术岗、质检、发酵",
+  r:"天津科技食品A-、发酵工程国家重点、盐业黄埔；武清/宁河绿色食品集群。",w:"进名企技术岗而非泛食品。",city:"天津 · 武清 · 宁河"},
+ {n:"中药学/中医学",c:"医学",ch:"现代中药",t:"C",h:3,s:"天津中医药大学（中医/中药双一流）",j:"中药研发、临床、大健康",
+  r:"天中医双一流，针灸学科国际知名；天津现代中药大单品密集、生物医药含现代中药方向。",w:"长学制、需执业；现代中药是天津优势切口。",city:"天津 · 静海"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"天津大学（土木/建筑双一流、老八校）",j:"设计院、施工、基建、智能建造",
+  r:"房地产-0.7%、新建商品房销售面积-13.5%、建筑业-12.9%，土建链深度承压。",w:"仅天大建筑双一流或志在央企设计院/重大基建（港口、轨交）。",city:"天津 · 滨海"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"天津财经大学／南开大学",j:"企业职能管理、行政、咨询",
+  r:"制造业+港口为主，泛管理岗位稀缺、内卷严重；优质岗位多被财经/行业职能岗挤占。",w:"叠加行业+管理（能源/医院/车企/航运管理），否则慎选。",city:"天津 · 河西"}
+];
+
+var CHAINS = [
+ {n:"信创/新一代信息技术（信创第一城）",u:["飞腾CPU","麒麟OS","海光CPU","半导体材料","数据库"],m:["整机服务器（联想/曙光）","网络安全（360）","工业软件","超算（天河）"],d:["政务/金融信创替代","AI大模型","算力服务"],
+  mj:"计算机、软件、集成电路、电子信息、网络安全",
+  f:"京津冀信创集群为国家先进制造业集群（唯一）、规模超2万亿、企业3.3万；天津信创2024年1467.76亿+21%，PK体系市占率80%，麒麟Linux连续14年全国第一；中芯国际8吋晶圆全球最大单体，华海清科抛光机份额24%，中环领先半导体单晶全国第一。"},
+ {n:"绿色石化（工业第一大产业）",u:["油气资源","炼化（渤油津炼）"],m:["烯烃/芳烃","乙烯（南港大乙烯）","合成橡胶","盐化工"],d:["精细化工","电子化学品","先进材料"],
+  mj:"化工、材料、应用化学",
+  f:"石油和天然气开采+3.6%、化学原料和化学制品制造+10.1%；南港工业区为全国一流绿色化工新材料基地；十五五推进减油增化、延链至高端精细及专用化学品。"},
+ {n:"智能网联新能源汽车（车联网+25.3%）",u:["车规芯片","动力电池","线控底盘"],m:["整车制造（一汽丰田/长城）","智能座舱","智驾系统"],d:["充换电","车联网服务","后市场"],
+  mj:"车辆、电气、自动化、计算机、材料",
+  f:"汽车制造+6.3%；天津（西青）国家级车联网先导区，车联网产业链+25.3%为12链最快；京津冀汽车供应链联盟企业1000余家；一汽丰田销售总部落户运营。"},
+ {n:"高端装备/海工装备（工业母机+海洋工程）",u:["数控系统","伺服驱动","关键零部件"],m:["海洋工程装备","轨道交通配件","机器人本体","机床"],d:["产线集成","运维","工程机械"],
+  mj:"机械、自动化、测控、机器人",
+  f:"专用设备制造+14.9%（规上最快之一）；高端装备为三大支柱之一，做强工业母机、海工装备、机器人；天津为国内重要海洋工程装备制造基地。"},
+ {n:"生物医药（2025规模破千亿）",u:["原料药","现代中药","生物制剂"],m:["创新药","高端医疗器械","疫苗"],d:["医疗服务","康养","医药外包CXO"],
+  mj:"生医工、药学、临床、生物",
+  f:"医药制造+7.3%、生物医药产业链+9.6%；2025产业规模破千亿元；化学药+现代中药大单品密集，北辰京津医药谷、滨海、武清共聚；医药材及药品出口+69.7%。"},
+ {n:"航空航天（机箭星站全产业链）",u:["航空复材","发动机短舱","导航测控载荷"],m:["大飞机总装（空客A320/A350）","运载火箭（长征五/七号）","卫星及大型航天器"],d:["航空维修","商业航天","低空经济"],
+  mj:"航空航天、飞行器动力、材料、自动化、通信",
+  f:"空客天津累计交付超760架，航天一院长征火箭33枚，航天五院交付空间站核心舱等7个；2025增加值+9.7%、产值增速10.3%；低空经济联盟成员100余家；2030规模力争500亿。"},
+ {n:"天津港枢纽经济/现代物流（北方国际航运核心区）",u:["多式联运枢纽","无水港"],m:["集装箱/班轮/航运","临港加工（冷链/粮油/汽车）"],d:["跨境电商","供应链金融","航运保险"],
+  mj:"交通运输、物流、国贸、金融、外语",
+  f:"集装箱2403万标箱全球第8、货物5.95亿吨全球第9，航线150条联通180+国家；五大临港产业产值超5000亿；东疆租赁资产1.7万亿、飞机租赁突破2400架；海铁联运158万标箱+15%。"},
+ {n:"新材料（半导体材料+先进化工材料）",u:["半导体区熔单晶硅","碳化硅","先进金属/无机非金属"],m:["光电功能材料","封装材料","轻量化材料"],d:["集成电路","航空航天","新能源"],
+  mj:"材料、冶金、应用化学",
+  f:"新材料产业链+9.3%；中环领先半导体区熔单晶硅片全国第一、全球第三；新材料为重点培育的新兴支柱，服务信创、航天、新能源。"}
+];
+
+var CITIES = [
+ {c:"滨海新区（核心引擎）",i:"信创谷·航空航天（空客/火箭/空间站）·绿色石化（南港）·港口·生物医药",l:"飞腾、麒麟、中科曙光、空客天津、航天一院/五院、渤化、一汽丰田",m:"计算机、电子信息、集成电路、航空航天、化工、交通运输"},
+ {c:"武清区",i:"京津产业新城·智能科技·生物医药·装备制造",l:"特变电工、佛罗伦萨小镇、天大合成生物、清华超滑",m:"计算机、生物、机械、自动化"},
+ {c:"西青区",i:"车联网（国家级先导区）·集成电路·生物医药·智能制造",l:"经纬恒润、中芯国际天津、华苑产业园",m:"车辆、集成电路、电子信息、生物"},
+ {c:"津南区",i:"海河教育园区（高教）·会展·智能制造·轨道交通装备",l:"海河教育园高校群、轨道交通企业",m:"计算机、机械、自动化、师范"},
+ {c:"北辰区",i:"高端装备·京津医药谷·智能制造谷·机器人",l:"天士力、天辰、雅迪、华北集团",m:"机械、生物、医药、自动化"},
+ {c:"宝坻区",i:"京津中关村科技城·动力电池·新能源（氢能）·生物医药",l:"中关村科技城、动力电池企业",m:"新能源、材料、生物、电气"},
+ {c:"东丽区",i:"航空航天（复材/配套）·生物医药·新材料·中国民航大学",l:"爱思达航天、中国民航大学、航空配套",m:"航空航天、材料、生医工"},
+ {c:"南开区/津南海河园",i:"高教科研·文创·电子信息（百利机械/中环电子）",l:"南开大学、天津大学、中环电子",m:"数学/化学/统计、计算机、电子"},
+ {c:"河西区",i:"金融总部·航运服务·设计·数字经济",l:"金融总部、航运集聚区、设计机构",m:"金融、统计、交通运输、设计"},
+ {c:"宁河区",i:"汽车及零部件·航空配套·绿色食品·装备制造",l:"汽车零部件、航空配套企业",m:"车辆、机械、食品"},
+ {c:"静海区",i:"新能源（动力/氢燃料/资源循环）·冶金·装备制造",l:"冶金、资源循环、新能源企业",m:"新能源、材料、电气、机械"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

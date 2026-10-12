@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>河南产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f7f5f1;
+  --card:#ffffff;
+  --ink:#2a2318;
+  --ink-2:#54493a;
+  --ink-3:#857a68;
+  --line:#e6dfd3;
+  --brand:#8a5a1a;
+  --brand-soft:#f3e9db;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(42,35,24,.05),0 4px 16px rgba(42,35,24,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(42,35,24,.06),0 8px 24px rgba(42,35,24,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f2efe9;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f2efe9;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f2efe9;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#faf9f6}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>河南产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年河南统计公报</b> · <b>「7+28+N」链群（占规上工业63.9%、贡献率超70%）</b> · <b>郑南商许超硬材料 / 洛阳现代农机 2个国家先进制造业集群</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">6.66万亿</div><div class="note">增长5.6%，经济大省增速第1</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+8.4%</div><div class="note">高于全国2.5pct、装备+13.6%</div></div>
+  <div class="stat"><div class="lab">新能源汽车</div><div class="val">破75万辆</div><div class="note">增加值+37.6%、出口+253%</div></div>
+  <div class="stat"><div class="lab">人造金刚石</div><div class="val">约占全国八成</div><div class="note">全球95%为中国产、国家集群</div></div>
+  <div class="stat"><div class="lab">进出口</div><div class="val">9356.73亿</div><div class="note">+14.1%、出口+18.0%创新高</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-8.6%</div><div class="note">新开工-21.0%、土建承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：超硬、轴承、车辆、尼龙、食品、种业、电气、算力、临床、法学、郑大、河科大、河工大">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应河南商业航天/通航）、生物制造（对应中原药谷/种业）、半导体装备（对应超硬/集成电路）、储能/氢能（对应新能源）全部对得上河南产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。河南高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>河南有国家集群/万亿产业支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应河南独有赛道（超硬/轴承/种业/食品/临床/财经），分数友好但需选对方向。适合想留豫、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>郑大线及以上</td><td>学校优先 + 专业不将就，锁双一流/国家重点学科</td><td>郑州大学（材料/化学/临床/计算机双一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>河南工业大学（超硬/粮油食品）、河南科技大学（轴承/车辆）、河南财经政法大学（法学/会计）、河南师范大学（师范）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴河南产业链</td><td>华北水利水电（电气/水利）、郑州轻工业（食品/车辆）、河南理工（机械/安全）、中原工学院（电子信息）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>新乡医学院（临床）、河南农大（种业/农学）、河南中医药（药学）、郑州航院（物流/会计）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--ink-2);margin-top:10px"><b>历史组建议：</b>法学/会计（河南财经政法大学）、教育学/师范（河南师范大学）、外国语言文学、种子科学/农学（部分历史组可报）、临床医学（文理兼收少数计划）是历史组友好方向；避开纯理科/工科强校的理科专业。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在河南读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>超硬材料/车辆/机械（轴承）/食品/种业/电气/计算机<br><span style="color:var(--ink-3);font-size:12.5px">（链群硬科技 + 特色刚需）</span></td><td><b style="color:var(--green)">优先留豫</b></td><td>产业+特色校双密集，河工大/河科大/河农大全国独一或特色，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床/法学/师范/药学/会计</td><td><b style="color:var(--green)">留豫或出省</b></td><td>郑大/河师大/财大/新乡医学院在省内认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产 -8.6%、新开工 -21.0%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#8a5a1a;border-left-color:var(--brand);margin-top:14px">
+      <b>河南独有优势：超硬材料国家集群（零的突破）+ 尼龙亚洲第一 + 轴承全国唯一 + 种业（中原农谷）+ 食品2500亿 + 新能源汽车换道超车 + 算力（超聚变6成）。</b>河南高教梯度分明（郑大211/河大双一流双核 + 一众行业特色校），但<b>全省无本土 985</b>；<b>外省/河北考生来豫读「超硬材料·轴承机械·车辆·食品·种业·临床·法学·药学」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理·传统代工不建议来豫；长期须算清「留豫 vs 出走」（常住人口9744万、自然增长率 -2.13‰，人口深度负增长，优质岗位向郑州/洛阳/新乡集中）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>河南靠「超硬材料 + 尼龙 + 新能源汽车 + 轴承装备 + 种业食品 + 算力」六引擎，别被「农业大省/人口大省」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>材料（超硬）、车辆、机械（轴承）、食品、种业、电气、计算机七者覆盖河南最有确定性的岗位，优先冲。</li>
+      <li><b>贴「郑州 + 洛阳 + 新乡 + 平顶山 + 漯河」五极点。</b>郑州（汽车/算力/超硬）、洛阳（轴承/农机/光电）、新乡（种业）、平顶山（尼龙）、漯河（食品）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>河南工业大学（超硬/粮油食品）、河南科技大学（轴承/车辆）、河南财经政法大学（法学/会计）、河南师范大学（师范）、华北水利水电（电气/水利）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>超硬材料是河南最被低估的王牌。</b>全球八成金刚石、国家先进制造业集群、8英寸散热片量产；材料选「超硬方向」是分数洼地金矿，河工大全国唯一本科。</li>
+      <li><b>轴承方向全国独一档。</b>河科大「黄埔军校」、全国唯一本硕博完整体系、培养70%骨干；机械/材料锁轴承，壁垒无对手、分数友好。</li>
+      <li><b>新能源汽车是换道超车的最大增量。</b>郑州比亚迪占全省80%+、出口+253%；车辆/电气/自动化/计算机（智驾）在河南壁垒强，且分数友好。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -8.6%、新开工 -21.0%、建筑业 +0.2%；除非郑大土木双一流或志在央企设计院/重大基建。</li>
+      <li><b>算清「留豫 vs 出走」。</b>河南无本土985、人均GDP偏低（68240元）、人口自然增长率 -2.13‰；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：河南省统计局《2025 年河南省国民经济和社会发展统计公报》（2026-04-16）、河南省发改委《河南省国民经济和社会发展第十五个五年规划纲要》（2026-05-25）、河南省工信厅「7+28+N」链群建设公开材料、河南省政府网经济运行与产业发布、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"材料科学与工程（超硬/新型材料）",c:"工学",ch:"超硬/尼龙",t:"A",h:5,s:"河南工业大学（全国唯一超硬材料本科）／郑州大学（材料双一流）／河南科技大学",j:"超硬材料研发、半导体散热片、尼龙化工、金属/复合材料",
+  r:"郑南商许超硬材料集群为国家先进制造业集群（河南零的突破）、河南产全国八成人造金刚石；尼龙66工业丝全球市占37%、200亿产业集群基金。",w:"锁「超硬/半导体材料/高分子」方向，避泛材料；河工大超硬方向是分数洼地金矿。",city:"郑州 · 许昌 · 商丘 · 平顶山"},
+ {n:"车辆工程（新能源/智能网联）",c:"工学",ch:"新能源汽车",t:"A",h:5,s:"河南科技大学（车辆/轴承）／郑州大学（机械双一流）／郑州轻工业大学",j:"整车研发、三电系统、智能网联、自动驾驶",
+  r:"全省新能源产量破75万辆、增加值+37.6%、出口+253%；郑州比亚迪占全省80%+，宇通全球新能源客车第一。",w:"锁「新能源/智能网联」方向，避传统燃油车；河科大车辆+轴承是性价比第一档。",city:"郑州 · 航空港 · 洛阳"},
+ {n:"机械设计制造及其自动化（轴承方向）",c:"工学",ch:"轴承/重大装备",t:"A",h:5,s:"河南科技大学（轴承王牌）／郑州大学／河南理工大学",j:"精密轴承、工程机械、农机、智能制造",
+  r:"河科大轴承「黄埔军校」、全国唯一本硕博完整体系、培养行业70%+骨干；中信重工/一拖/郑煤机均为龙头。",w:"明确选「轴承/精密制造」方向，这是全国独一档信息差，分数远低于同档外省。",city:"洛阳 · 郑州 · 焦作"},
+ {n:"食品科学与工程",c:"工学",ch:"现代食品",t:"A",h:4,s:"河南工业大学（粮油食品全国最完整学科群）／郑州轻工业大学／河南农业大学",j:"食品加工、技术岗、质检、营养健康",
+  r:"漯河食品总规模超2500亿（全国1/40），双汇/卫龙单品产量全国第一；中原食品实验室14院士。",w:"进名企技术岗/研发而非泛食品；河工大粮油食品全国独一。",city:"漯河 · 郑州"},
+ {n:"种子科学与工程（种业）",c:"农学",ch:"中原农谷种业",t:"A",h:4,s:"河南农业大学（作物学强）／河南科技学院／河南工业大学",j:"育种研发、种子质检、农业技术推广",
+  r:"中原农谷67家省级以上平台、17院士、221新品种、冬小麦供种占全国50%；国家生物育种产业创新中心投用。",w:"结合生物育种/基因编辑前沿，深造路径清晰；属地就业稳。",city:"新乡 · 郑州"},
+ {n:"电气工程及其自动化（电网/汽车三电）",c:"工学",ch:"三电/电网",t:"A",h:4,s:"华北水利水电大学（电气/水利特色）／郑州大学／河南科技大学",j:"电网、电气设备、新能源三电、储能",
+  r:"河南是装备制造大省（装备制造业+13.6%、贡献率44.1%）；电网+新能源三电双需求。",w:"电网方向需提前准备国网考试；行业校性价比高。",city:"郑州 · 洛阳"},
+ {n:"计算机类（算力/电子信息）",c:"工学",ch:"电子信息/算力",t:"A",h:5,s:"郑州大学（计算机国家一流）／河南工业大学／中原工学院（电子信息特色）",j:"软件开发、算力运维、工业软件、智驾算法",
+  r:"超聚变AI服务器国内市场占有率超6成；全省手机产量全国第2、集成电路+71.0%；郑州传感器产业320亿。",w:"工程能力＞文凭；贴合河南「算力+装备」场景比纯互联网更稳。",city:"郑州 · 新乡"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"半导体",t:"B",h:4,s:"郑州大学（集成电路）／河南工业大学／新乡学院",j:"芯片设计、功率半导体、车规芯片",
+  r:"集成电路产量+71.0%、超聚变服务器拉动；郑州/新乡布局封测与设计，河南从「代工」向「芯」爬升。",w:"对数理要求高，深造路径清晰。",city:"郑州 · 新乡"},
+ {n:"化学工程与工艺（尼龙/化工新材料）",c:"工学",ch:"尼龙化工",t:"B",h:4,s:"郑州大学（化工国家重点）／河南工业大学／平顶山学院",j:"尼龙化工、材料合成、精细化工",
+  r:"中国尼龙城产能破400万吨、尼龙66盐亚洲第一；己二腈国产化打破封锁。",w:"选「新能源/尼龙/半导体材料」方向，避传统煤化工。",city:"平顶山 · 焦作"},
+ {n:"自动化/测控技术与仪器",c:"工学",ch:"汽车电子/智能制造",t:"B",h:4,s:"河南科技大学（测控/轴承）／郑州大学／河南理工大学",j:"控制系统、汽车电子、工业自动化、机器人",
+  r:"新能源汽车+37.6%、装备制造业+13.6%；产线自动化与轴承检测全需自动化/测控。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"洛阳 · 郑州"},
+ {n:"软件工程/人工智能",c:"工学",ch:"算力/AI",t:"B",h:4,s:"郑州大学（软件国家一流）／河南工业大学／战略支援部队信息工程大学（军校）",j:"工业软件、AI应用、智驾算法、信创",
+  r:"超聚变服务器全国6成、中原科技城AI训练场（全国第三）；软件与算力是河南「换道领跑」底座。",w:"叠加河南「装备+农业」产业场景更有壁垒。",city:"郑州 · 洛阳"},
+ {n:"生物医学工程",c:"工学",ch:"生物医药",t:"B",h:3,s:"郑州大学（生医工）／新乡医学院／河南科技大学",j:"医疗器械、生物制剂、医工交叉",
+  r:"中原医学科学城整体起势、翔宇医疗脑机接口填补国内空白；老龄化+健康需求长期刚性。",w:"医工交叉比纯生物更对产业口。",city:"郑州 · 新乡 · 安阳"},
+ {n:"交通运输/物流工程（枢纽经济）",c:"工学",ch:"枢纽经济",t:"B",h:3,s:"郑州大学（物流）／河南工业大学／郑州航空工业管理学院",j:"多式联运、供应链、港口/枢纽运营",
+  r:"河南「空陆数海」四条丝路、郑州机场货邮+25.2%、中欧班列1.7万列、周口港上升全国内河主要港口、漯河国家骨干冷链物流基地。",w:"贴「枢纽+供应链」比纯运输更有前景。",city:"郑州 · 周口 · 漯河"},
+ {n:"机器人工程/智能装备（具身智能）",c:"工学",ch:"具身智能",t:"B",h:3,s:"河南科技大学／郑州大学／河南理工大学",j:"工业机器人、人形机器人、智能产线",
+  r:"「十五五」将具身智能列为未来产业之首；中原异构人形机器人训练场（全国第三）、洛阳机器人产业年增45%。",w:"未来产业波动大，需持续学习；贴河南装备底色。",city:"洛阳 · 郑州"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"郑州大学（临床双一流）／新乡医学院／河南科技大学",j:"三甲/地市医院、科研、公共卫生",
+  r:"郑大临床（5+3双一流）、新乡医学院、河科大医科平台强；老龄化+健康需求长期刚性、留豫三甲比例高。",w:"学制长（5+3本博）、分数高。",city:"郑州 · 新乡 · 洛阳"},
+ {n:"法学/会计学",c:"法学",ch:"法律/财经",t:"C",h:4,s:"河南财经政法大学（全省财经政法第一校）",j:"公检法、律所、企业法务、财务审计",
+  r:"财大公检法/律所/国企法务/本地银行认可度高；考公优势明显。",w:"须过法考/考证。",city:"郑州"},
+ {n:"农学/植物保护",c:"农学",ch:"种业周边",t:"C",h:3,s:"河南农业大学（农学强）／河南科技学院",j:"育种、植保、农技推广、海关检疫",
+  r:"中原农谷带动育种/植保全链条；河南是农业大省，农技推广与生物育种岗位稳。",w:"结合生物育种前沿，避纯栽培。",city:"郑州 · 新乡"},
+ {n:"药学（中原药谷）",c:"医学",ch:"生物医药",t:"C",h:3,s:"郑州大学（药学）／河南中医药大学／新乡医学院",j:"药物研发、质检、临床药学",
+  r:"中原医学科学城+翔宇医疗+华兰生物等集聚；医药健康是「十五五」重点。",w:"进研发/注册而非泛药学销售。",city:"郑州 · 新乡"},
+ {n:"教育学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"河南师范大学（师范王牌）／郑州大学",j:"中小学教师、教研、心理咨询",
+  r:"河南师范大学是全省师范龙头、公费师范生考编优势；人口大省教师需求基数大。",w:"公费师范生包分配，考编优势大。",city:"新乡 · 郑州"},
+ {n:"统计学/数据科学",c:"理学",ch:"AI/金融底座",t:"C",h:3,s:"郑州大学（统计）／河南财经政法大学／河南工业大学",j:"量化、数据分析、商业智能",
+  r:"金融、AI、政务大数据均依赖统计底座；超聚变/算力产业带动数据岗。",w:"数学要求高，是金融与AI通用底座。",city:"郑州"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"郑州大学（土木双一流）",j:"设计院、施工、基建、智能建造",
+  r:"房地产投资-8.6%、新开工-21.0%、建筑业仅+0.2%，土建链深度承压。",w:"仅郑大土木双一流或志在央企设计院/重大基建；否则慎选。",city:"郑州"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"河南财经政法大学／郑州大学",j:"企业职能管理、行政、咨询",
+  r:"制造业为主，泛管理岗位稀缺、内卷严重。",w:"叠加「行业+管理」（能源/医院/车企管理）或走财经路径，否则慎选。",city:"郑州"}
+];
+
+var CHAINS = [
+ {n:"超硬材料（金刚石）— 河南全国独一份硬科技",u:["金刚石单晶/微粉","六面顶压机","CVD设备"],m:["培育钻石","功能金刚石","超硬刀具/砂轮"],d:["半导体散热片","光学窗口","珠宝消费"],
+  mj:"材料（超硬方向）、机械（超硬制品）、计算机（工业软件）",
+  f:"中国人造金刚石占全球95%、河南产约八成；郑南商许集群2024年12月入选国家先进制造业集群（河南零的突破）；许昌8英寸金刚石热沉片量产、通过华为/中芯国际验证；郑州122家链上企业、产业规模超150亿。"},
+ {n:"尼龙新材料（平顶山中国尼龙城）",u:["煤/焦/氢/氨","己二腈/己内酰胺"],m:["尼龙66盐/切片","工业丝/帘子布"],d:["轮胎骨架","工程塑料","汽车部件"],
+  mj:"化学工程与工艺、材料（高分子）、化工与制药",
+  f:"尼龙66工业丝全球市占率37%（世界第一）、尼龙66盐/切片产能亚洲第一；相关产能破400万吨、产业规模破1000亿；全球最完整碳基尼龙产业链；己二腈国产化打破封锁。"},
+ {n:"新能源汽车（郑州/航空港为核）",u:["锂/镍/正负极/电解液（多氟多等）"],m:["动力电池（宁德时代中州时代）","整车（比亚迪/宇通/奇瑞）"],d:["充换电","智能网联","后市场"],
+  mj:"车辆工程、电气工程、自动化、计算机（智驾）、材料（轻量化）",
+  f:"2025全省新能源产量破75万辆、产业增加值+37.6%、出口额308.7亿（+253%）；郑州比亚迪累计下线超100万辆、产值破1700亿、占全省80%+；7家整车、600+规上零部件企业；洛阳LYC新能源轮毂轴承市占率全国第一。"},
+ {n:"轴承与重大装备（洛阳「工业关节」）",u:["轴承钢","滚动体"],m:["精密轴承（高铁/风电/航天/机器人轴承）"],d:["工程机械","农机","汽车","军工"],
+  mj:"机械（轴承方向）、材料、测控",
+  f:"河科大轴承「黄埔军校」、全国唯一本硕博完整体系、培养行业70%+骨干；洛阳LYC+一拖+中信重工「一厂一所一校一院」；中信重工18500吨油压机、郑煤机液压支架占全国60%煤矿改造市场。"},
+ {n:"种业与现代食品（中原农谷+漯河）",u:["种质资源/育种"],m:["种子","粮食加工","肉制品"],d:["商超","餐饮","冷链"],
+  mj:"种子科学与工程、农学、食品科学与工程、生物工程",
+  f:"中原农谷67家省级以上平台、17院士、221新品种、冬小麦供种占全国50%；漯河食品总规模超2500亿（占全省1/4、全国1/40），双汇（全球最大猪肉加工）、卫龙，单品产量全国第一。"},
+ {n:"电子信息与算力（郑州超聚变为核）",u:["芯片/服务器/传感器"],m:["先进计算","智能终端","新型显示"],d:["软件","信创","AI应用"],
+  mj:"计算机类、电子信息、集成电路/微电子、软件工程",
+  f:"超聚变AI服务器国内市场占有率超6成；2024全省手机产量1.3亿部、居全国第2；郑州高新区传感器企业超2900家、产业规模320亿；集成电路产量+71.0%、锂离子电池+53.8%。"},
+ {n:"生物医药与健康（中原医学科学城）",u:["原料药","生物技术"],m:["创新药","医疗器械（翔宇脑机接口）"],d:["医疗服务","康养"],
+  mj:"生物医学工程、药学、临床医学、生物科学",
+  f:"中原医学科学城（中原药谷）整体起势；翔宇医疗脑机接口信号准确率超92%、填补国内空白；全省规上工业企业研发活动覆盖率77.76%。"},
+ {n:"现代农机装备（洛阳国家集群）",u:["发动机","液压件"],m:["拖拉机","收获机械","盾构装备"],d:["农业服务","出口"],
+  mj:"机械、车辆（农机）、自动化、农业工程",
+  f:"洛阳现代农机装备集群入选国家先进制造业集群；一拖「东方红」、中信重工盾构机；河南是农业大省，农机本土需求+出口双旺。"}
+];
+
+var CITIES = [
+ {c:"郑州（国家中心城市）",i:"新能源汽车、电子信息、超硬材料、算力（超聚变）",l:"比亚迪、宇通、超聚变、三磨所、中铁",m:"车辆、电子信息、材料、计算机、自动化"},
+ {c:"郑州航空港区",i:"新能源汽车城（千亿级集群）",l:"郑州比亚迪、佛吉亚、众友益新",m:"车辆、机械、电气、汽车电子"},
+ {c:"洛阳（副中心）",i:"现代农机装备（国家集群）、轴承、光电、新能源电池",l:"洛轴（LYC）、一拖、中信重工、中航光电、宁德时代中州时代",m:"机械（轴承）、电气、光电、材料"},
+ {c:"南阳（副中心）",i:"防爆电机、新材料、中医药（仲景）",l:"卧龙电气、中南钻石、宛西制药",m:"电气、材料、中药学"},
+ {c:"新乡",i:"中原农谷（种业）、振动/起重（长垣）、电池",l:"先正达、隆平高科、卫华集团",m:"种子科学、农学、机械"},
+ {c:"许昌",i:"超硬材料（培育钻石）、电力装备、发制品",l:"黄河旋风、许继电气",m:"材料（超硬）、电气、机械"},
+ {c:"平顶山",i:"中国尼龙城（尼龙新材料）",l:"神马股份、平煤神马",m:"化工、材料（高分子）"},
+ {c:"漯河",i:"现代食品（2500亿，全国1/40）",l:"双汇、卫龙、中大恒源",m:"食品科学与工程、生物工程"},
+ {c:"商丘",i:"超硬材料微粉（柘城）、制冷",l:"力量钻石、冰熊",m:"材料（超硬）、机械"},
+ {c:"安阳",i:"钢铁、康复设备、通航",l:"安钢、翔宇医疗",m:"冶金、材料、生物医学工程"},
+ {c:"焦作",i:"新材料（多氟多）、电池材料、铝基",l:"多氟多、龙蟒佰利",m:"化工、材料、电气"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

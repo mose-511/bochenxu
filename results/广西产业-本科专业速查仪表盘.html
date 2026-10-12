@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>广西产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#0d4f7a;
+  --brand-soft:#e6eef5;
+  --accent:#1f8a8a;
+  --accent-soft:#e6f4f4;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>广西产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年广西统计公报</b> · <b>制造业十大现代化支柱产业（1个万亿·有色）</b> · <b>西部陆海新通道＋平陆运河</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">2.97万亿</div><div class="note">增长5.1%，全国第17位</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+7.7%</div><div class="note">高技术制造+23.7%、装备制造+16.5%</div></div>
+  <div class="stat"><div class="lab">新能源汽车</div><div class="val">全国第7</div><div class="note">五菱年销破100万辆、产值超千亿</div></div>
+  <div class="stat"><div class="lab">有色金属</div><div class="val">4000亿级</div><div class="note">全球最大锰基新材料基地</div></div>
+  <div class="stat"><div class="lab">北部湾港</div><div class="val">1006万标箱</div><div class="note">+11.6%，货物3.58亿吨</div></div>
+  <div class="stat"><div class="lab">平陆运河</div><div class="val">2026.9通航</div><div class="note">缩短560公里、年省运费超50亿</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="农学">农学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：车辆、汽车、五菱、电池、有色、铝、糖、东盟、通道、柳州、桂林、桂电、西大、临床、法学">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应柳州五菱柳机无人机发动机）、生物制造（对应广西生物医药）、半导体装备（对应桂电微电子）、储能/氢能（对应新能源汽车及电池）全部对得上广西产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。广西高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>广西有万亿/千亿产业或国家通道支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但体量仍小、波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应广西独有赛道（糖业/东盟语种/临床/师范/生医工），分数友好但需选对方向。适合想留桂、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>广西大学及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>广西大学（土木双一流、电气/机械/计算机/材料国家一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>桂林电子科技（电子/计算机/通信）、广西医科大（临床）、广西师大（师范）、广西民族（东盟语种/法学）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴广西产业链</td><td>广西科技大学（车辆/冶金/电气，柳州在地）、桂林理工（材料/环境）、北部湾大学（海洋/食品）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的市属校，锁特色专业</td><td>南宁师大（师范）、广西财经类（会计）、广西民族（语种/法学）、广西科技（轻工/食品）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在广西读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>车辆/电气/材料冶金/计算机/电子/自动化/机械<br><span style="color:var(--ink-3);font-size:12.5px">（汽车+有色+AI 硬科技）</span></td><td><b style="color:var(--green)">优先留桂</b></td><td>产业+高校双密集，西大/桂电/广西科大全国特色独一，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床/师范/东盟语种/法学/食品/生医工</td><td><b style="color:var(--green)">留桂或出省</b></td><td>广西医科大/广西师大/广西民族在西南与东盟圈认可度高，冲名校财经可出省</td></tr>
+        <tr><td>土木/泛管理/传统资源初加工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产承压、生产性服务业滞后，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#0d4f7a;border-left-color:var(--brand);margin-top:14px">
+      <b>广西独有优势：中国—东盟唯一陆海相连门户 + 平陆运河 2026 通航 + 北部湾港破千万标箱 + 五菱新能源全国第 7 + 有色 4000 亿级 + 南 A 中心 AI 高地。</b>广西高教梯度（广西大学 211 双一流单核 + 桂电/广西科大/桂理工/广西医科/广西师大/广西民族一众行业特色校），但<b>全省仅 1 所双一流</b>；<b>外省/河北考生来桂读「车辆·电气·材料冶金·计算机·电子·自动化·临床·东盟语种·师范」性价比高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理·传统初加工不建议来桂；长期须算清「留桂 vs 出走」（常住人口净减 24 万、R&D 强度长期低于 0.9%、外出农民工 920 万）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>广西靠「汽车 + 有色金属 + 通道开放 + 东盟 AI」四引擎，别被「山水/糖罐子」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>车辆、电气、材料冶金、计算机、电子、自动化六者覆盖广西最有确定性的岗位，优先冲。</li>
+      <li><b>贴「柳州 + 南宁 + 北部湾」三极。</b>柳州（汽车/机械）、南宁（AI/铝/通道）、北部湾（钢铁/石化/港口）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>桂电（电子/计算机/微电子）、广西科大（车辆/冶金，柳州在地）、广西医科大（临床）、广西民族（东盟语种/法学）、桂理工（材料/环境）——专业全国特色独一、分数远低于同档综合校。</li>
+      <li><b>新能源汽车是广西最被低估的王牌。</b>五菱新能源年销破 100 万、宏光 MINIEV 累计 185 万辆全国纯电第一；车辆/电气/自动化/计算机（智驾）在广西壁垒强、且分数友好。</li>
+      <li><b>有色金属是「隐形的万亿家底」。</b>4000 亿级、全球最大锰基新材料、南丹关键金属集群；材料/冶金需求刚性，但须锁「电池材料/高纯金属/轻量化」上行方向。</li>
+      <li><b>通道经济（平陆运河+北部湾港）是 2026 后的增量金矿。</b>集装箱破千万标箱、海铁联运破万列、运河通航降本超 50 亿；交通运输/物流/国贸/供应链岗位将放量，且面向东盟有语种叠加优势。</li>
+      <li><b>东盟语种 + 国贸/AI 是「独一份」赛道。</b>广西唯一陆海连东盟，越南语/泰语/老挝语叠加贸易或算法，是外省考生复制不了的地缘红利。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/东盟法务/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>算清「留桂 vs 出走」。</b>常住人口净减 24 万、R&D 强度长期低于 0.9%、外出农民工 920 万，长期人才外流压力；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：广西统计局、国家统计局广西调查总队《2025 年广西国民经济和社会发展统计公报》（2026-04-09）、自治区政府网经济运行解读、自治区工信厅补链强链延链访谈、2026 年自治区政府工作报告、平陆运河/北部湾港公开数据、柳州市政府/人民网广西汽车产业报道、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"车辆工程（智能网联新能源）",c:"工学",ch:"新能源汽车及电池",t:"A",h:5,s:"广西大学（机械/车辆、部区合建）／广西科技大学（汽车柳州在地）／桂林电子科技",j:"整车研发、三电系统、智能网联、自动驾驶、出口东盟",
+  r:"上汽通用五菱2025新能源年销破100万辆、产值再超1000亿；广西新能源产量全国第7；汽车用锂离子动力电池+54.5%。",w:"锁新能源/智能网联方向，避传统燃油车；广西科大贴汽车链最紧、性价比高。",city:"柳州 · 南宁"},
+ {n:"电气工程及其自动化（电网/三电/能源）",c:"工学",ch:"三电/电网/能源",t:"A",h:4,s:"广西大学（电气国家一流）／广西科技大学／桂林电子科技",j:"电网、电气设备、新能源三电、储能、能源央企",
+  r:"西大电气国家一流、电网校招第一梯队；防城港核电/海上风电、柳钢用电、汽车三电全需电气。",w:"电网方向需提前准备国网考试；西大电气回报稳。",city:"南宁 · 柳州 · 防城港"},
+ {n:"材料科学与工程/冶金工程（有色+先进材料）",c:"工学",ch:"有色金属/先进钢铁",t:"A",h:4,s:"广西大学（材料ESI前1‰）／广西科技大学（冶金）／桂林理工（材料）",j:"铝加工、高纯金属、电池材料、钢铁品种钢、半导体材料",
+  r:"有色4000亿级、2030目标万亿；全球最大锰基新材料基地；氧化铝+15.8%、钢材+16.5%。",w:"锁有色/电池材料/轻量化方向，避泛材料；冶金偏工厂但需求刚性。",city:"百色 · 防城港 · 柳州"},
+ {n:"计算机类（软件/人工智能/智驾）",c:"工学",ch:"AI/智驾",t:"A",h:5,s:"桂林电子科技（计算机A、软件强）／广西大学（计算机国家一流）／广西科技",j:"软件开发、工业软件、智驾算法、面向东盟的AI应用",
+  r:"南宁南A中心签约AI项目208个、工业AI核心产值破800亿；信息传输软件+10.7%；高技术制造+23.7%。",w:"工程能力大于文凭；桂电计算机在信息产业校招极强、面向东盟有语言叠加。",city:"南宁 · 桂林"},
+ {n:"电子信息类（通信/微电子/光电）",c:"工学",ch:"新一代信息技术",t:"A",h:4,s:"桂林电子科技（通信/微电子/光电王牌）／广西大学（电子信息国家一流）／桂林理工",j:"通信、半导体封测、智能终端、光电",
+  r:"桂电5个学科ESI前1%、电子国家一流；北海电子、钦州智能终端；电子元件+19.1%。",w:"本科多去制造/封测，深造（微电子/集成电路）更有利；桂电是广西电子第一校。",city:"桂林 · 北海 · 南宁"},
+ {n:"自动化/测控技术与仪器（汽车电子/智能制造）",c:"工学",ch:"汽车电子/智能制造",t:"A",h:4,s:"广西大学（自动化国家一流）／桂林电子科技（测控）／广西科技（机械电子）",j:"控制系统、汽车电子、工业自动化、机器人",
+  r:"柳工电动工程机械破万台、五菱岛式智造、工业智能体涌现；装备制造占规上17.6%、贡献34.3%。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"柳州 · 桂林"},
+ {n:"机械设计制造及其自动化（工程机械/汽车装备）",c:"工学",ch:"机械及高端装备制造",t:"B",h:4,s:"广西大学（机械国家一流）／广西科技大学／桂林理工",j:"工程机械、汽车零部件、高端装备",
+  r:"柳工电动工程机械累计破万台、玉柴发动机+26.2%；机械为2000亿级产业。",w:"锁工程机械/新能源装备方向，避泛机加工。",city:"柳州 · 玉林"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"半导体",t:"B",h:4,s:"桂林电子科技（微电子强）／广西大学（集成电路）／桂林理工",j:"芯片设计、功率半导体、车规芯片",
+  r:"桂电微电子国家一流、电子元件+19.1%；南宁/桂林布局芯片设计。",w:"对数理要求高，深造路径清晰。",city:"桂林 · 南宁"},
+ {n:"人工智能（面向东盟AI高地）",c:"工学",ch:"AI+制造",t:"B",h:3,s:"广西大学（人工智能）／桂林电子科技／南宁师大",j:"工业智能体、东盟语料/算法、智驾",
+  r:"南A中心获批、工业AI核心产值破800亿；北上广研发+广西集成+东盟应用；服务机器人+23.0%。",w:"新设专业多、课程尚不成熟，须叠加工程能力。",city:"南宁 · 桂林"},
+ {n:"交通运输/物流工程（西部陆海新通道/平陆运河）",c:"工学",ch:"通道经济",t:"B",h:3,s:"广西大学（交通运输/物流）／桂林电子科技（交通工程）／南宁师大",j:"多式联运、供应链、港口/枢纽运营、跨境物流",
+  r:"北部湾港集装箱破千万标箱+11.6%、海铁联运破万列；平陆运河2026.9通航、年省运费超50亿。",w:"贴通道+供应链金融+东盟比纯运输更有前景。",city:"钦州 · 北海 · 南宁"},
+ {n:"化学工程与工艺（绿色化工/石化）",c:"工学",ch:"绿色化工",t:"B",h:3,s:"广西大学（化工国家一流）／桂林理工（化工/环境）／广西民族",j:"炼化、化工新材料、精细化工",
+  r:"钦州中石油炼化、华谊、北部湾化工新材料集群；石化化工2000亿级、2030目标4000亿。",w:"选新能源/半导体材料方向，避传统煤化工；北海/钦州临港就业。",city:"钦州 · 北海"},
+ {n:"生物医学工程/药学（生物医药）",c:"医学",ch:"生物医药",t:"B",h:3,s:"广西医科大学（药学/临床）／桂林（生医工）／广西大学",j:"医疗器械、生物制剂、医工交叉",
+  r:"生物医药为2030超千亿产业、桂林集聚；广西医科大平台强。",w:"医工交叉比纯生物更对产业口。",city:"桂林 · 南宁"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"广西医科大学（临床强、广西医科龙头）／桂林医学院／广西大学",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化+健康需求长期刚性；广西医科大附院平台强、留桂三甲比例高。",w:"学制长（5+3本博）、分数高。",city:"南宁 · 桂林"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:3,s:"广西民族大学（法学特色）／广西大学（法学国家一流）",j:"公检法、律所、企业法务、合规",
+  r:"广西民族法学（民族/东盟法治）、西大法学国家一流；面向东盟跨境法务需求上行。",w:"须过法考，考公优势明显。",city:"南宁 · 桂林"},
+ {n:"食品科学与工程（糖业/制糖/加工）",c:"工学",ch:"糖业/食品",t:"C",h:3,s:"广西大学（食品国家一流、制糖方向）／广西科技（食品/轻工）／北部湾大学",j:"制糖/食品加工、技术岗、质检",
+  r:"全国每3勺糖约2勺来自广西、连续33榨季第一；水果连续8年全国第一；机制纸+37.2%。",w:"进名企技术岗而非泛食品；制糖是广西独有刚需。",city:"南宁 · 柳州 · 崇左"},
+ {n:"外国语言文学（东盟小语种：越南语/泰语）",c:"文学",ch:"跨境/东盟",t:"C",h:3,s:"广西民族大学（东南亚语种王牌）／广西大学（越南语/泰语国家一流）",j:"跨境贸易、外事、涉外语料/AI、东盟法务",
+  r:"广西唯一陆海连东盟，高校东盟语种数量全国前列；中国—东盟AI/贸易合作需求上行。",w:"须叠加贸易/国贸/法律/AI，避纯语言内卷。",city:"南宁 · 崇左"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"广西师范大学（教育学/心理学强）／南宁师范大学／广西大学",j:"中小学教师、教研、心理咨询",
+  r:"广西师大教师教育领头羊、公费师范生考编优势；广西基础教育师资刚需。",w:"公费师范生包分配，考编优势大。",city:"桂林 · 南宁"},
+ {n:"会计学/财务管理",c:"管理学",ch:"财经",t:"C",h:3,s:"广西大学（会计国家一流）／桂林电子科技（会计）／广西财经类",j:"企业财务、审计、税务",
+  r:"西大会计国家一流、桂电会计强；本地银行/商贸认可度高。",w:"须考证（CPA等）。",city:"南宁 · 桂林"},
+ {n:"环境科学/生态学（有色金属环保/铝）",c:"理学",ch:"有色环保",t:"C",h:3,s:"桂林理工（环境/地质强）／广西大学（生态学B-）／广西民族",j:"环保工程、资源循环、生态修复",
+  r:"广西有色金属大省，涉重金属污染防治、赤泥/尾矿综合利用需求刚性。",w:"政策驱动型岗位，稳定性好但起薪中等。",city:"桂林 · 百色"},
+ {n:"农业/林业（甘蔗/林木/农学）",c:"农学",ch:"农林压舱",t:"C",h:3,s:"广西大学（农学/林学国家重点）／广西科技（林业）／北部湾大学",j:"农技、林产加工、种业、智慧农业",
+  r:"人工林面积全国第一、林草产业全国率先破万亿、糖料蔗/水果全国第一。",w:"智慧农业/林产加工比传统农学更有产业口。",city:"南宁 · 百色 · 玉林"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"广西大学（土木双一流、山地/岩土）／桂林理工",j:"设计院、施工、基建、智能建造",
+  r:"房地产等领域投资明显承压（2026政府工作报告）；传统土建就业收缩。",w:"仅西大土木双一流或志在央企设计院/平陆运河重大基建。",city:"南宁 · 柳州"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"广西大学／桂林电子科技",j:"企业职能管理、行政、咨询",
+  r:"制造业为主、生产性服务业滞后，泛管理岗位稀缺、内卷严重。",w:"叠加行业+管理（能源/医院/车企管理），否则慎选。",city:"南宁"}
+];
+
+var CHAINS = [
+ {n:"新能源汽车及电池（柳州/南宁，第一成长引擎）",u:["锂/镍/锰资源（锰基新材料全球最大）","电池材料（三元前驱体）"],m:["动力电池（弗迪/国轩/赛克瑞浦）","整车制造（五菱/东风柳汽）","智能座舱"],d:["充换电","智能网联","出口东盟"],
+  mj:"车辆、电气、自动化、计算机、材料",
+  f:"上汽通用五菱2025新能源年销破100万辆、产值再超1000亿；宏光MINIEV累计185万辆全国纯电第一；柳州汽车年出口迈过30万辆；广西新能源产量全国第7；汽车用锂离子动力电池+54.5%。"},
+ {n:"有色金属及关键金属材料（百色铝/河池稀有金属/崇左铜锰）",u:["铝土矿","锡锑铟镓锗稀土"],m:["氧化铝/电解铝","高纯金属（4N级高纯铝）","合金材料"],d:["航空航天部件","半导体芯片","高端铝合金轮毂","电池材料"],
+  mj:"冶金、材料、化学、资源循环",
+  f:"全区1个4000亿级产业；氧化铝+15.8%；全球最大锰基新材料基地；南丹关键金属综合试验区争创国家集群；2030目标万亿。"},
+ {n:"先进钢铁材料（防城港/柳钢）",u:["铁矿","焦炭"],m:["粗钢","品种钢（柳钢品种钢比例45.3%）"],d:["汽车用钢","船舶及海洋用钢","风电/工程机械用钢","不锈钢"],
+  mj:"冶金、材料、机械、电气",
+  f:"钢材+16.5%；防城港钢铁基地持续放量；先进钢铁材料为2030年2个5千亿级产业之一。"},
+ {n:"绿色化工/石化（钦州/北海）",u:["原油","三烯三苯","合成氨/烧碱"],m:["炼化","化工新材料","专用化学品"],d:["精细化工","新能源材料","橡塑"],
+  mj:"化工、材料、环境",
+  f:"钦州中石油炼化、华谊；北部湾化工新材料集群为自治区先进制造业集群；石化化工2000亿级、2030目标4000亿。"},
+ {n:"人工智能及新一代信息技术（南宁/桂林/柳州）",u:["电子元器件","半导体","面板玻璃"],m:["智能终端","新型显示","通信设备","工业智能体"],d:["软件","面向东盟的AI应用","算力服务"],
+  mj:"计算机、电子信息、微电子、人工智能、软件",
+  f:"桂电电子/计算机王牌；南宁南A中心签约AI项目208个、工业AI核心产值破800亿；高技术制造+23.7%；服务机器人+23.0%、电子元件+19.1%。"},
+ {n:"机械及高端装备制造（柳工/玉柴/柳州）",u:["数控系统","发动机（玉柴+26.2%）"],m:["工程机械（柳工电动装载机）","内燃机","汽车零部件"],d:["后市场","出口"],
+  mj:"机械、车辆、自动化、测控",
+  f:"机械2000亿级；柳工首台矿山电动无人装载机交付、电动工程机械累计破万台；发动机+26.2%。"},
+ {n:"食品加工/糖业/林产（全区压舱）",u:["甘蔗","水果","林木","畜禽"],m:["制糖","食品加工","造纸（太阳纸业）","林板"],d:["商超","电商","出口"],
+  mj:"食品、轻工（制糖/造纸）、林业、生物工程",
+  f:"食糖连续33榨季全国第一（全国每3勺糖约2勺来自广西）；水果连续8年全国第一；人工林面积全国第一；林草产业全国率先破万亿；机制纸+37.2%。"},
+ {n:"西部陆海新通道/平陆运河（北部湾港/钦州）",u:["多式联运枢纽","江海联运泊位"],m:["港口","班列","航运"],d:["跨境贸易","供应链","中国—东盟产业合作区"],
+  mj:"交通运输、物流、国贸、外语（东盟语种）",
+  f:"北部湾港集装箱1006.26万标箱+11.6%、货物3.58亿吨+9.1%、通达100多国200多港、海铁联运破万列；平陆运河2026.9通航（缩短560公里、年省运费超50亿）；中马钦州产业园外资+728.2%。"}
+];
+
+var CITIES = [
+ {c:"南宁（首府/枢纽）",i:"新能源汽车及零部件、电子信息、化工新材料、铝精深加工、人工智能（南A中心）、跨境金融与贸易",l:"弗迪电池、南南铝、瑞声科技、东盟AI企业",m:"车辆、电子信息、计算机、AI、材料、国贸、金融"},
+ {c:"柳州（最大工业城）",i:"汽车（上汽通用五菱/东风柳汽/广西汽车集团）、钢铁（柳钢）、工程机械（柳工）、特色食品（螺蛳粉）",l:"上汽通用五菱、东风柳汽、柳钢、柳工",m:"车辆、机械、电气、自动化、材料、食品"},
+ {c:"桂林",i:"电子信息（桂电辐射）、装备制造、生物医药、生态食品、文旅",l:"桂林智神、星辰科技、生物医药企业、旅企",m:"电子信息、计算机、生医工、药学、设计"},
+ {c:"北海",i:"绿色化工（中石化）、电子信息、光伏、新材料、高端造纸（太阳纸业）、能源",l:"中石化北海炼化、太阳纸业、惠科",m:"化工、电子、材料、能源、轻工"},
+ {c:"防城港",i:"钢铁（防城港钢铁基地）、有色金属、绿色新材料、粮油加工、核电/海上风电",l:"柳钢防城港基地、盛隆冶金、白龙核电",m:"冶金、材料、电气、能源、化工"},
+ {c:"钦州",i:"石化（中石油炼化）、化工新材料、装备制造、平陆运河起点（陆屋）、新能源",l:"中石油钦州炼化、中伟新材料、华谊",m:"化工、石化、机械、物流、能源"},
+ {c:"玉林",i:"先进装备制造（玉柴）、新材料、临港产业（龙潭/柳钢）、大健康",l:"玉柴机器、柳钢玉林、银亿",m:"机械、车辆、材料、电气"},
+ {c:"百色",i:"生态铝（百色生态铝）、林业、新能源、新材料",l:"百色铝产业基地、电解铝企业",m:"冶金、材料、化工、林业"},
+ {c:"梧州",i:"再生资源、冶金机械、医药食品、电子信息、光伏",l:"再生金属、不锈钢企业",m:"冶金、机械、电子、药学"},
+ {c:"贵港",i:"汽车、机械装备制造、高端绿色家居、电动自行车",l:"电动车、家居制造企业",m:"机械、车辆、材料、轻工"},
+ {c:"崇左",i:"铜锰稀土新材料、糖及食品加工、高端家居、边境贸易",l:"铜锰新材料、糖企、口岸",m:"材料、化工、食品、国贸"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

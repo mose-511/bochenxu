@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山西产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3ece6;
+  --card:#ffffff;
+  --ink:#23201c;
+  --ink-2:#4f4942;
+  --ink-3:#857c72;
+  --line:#e4d9cf;
+  --brand:#8a4b2a;
+  --brand-soft:#f3ece6;
+  --accent:#2a7d6b;
+  --accent-soft:#e6f1ee;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(35,32,28,.05),0 4px 16px rgba(35,32,28,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(35,32,28,.06),0 8px 24px rgba(35,32,28,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>山西产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年山西统计公报</b> · <b>2个五千亿级集群（新材料/装备制造）</b> · <b>2条千亿级产业链（新型煤化工/非常规天然气）</b> · <b>16条省级重点产业链</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">2.55万亿</div><div class="note">增长4.0%，全国第21</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+4.9%</div><div class="note">新能源+25.3%、新材料+6.2%</div></div>
+  <div class="stat"><div class="lab">原煤产量</div><div class="val">13.09亿吨</div><div class="note">煤炭先进产能占比84%</div></div>
+  <div class="stat"><div class="lab">清洁能源装机</div><div class="val">55.1%</div><div class="note">发电量+24.2%，绿电外送</div></div>
+  <div class="stat"><div class="lab">旅游总花费</div><div class="val">破5000亿</div><div class="note">文旅占GDP约5%，国保第一</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-9.9%</div><div class="note">土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="历史学">历史学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="经济学">经济学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：化工、煤化工、材料、特钢、机械、煤机、电气、采矿、能源、计算机、电子、半导体、LED、光电、新能源、临床、文博、考古、旅游、法学、山财、山大、太理、中北、山医、太科">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应山西通航/低空经济布局）、生物制造（对应现代医药）、半导体装备（对应长治光电/太原半导体）、储能科学与工程/氢能（对应风光储）全部对得上山西产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。山西高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>太原理工/211线及以上</td><td>学校优先 + 专业不将就，锁双一流/国家重点学科</td><td>太原理工（化工/材料/机械/矿业/电气双一流或强项）、山西大学（物理/哲学/计算机/文博双一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>中北大学（兵器/仪器/机械）、山西医科（临床）、山西财经（经管）、太原科技（机械/重装）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴山西产业链</td><td>山西大学（非双一流专业）、中北、太原科大、山西农大（农学/兽医）</td></tr>
+        <tr><td><b>中低分及历史组</b></td><td>优先有行业背景的省属校，锁特色专业</td><td>山西大学（文博/旅游/法学/外语/师范）、山西财经（会计）、山西中医药、山西师范（临汾）</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#8a4b2a;border-left-color:var(--brand);margin-top:14px">
+      <b>历史组建议：</b>文物与博物馆学/考古（山西大学）、旅游管理（山西大学）、法学（山西大学/山财）、外国语言文学（山西大学）、会计/财经（山财）、设计学（山西大学）是历史组友好方向；避开纯理科/工科强校的理科专业。注意山西大学考古/文博对选科可能要求历史/不限，须查当年章程。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、在山西读，还是出省读？（含外省/河北考生判断）</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>化工/材料/机械/电气/采矿/能源/计算机/电子/自动化<br><span style="color:var(--ink-3);font-size:12.5px">（能源+材料+装备+半导体硬科技）</span></td><td><b style="color:var(--green)">优先留晋</b></td><td>产业+高校双密集，太原理工/中北/山西大学行业壁垒在华北极硬，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>临床/文博/旅游/法学/财经/农学/设计/外语</td><td><b style="color:var(--green)">留晋或出省</b></td><td>山医/山大/山财/山农在山西及周边认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/国贸/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产 -9.9%、外贸 -21.2%、泛管理内卷，承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#8a4b2a;border-left-color:var(--brand);margin-top:14px">
+      <b>山西独有优势：能源革命综合改革试点（全国唯一全省域）+ 非煤战新高增（新能源+25.3%、计算机设备+1.2倍）+ 国保单位全国第一的文博古建刚需 + 行业校壁垒 + 分数洼地。</b>山西高教梯度偏弱（仅 2 所双一流、无 985），但<b>外省/河北考生来晋读「化工·材料·机械·电气·采矿·能源·计算机·电子·文博·临床」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理·国贸·传统代工不建议来晋。长期须算清「留晋 vs 出走」：常住人口净减 21.95 万、自然增长率 -3.32‰、近十年净流出超 180 万，选专业时务必规划深造路径与就业地。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>四、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>山西靠「能源革命 + 非煤战新（新材料/装备/半导体/新能源）+ 文博文旅」三主线，别被「挖煤/黄土」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>化工、材料、机械、电气、智能采矿、能源动力六者覆盖山西最有确定性的岗位，优先冲。</li>
+      <li><b>贴「太原 + 行业龙头」双核心。</b>太钢（特钢）、太重（煤机/重装）、晋能（煤电）、长治光电、晋中/长治新能源汽车贡献最密集产业与院校重叠；大同/忻州/吕梁/晋城是特色极点。</li>
+      <li><b>行业特色校是最大信息差。</b>太原理工（化工/采矿/机械/材料）、中北（兵器/仪器/机械）、山医（临床）、山财（经管）、山农（农学）、山大（文博/物理/计算机）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>文博古建是被低估的金矿。</b>国保全国第一、3 处世界遗产、文保人才断层，山西大学考古/文博在古建赛道是「黄埔」，且《黑神话》持续带火古建游，冷门但刚需。</li>
+      <li><b>非煤战新要从「增速」看到「岗位」。</b>新能源+25.3%、计算机设备+1.2倍、工业机器人+3.7倍是真实增量，选半导体（长治LED）、算力（冷凉+绿电）、储能而非纯互联网。</li>
+      <li><b>材料+冶金是隐蔽硬核。</b>太钢手撕钢、铝镁集群、碳基新材料；材料/冶金在山西壁垒强，且对接航天/汽车/电子高端需求。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯国贸必须叠加硬技能（数据/芯片/法律/文旅），否则被 AI 与内卷双重挤压；国贸还叠加外贸 -21.2% 的硬承压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -9.9%、建筑业 -7.9%；除非太原理工土木双一流或志在央企基建（雄忻/太绥高铁、武宿机场）。</li>
+      <li><b>算清「留晋 vs 出走」。</b>人口净减 21.95 万、自然增长率 -3.32‰、近十年净流出超 180 万；双一流稀缺意味着保研要早准备，选专业时规划深造与就业地。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：山西省统计局、国家统计局山西调查总队《山西省 2025 年国民经济和社会发展统计公报》（2026-03-25）、山西省政府「开局起步『十五五』」系列新闻发布会（2026-08）、山西省工信厅《山西省企业技术改造指导目录》《山西省「十四五」新装备规划》、《「十五五」山西中部城市群发展规划》、山西省文旅厅「十四五」文旅专场发布会、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"化学工程与工艺（煤化工/能源化工）",c:"工学",ch:"新型煤化工",t:"A",h:5,s:"太原理工大学（化工双一流学科）／山西大学（化学B）／中北大学",j:"煤化工、精细化工、碳基新材料、化工设计院",
+  r:"新型煤化工是十五五2条千亿级产业链之一；长治/晋城/大同/阳泉现代煤化工集群，晋城谋划百亿级碳基新材料（沁河碳谷）。",w:"锁现代煤化工/碳基新材料/高端聚烯烃方向，避传统高污染路径；太原理工化工进能源国企比例高。",city:"长治 · 晋城 · 大同 · 阳泉"},
+ {n:"材料科学与工程（特钢/不锈钢/铝镁/碳基）",c:"工学",ch:"特钢材料",t:"A",h:5,s:"太原理工大学（材料B）／中北大学（材料B-、硬质合金）／山西大学（材料化学）",j:"特种钢、不锈钢、铝镁合金、碳基/半导体材料、工艺工程",
+  r:"太钢手撕钢0.015mm国际领先，太原特钢、运城/吕梁铝镁集群；新材料产业+6.2%、光伏电池+2.3倍；十五五新材料定位五千亿级集群。",w:"锁特钢/不锈钢/铝镁/碳基/半导体材料方向，避泛材料；太钢、中北校企联合培养多。",city:"太原 · 运城 · 吕梁"},
+ {n:"机械设计制造及其自动化（煤机/轨道交通/重型装备）",c:"工学",ch:"煤机装备",t:"A",h:4,s:"太原科技大学（机械B-、重型机械）／太原理工大学（机械B+）／中北大学（机械B-）",j:"智能煤机、重装、轨交装备、液压/法兰、产线集成",
+  r:"太重为重型机械龙头，太原/临汾煤机、太原/大同/运城轨交、忻州法兰锻造集群；装备制造业利润+1.1倍、高端装备制造+5.7%、工业机器人+3.7倍。",w:"锁煤机智能/轨交/重装方向，贴太重、太原煤机；太科大有重工人才摇篮壁垒。",city:"太原 · 临汾 · 大同 · 运城 · 忻州"},
+ {n:"电气工程及其自动化（电网/煤电/新能源）",c:"工学",ch:"煤电/新能源",t:"A",h:4,s:"太原理工大学（电气）／山西大学（电气工程国家一流）／中北大学",j:"电网、电气设备、煤电/新能源电站、储能",
+  r:"山西是电力外送基地（外送电力1503.6亿kWh），国网/能源央企校招第一梯队；风光储与煤电都需电气底座；新能源装机占比55.1%。",w:"电网方向需提前准备国网考试；能源央企签约率高，起薪稳。",city:"太原 · 大同"},
+ {n:"智能采矿工程（煤炭智能绿色开采）",c:"工学",ch:"智能开采",t:"A",h:4,s:"太原理工大学（矿业工程B+、智能矿山实验室）／山西大学（智能采矿相关）",j:"智能化煤矿、智能采掘、安全监控、绿色矿山",
+  r:"全国唯一能源革命综合改革试点全省域；煤炭先进产能占比84%、智能化煤矿268座；原煤13.09亿吨（+2.4%），长期仍是压舱石。",w:"锁智能化/绿色化而非传统井下；太原理工矿业进国家能源集团、中煤比例超50%。",city:"太原 · 大同 · 阳泉 · 晋城"},
+ {n:"能源与动力工程（煤电/新能源/储能）",c:"工学",ch:"电力/新能源",t:"A",h:4,s:"太原理工大学（能源动力）／山西大学（能源与动力国家一流、储能科学）",j:"火电/新能源电站、储能、节能、热力",
+  r:"发电量4704.5亿kWh、外送1503.6亿；新能源发电利润+1.2倍、发电量+24.2%；十五五新增可再生能源装机1亿千瓦、绿电园区/零碳园区建设。",w:"贴新能源+储能+绿电园区比纯火电更有前景。",city:"太原 · 大同"},
+ {n:"计算机类（信创/软件/半导体/人工智能）",c:"工学",ch:"半导体/算力",t:"B",h:5,s:"山西大学（计算机国家重点/国家一流、与华为鲲鹏）／太原理工大学／中北大学",j:"软件开发、信创、AI、算力运维、半导体软件",
+  r:"计算机及办公设备制造+1.2倍、服务器+47.8%、软件信息技术服务业+12.1%；太原软件、信创集群；山西气候冷凉+绿电便宜，算力产业成新增长点。",w:"工程能力>文凭；贴信创/算力/半导体软件而非纯互联网。",city:"太原 · 长治"},
+ {n:"电子信息类（第三代半导体/光电）",c:"工学",ch:"半导体/光电",t:"B",h:5,s:"太原理工大学（集成电路/电子）／中北大学（信息与通信B、仪器B+）／山西大学（光电国家一流）",j:"LED/半导体、光电、集成电路、通信",
+  r:"长治LED产值占全省95%、深紫外LED芯片全球领先；太原半导体、第三代半导体为省级重点产业链；光伏电池+2.3倍。",w:"对数理要求高，深造（微电子/光电）更有利；长治光电是隐藏强点。",city:"长治 · 太原"},
+ {n:"自动化/测控技术与仪器（煤机智能/智慧矿山）",c:"工学",ch:"智能煤机",t:"B",h:4,s:"中北大学（仪器B+、测控）／太原理工大学（自动化）／山西大学（测控）",j:"控制系统、智能煤机、工业自动化、机器人",
+  r:"智能煤机、智慧矿山全需自动化/测控；工业机器人+3.7倍；中北仪器B+、测控就业覆盖航天/电子。",w:"强电+控制背景比普机械更有智能化溢价；中北测控军工底色强。",city:"太原 · 中北"},
+ {n:"新能源科学与工程（风光储/氢能）",c:"工学",ch:"风光储/氢能",t:"B",h:4,s:"山西大学（新能源科学、储能科学）／太原理工大学（新能源）／中北大学",j:"光伏/风电、储能、氢能、绿电园区",
+  r:"新能源和清洁能源装机占比55.1%、发电量+24.2%；太阳能装机+42.4%；十五五新增可再生装机1亿千瓦、氢能/生物质/地热多能互补。",w:"贴风光储+氢能+零碳园区方向，山西绿电资源全国稀缺。",city:"大同 · 忻州 · 吕梁 · 晋城"},
+ {n:"环境科学与工程/安全工程（绿色矿山/安全监管）",c:"工学",ch:"绿色矿山",t:"B",h:4,s:"太原理工大学（安全科学与工程B-、环境）／山西大学（环境国家一流）",j:"绿色矿山、安全评价、环评、应急",
+  r:"能源革命要求绿色开采、安全生产；煤炭先进产能84%、智能化煤矿268座，绿色矿山与安全监管刚需；太原理工安全B-。",w:"体制内（应急/环保）与龙头矿企双通道，稳定性好。",city:"太原"},
+ {n:"生物医学工程（现代医药集群）",c:"工学",ch:"现代医药",t:"B",h:3,s:"山西医科大学（生医工）／中北大学（材料/仪器支撑）／山西大学",j:"医疗器械、生物制剂、医工交叉",
+  r:"大同原料药、晋中中成药、长治/运城新特药集群；现代医药为16条省级重点产业链之一；医工交叉缺口大。",w:"医工交叉比纯生物更对产业口；贴大同/晋中/长治医药园。",city:"大同 · 晋中 · 长治"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"山西医科大学（临床B、ESI前1%）／山西大学（医学相关）",j:"三甲/地市医院、科研、公共卫生",
+  r:"山西医科是省内医疗系统垄断性龙头，直属三甲医院5所、执业医师通过率超90%；老龄化刚性需求。",w:"学制长（5+3本博）、分数高。",city:"太原 · 晋中"},
+ {n:"文物与博物馆学/考古学（文博古建）",c:"历史学",ch:"文博古建",t:"C",h:5,s:"山西大学（考古学国家一流、文博、文化遗产、非遗研究院）",j:"文保院所、考古所、古建修缮、博物馆、数字化保护",
+  r:"国保单位全国第一、3处世界遗产、古建大省；云冈/五台山官方直言补齐技艺传承断层、壮大本土文保后备力量；文保人才一才难求。",w:"需耐得住冷门与坐得住工地；山西是古建人才黄埔，对口极硬。",city:"大同 · 晋中 · 忻州"},
+ {n:"旅游管理（文旅强省）",c:"管理学",ch:"文旅",t:"C",h:4,s:"山西大学（旅游管理国家一流）／山西财经大学",j:"景区运营、文旅策划、研学、康养",
+  r:"2024旅游总花费破5000亿、文旅占GDP约5%；黑神话悟空带火古建游、平遥/云冈/五台山流量新高。",w:"需叠加数字营销/古建文化，避纯酒店管理。",city:"大同 · 晋中 · 忻州 · 晋城"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:4,s:"山西大学（法学）／山西财经大学",j:"公检法、律所、企业法务、合规",
+  r:"山西大学法学C+、国际政治强；山财经管华北知名，公检法/企业法务刚需。",w:"须过法考，考公优势明显。",city:"太原"},
+ {n:"统计学/数据科学（金融/算力/AI）",c:"理学",ch:"金融/算力",t:"C",h:3,s:"山西大学（统计国家一流、数学B-）／山西财经大学（统计B）",j:"量化、数据分析、商业智能、算力调度",
+  r:"山西大学统计/数学强、算力产业与金融均需统计底座；软信+12.1%。",w:"数学要求高，是金融与AI通用底座。",city:"太原"},
+ {n:"设计学/动画（文创/非遗）",c:"艺术",ch:"文创非遗",t:"C",h:3,s:"山西大学（视觉传达/环境设计国家一流）",j:"文创、数字媒体、工业设计、非遗活化",
+  r:"平遥推光漆器/纱阁戏人、晋派砖雕等非遗IP火爆，佛小伴/煤球宝宝文创出圈；文旅消费中文创占比上升。",w:"需作品集功底，贴非遗+文旅比纯美术更对产业口。",city:"晋中 · 平遥"},
+ {n:"农学/动物医学（特优农业/小杂粮）",c:"农学",ch:"特优农业",t:"C",h:3,s:"山西农业大学（兽医学B-、作物/园艺）",j:"农技、种业、畜牧、农产品加工",
+  r:"晋中农高区、忻州小杂粮、吕梁白酒原料；山西小杂粮王国品牌待转化（加工转化率约45%）。",w:"贴特优农业+加工+品牌比纯种植更有前景。",city:"晋中 · 忻州 · 吕梁"},
+ {n:"外国语言文学（文旅涉外/跨境）",c:"文学",ch:"涉外文旅",t:"C",h:3,s:"山西大学（外语国家一流）",j:"涉外文旅、外事、跨境服务",
+  r:"240小时过境免签、文旅涉外服务需求上行；但外贸整体-21.2%承压。",w:"须叠加文旅/国贸/法律，避纯语言内卷。",city:"太原"},
+ {n:"会计学/财务管理（山财）",c:"管理学",ch:"财经",t:"C",h:3,s:"山西财经大学（会计/财管校级王牌、应用经济学B）",j:"企业财务、审计、税务",
+  r:"山西财经大学会计/财管省内银行、财税、国企财会认可度高，CPA通过率居全国财经高校前列。",w:"须考证（CPA等）。",city:"太原"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"太原理工大学（仅土木双一流/矿山建设）",j:"设计院、施工、基建、智能建造",
+  r:"房地产投资-9.9%、住宅-12.0%，建筑业增加值-7.9%、总产值-5.5%，土建链深度承压。",w:"除太原理工土木双一流或志在央企设计院/重大基建（雄忻/太绥高铁、武宿机场三期）外慎选。",city:"太原"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"山西财经大学／山西大学",j:"企业职能管理、行政、咨询",
+  r:"山西以能源/制造为主，泛管理岗位稀缺、内卷严重；民营主体偏小。",w:"叠加行业+管理（能源/医院/车企管理）否则慎选。",city:"太原"},
+ {n:"国际经济与贸易（外贸承压）",c:"经济学",ch:"外贸",t:"D",h:2,s:"山西财经大学／山西大学",j:"企业外贸、跨境、关务",
+  r:"2025进出口-21.2%、出口-34.3%，外贸是山西明显失分项；外向度偏低。",w:"叠加外语/法律/文旅涉外，或冲外省外贸强校；否则慎选。",city:"太原"}
+];
+
+var CHAINS = [
+ {n:"煤炭智能绿色开采与煤电（能源压舱石）",u:["地质勘探","智能装备/采掘机"],m:["智能化煤矿开采","洗选","燃煤发电","电力外送"],d:["电网调度","储能","终端用能"],
+  mj:"智能采矿工程、能源与动力工程、电气工程、安全工程、自动化",
+  f:"原煤13.09亿吨（+2.4%）、煤炭先进产能占比84%、智能化煤矿达268座（2024）；发电量4704.5亿kWh（+3.1%）、外送电力1503.6亿kWh；单位GDP能耗-2.0%。全国唯一能源革命综合改革试点全省域。"},
+ {n:"新型煤化工/现代煤化工（千亿级产业链）",u:["煤炭","焦炉气","煤层气"],m:["煤制烯烃/煤制气","精细化工","碳基新材料"],d:["化工新材料","可降解材料","高端聚烯烃"],
+  mj:"化学工程与工艺、材料科学与工程、应用化学",
+  f:"十五五打造新型煤化工千亿级产业链；长治/晋城/大同/阳泉现代煤化工集群；晋城谋划百亿级碳基新材料集群（沁河碳谷）；高端聚烯烃、煤层气提氦技术攻关；中煤平朔煤制烯烃项目推进。"},
+ {n:"特钢材料与冶金（太钢/不锈钢/手撕钢/铝镁/碳基）",u:["铁矿","铝土矿","镍铬"],m:["不锈钢冶炼","手撕钢（0.015mm）","铝镁合金","碳基新材料"],d:["航天/汽车/电子/新能源用特种材料"],
+  mj:"材料科学与工程、冶金工程、高分子材料、复合材料",
+  f:"太钢手撕钢厚度达0.015mm国际领先；太原特殊钢产业集群、运城/吕梁铝镁产业集群；新材料产业+6.2%、光伏电池+2.3倍；十五五新材料定位五千亿级集群。"},
+ {n:"煤机装备与轨道交通重装（太重）",u:["铸锻件","液压件","数控系统"],m:["智能煤机","重型机械","轨道交通装备","法兰锻造"],d:["矿山智能化","高铁/城轨运维","工程总包"],
+  mj:"机械设计制造及其自动化、测控技术与仪器、自动化、车辆工程",
+  f:"太原/临汾煤机装备集群、太原/大同/运城轨道交通装备集群、忻州法兰锻造；太重为重型机械龙头；装备制造业利润+1.1倍、高端装备制造+5.7%；工业机器人产量+3.7倍。"},
+ {n:"新能源与清洁能源（风光储/氢能/煤层气）",u:["硅料/锂/稀土"],m:["光伏组件","风电整机","储能电池","氢能装备","煤层气开发"],d:["绿电园区","源网荷储","换电重卡"],
+  mj:"新能源科学与工程、储能科学与工程、电气工程、能源与动力工程",
+  f:"新能源和清洁能源装机占比55.1%、发电量+24.2%；太阳能装机4950.5万千瓦（+42.4%）、风电2833万千瓦；十五五新增可再生能源装机1亿千瓦；新能源发电企业利润+1.2倍；13个省级绿电园区、2个国家级零碳园区。"},
+ {n:"第三代半导体与电子信息（长治LED/太原半导体/信创/算力）",u:["衬底材料（碳化硅/砷化镓）","芯片设计"],m:["LED芯片","深紫外LED","封装","信创整机"],d:["新型显示","算力中心","消费电子"],
+  mj:"电子信息类、集成电路、微电子、计算机类、光电信息",
+  f:"长治LED产值占全省95%、深紫外LED芯片技术全球领先；太原半导体、软件产业集群；计算机及办公设备制造+1.2倍、服务器+47.8%；软件信息技术服务业+12.1%；山西气候冷凉、能源便宜，算力产业被列为新增长点。"},
+ {n:"现代医药（大同/晋中/长治）",u:["原料药","中药材"],m:["制剂","医疗器械","生物药"],d:["医疗服务","康养"],
+  mj:"生物医学工程、药学、临床医学、生物科学",
+  f:"大同原料药及制剂、晋中中成药、长治/运城新特药集群；16条省级重点产业链含现代医药；晋中农高区+医药健康升级。"},
+ {n:"文博文旅与古建保护（云冈/平遥/五台山）",u:["文物保护规划","古建勘察"],m:["修缮/彩塑壁画修复","数字化建档","文创设计"],d:["景区运营","研学旅游","文旅康养"],
+  mj:"文物与博物馆学、考古学、旅游管理、设计学、文化遗产",
+  f:"国保单位全国第一；3处世界遗产；2024旅游总花费破5000亿；云冈完成80%洞窟数字化（精度0.03mm）、五台山文物数字化全覆盖；官方明确补齐技艺传承断层、壮大本土文保后备力量；黑神话悟空带动古建游。"}
+];
+
+var CITIES = [
+ {c:"太原（省会核心）",i:"高端装备制造、特钢材料、信创/软件、半导体、现代医药、金融总部",l:"太钢、太重、太原煤机、晋能控股、富士康（太原）",m:"材料、机械、电气、计算机、半导体、临床、财经"},
+ {c:"大同",i:"现代医药、通用航空、新能源、轨道交通/煤机装备、算力装备、云冈文旅",l:"大同医药园、中车大同、晋能控股",m:"医药、机械、电气、计算机、旅游、文博"},
+ {c:"朔州",i:"现代医药、通用航空、新能源、日用陶瓷、资源循环",l:"医药与陶瓷企业、新能源电站",m:"医药、材料、新能源、环境"},
+ {c:"忻州",i:"半导体材料、法兰锻造、煤机装备、文旅康养、小杂粮、综合能源",l:"法兰锻造集群、风电/光伏",m:"材料、机械、新能源、旅游、农学"},
+ {c:"吕梁",i:"铝镁精深加工、大数据、光伏、非常规天然气、氢能、白酒",l:"铝镁企业、杏花村汾酒、数据产业园",m:"材料、计算机、新能源、化工、酿酒"},
+ {c:"阳泉",i:"新型耐火、新能源电池、高端泵阀、数字经济、煤机装备",l:"新能源电池、泵阀企业",m:"材料、电气、计算机、机械、新能源"},
+ {c:"晋中",i:"新能源汽车、光伏装备、现代医药、晋商文旅、大学城",l:"吉利（晋中）、平遥文旅、山西大学城",m:"车辆、材料、医药、旅游、文博、计算机"},
+ {c:"临汾",i:"装备制造、煤机智能制造、特种金属材料",l:"装备/煤机企业、特种钢",m:"机械、材料、自动化、测控"},
+ {c:"运城",i:"装备制造、煤机智能制造、铝镁、新能源汽车、光电",l:"铝镁、汽车及零部件、光电",m:"机械、材料、车辆、电子信息"},
+ {c:"长治",i:"装备制造、节能环保、光电（LED占全省95%）、新能源、半导体新材料、现代煤化工",l:"半导体光电企业、煤化工",m:"光电、材料、机械、化工、新能源"},
+ {c:"晋城",i:"煤层气、现代煤化工、光机电、装备制造、文旅康养",l:"煤层气龙头、煤化工、光机电",m:"化工、能源、机械、材料、旅游"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

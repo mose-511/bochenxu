@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2027 河北选科专业对照表 | 前程起点升学规划</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#F4F2EC;color:#1F1F1D;line-height:1.7;font-size:15px}
+.wrap{max-width:1000px;margin:0 auto;background:#fff;min-height:100vh;padding:0 0 60px}
+
+.hero{background:linear-gradient(135deg,#0B2545 0%,#173A5E 100%);color:#fff;padding:42px 40px 36px}
+.hero .brand{font-size:13px;letter-spacing:2px;color:#8FB8E0;margin-bottom:14px}
+.hero h1{font-size:29px;font-weight:700;letter-spacing:1px;margin-bottom:10px}
+.hero .sub{font-size:15px;color:#C4D8EC;line-height:1.6}
+.hero .meta{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px}
+.hero .meta span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:4px 14px;font-size:12.5px;color:#DCE9F6}
+
+.sec{padding:34px 40px 0}
+.sec h2{font-size:19px;font-weight:700;color:#0B2545;padding-bottom:12px;border-bottom:2px solid #0B2545;margin-bottom:20px}
+.sec h3{font-size:15.5px;font-weight:700;color:#173A5E;margin:22px 0 12px;padding-left:11px;border-left:4px solid #C9A227}
+
+/* 三档卡片 */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px}
+.tier{border-radius:10px;padding:18px;border:1.5px solid}
+.tier.t1{background:#EAF6EF;border-color:#1D9E75}
+.tier.t2{background:#FDF5E3;border-color:#D9A426}
+.tier.t3{background:#F4F2EC;border-color:#8A8780}
+.tier .lv{font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:6px}
+.tier.t1 .lv{color:#0F6E56}
+.tier.t2 .lv{color:#8A6410}
+.tier.t3 .lv{color:#5F5E5A}
+.tier .rate{font-size:31px;font-weight:800;line-height:1.1;margin:4px 0 8px}
+.tier.t1 .rate{color:#0F6E56}
+.tier.t2 .rate{color:#B8830F}
+.tier.t3 .rate{color:#5F5E5A}
+.tier .desc{font-size:13px;color:#4A4A46;line-height:1.6}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+th{background:#0B2545;color:#fff;font-weight:600;padding:11px 12px;text-align:left;font-size:13px;white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid #E8E5DD;vertical-align:top}
+tr:nth-child(even) td{background:#FAF9F6}
+.combo{font-weight:700;color:#0B2545;white-space:nowrap}
+.pct{font-weight:800;font-size:15px}
+.pct.hi{color:#0F6E56}
+.pct.mid{color:#B8830F}
+.pct.lo{color:#8A8780}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:700;white-space:nowrap}
+.tag.g{background:#DFF0E6;color:#0F6E56}
+.tag.y{background:#FBEECD;color:#8A6410}
+.tag.n{background:#E8E5DD;color:#5F5E5A}
+
+/* 提示框 */
+.box{border-radius:10px;padding:16px 20px;margin:16px 0;font-size:14px}
+.box.warn{background:#FDF5E3;border-left:4px solid #D9A426}
+.box.good{background:#EAF6EF;border-left:4px solid #1D9E75}
+.box.info{background:#EEF4FA;border-left:4px solid #378ADD}
+.box .bt{font-weight:700;margin-bottom:6px;font-size:14.5px}
+.box.warn .bt{color:#8A6410}
+.box.good .bt{color:#0F6E56}
+.box.info .bt{color:#185FA5}
+
+ul{padding-left:20px;margin:8px 0}
+li{margin-bottom:6px}
+.hl{background:#FBEECD;padding:1px 5px;border-radius:3px;color:#7A5710;font-weight:700}
+
+/* 组合详情 */
+.combo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:6px}
+.cc{border:1px solid #E0DDD4;border-radius:10px;padding:16px;background:#FCFBF8}
+.cc .h{font-size:15px;font-weight:700;color:#0B2545;margin-bottom:4px}
+.cc .r{font-size:12.5px;font-weight:700;margin-bottom:10px}
+.cc ul{padding-left:17px;font-size:13px;color:#3E3E3A}
+.cc ul li{margin-bottom:4px}
+.cc .no{font-size:12.5px;color:#8A8780;margin-top:8px;padding-top:8px;border-top:1px dashed #E0DDD4}
+
+.foot{margin:40px 40px 0;padding:22px 26px;background:#0B2545;border-radius:12px;color:#DCE9F6;font-size:13.5px}
+.foot .t{font-size:16px;font-weight:700;color:#fff;margin-bottom:10px}
+.foot .row{display:flex;flex-wrap:wrap;gap:26px;margin-top:12px}
+.foot .row div b{display:block;color:#fff;font-size:14px}
+
+.src{margin:20px 40px 0;font-size:12px;color:#8A8780;line-height:1.75}
+@media(max-width:720px){.tiers,.combo-grid{grid-template-columns:1fr}.hero{padding:30px 22px}.sec{padding:26px 22px 0}.foot,.src{margin-left:22px;margin-right:22px}}
+@media print{body{background:#fff}.wrap{max-width:none}@page{margin:12mm}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="brand">前程起点 · 升学规划</div>
+  <h1>2027 河北选科专业对照表</h1>
+  <div class="sub">选科怎么选，直接决定孩子能报多少专业。<br>这张表把 12 种组合能报什么、不能报什么，一次讲透。</div>
+  <div class="meta">
+    <span>适用：2024 年及以后入学高一学生</span>
+    <span>依据：冀教学〔2025〕1 号</span>
+    <span>河北 2027 拟招生本科专业 5.2 万个</span>
+  </div>
+</div>
+
+<div class="sec">
+  <h2>一、一句话看懂：12 种组合分三档</h2>
+
+  <div class="tiers">
+    <div class="tier t1">
+      <div class="lv">第一档 · 物化绑定</div>
+      <div class="rate">96%+</div>
+      <div class="desc">物理 + 化学任意搭配<br>理工医农全覆盖</div>
+    </div>
+    <div class="tier t2">
+      <div class="lv">第二档 · 伪理科</div>
+      <div class="rate">约 50%</div>
+      <div class="desc">选了物理但没选化学<br>一半工科直接关门</div>
+    </div>
+    <div class="tier t3">
+      <div class="lv">第三档 · 历史类</div>
+      <div class="rate">约 45%</div>
+      <div class="desc">历史类各组合差别很小<br>按分数优势选即可</div>
+    </div>
+  </div>
+
+  <div class="box info">
+    <div class="bt">为什么"物理"和"物理+化学"差这么多？</div>
+    决定能报多少专业的，不是选没选物理，而是<span class="hl">有没有选化学</span>。选了物理但放弃化学，比历史类多出来的可选专业只有 5 个百分点左右——多花一门的力气，只换来这么点增量。
+  </div>
+</div>
+
+<div class="sec">
+  <h2>二、12 种组合逐个体检</h2>
+
+  <table>
+    <tr><th>选科组合</th><th>可报专业占比</th><th>档次</th><th>典型可报方向</th></tr>
+    <tr><td class="combo">物理 + 化学 + 政治</td><td class="pct hi">99.7%</td><td><span class="tag g">第一档</span></td><td>理工医全覆盖 + 军警 + 法学 + 思政</td></tr>
+    <tr><td class="combo">物理 + 化学 + 生物</td><td class="pct hi">96.4%</td><td><span class="tag g">第一档</span></td><td>临床医学、口腔、计算机、电气、新能源</td></tr>
+    <tr><td class="combo">物理 + 化学 + 地理</td><td class="pct hi">95.8%</td><td><span class="tag g">第一档</span></td><td>工科主力、地质测绘、城规、地理信息</td></tr>
+    <tr><td class="combo">物理 + 生物 + 政治</td><td class="pct mid">约 50%</td><td><span class="tag y">第二档</span></td><td>经管法文 + 建筑学 + 部分中医</td></tr>
+    <tr><td class="combo">物理 + 生物 + 地理</td><td class="pct mid">约 50%</td><td><span class="tag y">第二档</span></td><td>经管法文 + 建筑学 + 地理相关</td></tr>
+    <tr><td class="combo">物理 + 政治 + 地理</td><td class="pct mid">约 50%</td><td><span class="tag y">第二档</span></td><td>经管法文 + 建筑学 + 公安（需政治）</td></tr>
+    <tr><td class="combo">历史 + 政治 + 地理</td><td class="pct lo">约 45%</td><td><span class="tag n">第三档</span></td><td>文学、法学、经管、师范、哲学、艺术</td></tr>
+    <tr><td class="combo">历史 + 政治 + 生物</td><td class="pct lo">约 45%</td><td><span class="tag n">第三档</span></td><td>同上 + 部分中医、护理</td></tr>
+    <tr><td class="combo">历史 + 政治 + 化学</td><td class="pct lo">约 45%</td><td><span class="tag n">第三档</span></td><td>同上 + 部分药学、护理</td></tr>
+    <tr><td class="combo">历史 + 生物 + 地理</td><td class="pct lo">约 45%</td><td><span class="tag n">第三档</span></td><td>文学、经管、师范、传媒</td></tr>
+    <tr><td class="combo">历史 + 生物 + 化学</td><td class="pct lo">约 45%</td><td><span class="tag n">第三档</span></td><td>同上 + 部分护理、中医</td></tr>
+    <tr><td class="combo">历史 + 地理 + 化学</td><td class="pct lo">约 45%</td><td><span class="tag n">第三档</span></td><td>同上 + 部分药学、护理</td></tr>
+  </table>
+
+  <div class="box warn">
+    <div class="bt">历史类内部，纠结"选政治还是地理"意义不大</div>
+    历史类各组合可报专业占比都在 45% 上下浮动，差距不到 1 个百分点。真正需要盯住的只有一件事：<span class="hl">想报公安警校，政治必须选</span>。这是历史类里少见的再选科目硬门槛。
+  </div>
+</div>
+
+<div class="sec">
+  <h2>三、四个最常见组合，适合什么样的孩子</h2>
+  <div class="combo-grid">
+
+    <div class="cc">
+      <div class="h">物理 + 化学 + 政治</div>
+      <div class="r" style="color:#0F6E56">覆盖率 99.7% · 全能型</div>
+      <ul>
+        <li>理工医全覆盖，同时能报军警、法学、思政</li>
+        <li>考研、考公适配性最强，多留一条体制内退路</li>
+        <li>适合理科中上、想兼顾军警或考公方向的孩子</li>
+      </ul>
+      <div class="no">注意：政治时政性强，需要持续关注，记忆和理解压力不小</div>
+    </div>
+
+    <div class="cc">
+      <div class="h">物理 + 化学 + 生物</div>
+      <div class="r" style="color:#0F6E56">覆盖率 96.4% · 理工医王牌</div>
+      <ul>
+        <li>纯理科组合，学科逻辑闭环，学习连贯</li>
+        <li>临床医学、口腔、电气、计算机、生物制药无限制</li>
+        <li>适合理科基础扎实、目标 985/211 理工或医学院的孩子</li>
+      </ul>
+      <div class="no">注意：学霸扎堆，赋分竞争激烈，生物知识点琐碎</div>
+    </div>
+
+    <div class="cc">
+      <div class="h">物理 + 化学 + 地理</div>
+      <div class="r" style="color:#B8830F">覆盖率 95.8% · 赋分友好</div>
+      <ul>
+        <li>难度低于物化生，地理考高分相对容易</li>
+        <li>地质、测绘、城规、军校技术类有优势</li>
+        <li>适合理科中等、不想背政治、生物也吃力的孩子</li>
+      </ul>
+      <div class="no">注意：部分顶尖医学院的临床、口腔仍要求生物</div>
+    </div>
+
+    <div class="cc">
+      <div class="h">历史 + 政治 + 地理</div>
+      <div class="r" style="color:#8A8780">覆盖率 40%–45% · 文科主路</div>
+      <ul>
+        <li>文学、法学、教育学、新闻、经管全覆盖</li>
+        <li>适配省内师范院校，考公考编优势明显</li>
+        <li>适合文科基础扎实、理科薄弱、方向明确的孩子</li>
+      </ul>
+      <div class="no">注意：招生计划总量比物理类少很多，同分段竞争更挤</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="sec">
+  <h2>四、四个最容易踩的坑</h2>
+
+  <div class="box warn">
+    <div class="bt">坑一：以为学医必须选生物</div>
+    临床、口腔、麻醉的主流要求是<span class="hl">物理 + 化学</span>，生物不是必需品。真正卡"物化生三门全选"的专业占比不到 1%。物化地、物化政的孩子报临床，大部分院校畅通无阻。
+  </div>
+
+  <div class="box warn">
+    <div class="bt">坑二：以为"选了物理就能学医"</div>
+    反过来了——<span class="hl">想学医，化学是底线</span>。哪怕是分数要求较低的护理、预防医学，基本也要求化学。没有任何医学专业只要求物理。
+  </div>
+
+  <div class="box warn">
+    <div class="bt">坑三：觉得政治没用，随手放弃</div>
+    公安学类、军校部分方向、马克思主义理论类硬性要求政治。而且政治是考研公共课必考科目，高中打下的底子，四年后用得上。
+  </div>
+
+  <div class="box warn">
+    <div class="bt">坑四：只看覆盖率，不看分数竞争力</div>
+    覆盖率 96% 不等于录取 96%。物化组合学霸扎堆，如果孩子物理长期在班里中下游，硬选物化的结果可能是：<span class="hl">专业表上什么都能报，分数出来哪儿都够不着</span>。覆盖率是上限，分数才是入场券。
+  </div>
+</div>
+
+<div class="sec">
+  <h2>五、2027 年的一个重要变化</h2>
+  <div class="box good">
+    <div class="bt">中医学专业，历史类孩子的门重新打开了</div>
+    2027 年河北选科要求里，多所高校的中医学专业从原来的"物化必选"调整为<span class="hl">不限选科</span>。这意味着历史类的孩子，学中医的路重新通了。同时针灸推拿等方向也有类似放宽。
+    <br><br>
+    另一个变化是经济学门类——有选科要求的专业占比升到了 30% 左右，金融工程、经济统计这些偏量化的方向越来越向物理类倾斜。指望"随便选科将来学金融"的家庭，要提前调整预期。
+  </div>
+</div>
+
+<div class="sec">
+  <h2>六、选科决策三步走</h2>
+  <table>
+    <tr><th style="width:110px">步骤</th><th>怎么做</th></tr>
+    <tr><td class="combo">第一步<br>定方向</td><td>想走理工、计算机、临床、电气 → 物理 + 化学必选；想走人文、法学、师范、考公 → 首选历史；方向不明 → 优先物化组合，保留最大选择权</td></tr>
+    <tr><td class="combo">第二步<br>看成绩</td><td>物理≥70、化学≥65 → 可冲物化生 / 物化政；物理 60–70、化学 60–65 → 物化地更稳；物理&lt;60、历史≥70 → 历史类更合适</td></tr>
+    <tr><td class="combo">第三步<br>查要求</td><td>提前查目标院校专业的选科要求——不同学校对同一个专业的要求可能不一样，以院校当年公布的招生章程为准</td></tr>
+  </table>
+
+  <div class="box info">
+    <div class="bt">一个容易被忽略的点：再选科目拼的是全省排名，不是卷面分</div>
+    化学、生物、政治、地理这四门走等级赋分——按全省排名划 A、B、C、D、E 五档，再换算成对应分数。孩子生物卷面考 75 分，如果排进全省前 15%，赋分后可能到 89；卷面 80 分但排名靠后，赋完可能只有 72。<br><br>
+    所以选科时，<span class="hl">"这门课我在年级排多少名"比"这门课我能考多少分"重要得多</span>。
+  </div>
+</div>
+
+<div class="sec">
+  <h2>七、三句实在话</h2>
+  <div class="box good">
+    <div class="bt">第一句</div>
+    选科是职业规划的第一步，不是高二的一次随手勾选。孩子想当医生、想进电网、想报警校，倒推回来选科答案往往只有一个。
+  </div>
+  <div class="box good">
+    <div class="bt">第二句</div>
+    再选科目看排名，不看卷面分。选科前把近几次大考的年级排名拉出来看，比听孩子说"我觉得我生物还行"靠谱得多。
+  </div>
+  <div class="box good">
+    <div class="bt">第三句</div>
+    这套选科要求管的就是现在的高一高二。<span class="hl">适用于 2024 年及以后入学的高中生</span>，也就是 2027 年及以后参加高考的孩子。高二已经定完选科的，对照本文自查一遍，还来得及。
+  </div>
+</div>
+
+<div class="foot">
+  <div class="t">需要一对一选科诊断？</div>
+  每个孩子的分数段、学科优势、目标方向都不一样，这张表解决的是"通用规则"，<b>具体到你家孩子该怎么选，需要单独分析</b>。
+  <div class="row">
+    <div><b>我们提供</b>选科方案诊断 · 目标院校专业匹配 · 三年学业路径规划</div>
+    <div><b>联系</b>前程起点 · 升学规划（河北）</div>
+  </div>
+</div>
+
+<div class="src">
+  <b>数据来源：</b><br>
+  ① 河北省教育厅《关于公布 2027 年起拟在河北省招生的普通高校本科专业选考科目要求的通知》（冀教学〔2025〕1 号）<br>
+  ② 河北省教育考试院公布的 2027 年选科要求口径<br>
+  ③ 教育部《普通高等学校本科专业目录（2026 年）》——现涵盖 13 个门类、92 个专业类、883 种专业<br>
+  ④ 教育部《普通高校本科招生专业选考科目要求指引（通用版）》<br><br>
+  <b>重要提示：</b>本文所述选科要求为高校在所有实施高考综合改革省份的通用要求。2027 年起在河北实际招生的高校、专业及选考科目要求，以及是否分别安排物理组合和历史组合招生计划，<b>以招生院校当年在河北公布的招生计划为准</b>。选科决策前请务必核对目标院校最新招生章程。
+</div>
+
+</div>
+</body>
+</html>

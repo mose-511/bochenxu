@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新疆产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#1a5e7a;
+  --brand-soft:#e6eef2;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>新疆产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年新疆统计公报</b> · <b>十大产业集群</b> · <b>丝绸之路经济带核心区</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">2.15万亿</div><div class="note">增长5.5%、全国第23</div></div>
+  <div class="stat"><div class="lab">新能源装机</div><div class="val">64%</div><div class="note">1.6亿kW、第一大电源</div></div>
+  <div class="stat"><div class="lab">外贸进出口</div><div class="val">5203.7亿</div><div class="note">+19.9%、增速全国第一</div></div>
+  <div class="stat"><div class="lab">棉花产量</div><div class="val">616.5万吨</div><div class="note">占全国92.8%</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+7.7%</div><div class="note">战新增加值+21.6%</div></div>
+  <div class="stat"><div class="lab">中欧班列</div><div class="val">1.8万列</div><div class="note">+7.4%、口岸19个</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：石油、电气、新能源、纺织、材料、化工、临床、农学、俄语、国贸、物流、水利、师范、法学">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备、氢能科学与工程等），<b>低空经济（对应新疆广域巡检/农业植保）、生物制造（对应新疆生物医药/农产品加工）、储能/氢能（对应新疆新能源大基地）、半导体装备（对应乌鲁木齐电子新材料）全部对得上新疆产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。新疆高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>有国家能源基地/十大产业集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/战新产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应新疆独有赛道（棉花纺织/农牧/医学/外语/师范），分数友好。适合想留疆、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产承压或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>双一流线及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>新疆大学（电气/计算机/化学化工双一流）、中国石油大学（北京）克拉玛依校区（油气）、石河子大学（农学/临床/化工），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校王牌」优于「综合排名略高但专业弱」</td><td>新疆医科大（临床）、新疆农大（草业/动医）、新疆财经（会计/金融）、新疆师大（师范）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴新疆产业链</td><td>塔里木大学（农学/电机电器智能化）、昌吉学院（新能源/材料）、喀什大学（丝路/师范）</td></tr>
+        <tr><td><b>中低分及历史组</b></td><td>优先有行业背景的省属校，锁特色专业</td><td>新疆师范（师范）、新疆财经（财经）、伊犁师范（旅游/俄语）、喀什大学（外语/边贸）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--ink-2);margin-top:10px"><b>历史组建议：</b>法学（新疆大学/石河子）、教育学/师范（新疆师大）、外国语言文学（俄语/中亚，新疆大学）、会计/财经（新疆财经）、旅游管理（新疆大学/喀什）是历史组友好方向；避开纯理科/工科强校的理科专业。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在新疆读，还是出省读？（含外省/河北考生判断）</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>石油/电气/新能源/材料/化工/机械/自动化<br><span style="color:var(--ink-3);font-size:12.5px">（能源+材料硬科技）</span></td><td><b style="color:var(--green)">优先留疆</b></td><td>国家能源基地+高校双密集，克拉玛依校区/新疆大学/石河子全国特色独一，能源央企校招直通车</td></tr>
+        <tr><td>临床/农学/师范/外语/财经/法学/旅游</td><td><b style="color:var(--green)">留疆或出省</b></td><td>新疆医科/新疆农大/新疆师范/新疆财经在疆认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>民营经济偏弱、土建承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a5e7a;border-left-color:var(--brand);margin-top:14px">
+      <b>新疆独有优势：丝绸之路经济带核心区（外贸+19.9%全国第一）+ 油气当量全国第一 + 新能源装机 64% 第一大电源 + 棉花占全国 92.8% + 8 个国家级产业集群。</b>新疆高教梯度为「2 所 211 双一流（新疆大学、石河子大学）+ 中石油克拉玛依校区 + 一众行业校」，但<b>全疆仅 3 所双一流</b>；<b>外省/河北考生来疆读「石油工程·电气·新能源·材料·化工·纺织·临床·农学·俄语/国贸·师范」性价比独特</b>——国家能源基地对口、院校特色独一、录取分数低于同档京沪苏浙；但须正视<b>人才外流、南北疆失衡、远离内地市场</b>的现实，长期要算清「留疆 vs 出走」。对外省考生而言，<b>能源/纺织/农牧类适合有志于扎根西部或进能源央企者</b>；若志在金融互联网中心，来疆未必最优。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>新疆靠「油气 + 煤炭煤化工 + 新能源 + 棉花纺织 + 向西开放 + 农牧」六引擎，别被「偏远/艰苦」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>石油、电气、新能源、材料、化工、纺织六者覆盖新疆最有确定性的岗位，优先冲。</li>
+      <li><b>贴「乌昌石 + 准东/哈密 + 克拉玛依」产业三角。</b>乌鲁木齐（总部/数字/金融）+ 昌吉准东（煤化工/硅铝）+ 克拉玛依（油气/云计算）+ 石河子（纺织/化工/农医）是产业与院校重叠最密地带。</li>
+      <li><b>行业特色校是最大信息差。</b>中石油克拉玛依校区（油气）、新疆大学（电气/计算机/化工）、石河子大学（农/医/化工/水利）、新疆医科大（临床）、新疆农大（草业/动医）、新疆财经（会计）——专业全国特色独一、分数远低于同档综合校。</li>
+      <li><b>新能源是新疆最被低估的王牌。</b>装机 64% 为第一大电源、6 个千万千瓦级基地、金风/特变双链主；电气/新能源/材料在新疆壁垒全国无对手。</li>
+      <li><b>棉花纺织不是「低端」。</b>全产业链破千亿、带动就业超百万、规划「1224」；纺织工程/服装设计是南疆就业蓄水池，且分数友好。</li>
+      <li><b>向西开放是隐性红利。</b>外贸+19.9%全国第一、对中亚贸易占全国 36.4%；俄语/国贸/物流在新疆有「近水楼台」优势，是外省考生容易忽略的赛道。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>民营经济偏弱、传统土建承压；除非石河子水利/能源基建对口或志在央企。</li>
+      <li><b>算清「留疆 vs 出走」。</b>人才外流、南北疆失衡、远离内地市场是长期约束；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：新疆维吾尔自治区统计局《2025 年新疆维吾尔自治区国民经济和社会发展统计公报》（2026-03-20）、新疆统计局 2025 年国民经济运行情况新闻发布会（2026-01-30）、自治区《2026 年政府工作报告》（2026-01-27）、自治区商务厅外贸发布会/乌鲁木齐海关（2026-01-28）、新疆日报/天山网产业集群报道、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增 38 种、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"石油工程/油气储运",c:"工学",ch:"油气",t:"A",h:5,s:"中国石油大学（北京）克拉玛依校区（油气工程顶尖、疆内录取分第一）／新疆大学（化学/化工双一流）／喀什大学",j:"油田勘探开发、油气储运、炼油化工、海外油气",
+  r:"新疆油气当量连续5年全国第一（2025油气当量3.25亿吨），原油3365.90万吨、天然气424.48亿m³；塔里木、克拉玛依、吐哈三大油田+独山子/克拉玛依/乌石化/塔河炼化，产业链全国最完整之一。",w:"中石油/中石化/中海油校招通道稳，但一线岗位多在荒漠戈壁；克拉玛依校区是性价比最高的能源央企直通车。",city:"克拉玛依·乌鲁木齐·库尔勒"},
+ {n:"电气工程及其自动化",c:"工学",ch:"新型电力系统",t:"A",h:5,s:"新疆大学（电气/计算机双一流、电气强）／石河子大学（电气/水利）／塔里木大学",j:"电网、新能源电站、电气装备、储能",
+  r:"新疆新能源装机超1.6亿kW、占全疆64%为第一大电源；疆电外送连续5年破千亿千瓦时，哈密—重庆±800kV特高压投产；国网新疆电力、特变电工需求刚性。",w:"电网方向需提前准备国网考试；特变电工等装备企业也大量招电气，起薪稳。",city:"乌鲁木齐·哈密·昌吉"},
+ {n:"新能源科学与工程/能源与动力工程",c:"工学",ch:"风光大基地",t:"A",h:4,s:"新疆大学（能源学科）／石河子大学／昌吉学院（新能源方向）",j:"风/光电站设计运维、风机/光伏制造、绿氢、储能",
+  r:"2025新能源发电量1467亿kWh（+22.3%），太阳能/风力发电量+42.9%/+9.3%；建成6个千万千瓦级基地；金风科技、特变电工均根植新疆。",w:"金风、特变等疆企校招强；深造（电力电子/材料）更有利。",city:"哈密·乌鲁木齐·昌吉"},
+ {n:"纺织工程/服装设计与工程",c:"工学",ch:"棉花纺织",t:"A",h:4,s:"新疆大学（纺织相关）／石河子大学（化工/纺织）／塔里木大学（阿拉尔纺织基地）",j:"纺纱/织造工艺、服装设计、印染、质量管理、外贸",
+  r:"棉花616.5万吨/全国92.8%，纺织服装总产值破千亿（+18.7%），纱335.5万吨（+20%）、布32.7亿米（+36.2%）；全产业链带动就业超百万人。",w:"常被误认为低端打工，实际南疆纺织厂技术岗、设计岗缺口大；女生可走服装设计/贸易。",city:"阿拉尔·喀什·石河子"},
+ {n:"材料科学与工程",c:"工学",ch:"硅铝新材料",t:"A",h:4,s:"新疆大学（材料相关）／石河子大学（碳硅铝）／昌吉学院",j:"硅/铝基材料、半导体材料、复合材料、冶金",
+  r:"石河子碳硅铝新材料、乌鲁木齐先进结构材料/电子新材料为国家级集群；昌吉准东硅基铝基新材料千亿级。",w:"锁硅/铝基/电子材料方向，避泛材料；石河子材料有兵团产业依托。",city:"昌吉·石河子·乌鲁木齐"},
+ {n:"化学工程与工艺",c:"工学",ch:"油气/煤化工",t:"A",h:4,s:"中国石油大学（北京）克拉玛依校区／新疆大学（化学化工双一流）／石河子大学（化学工程与技术）",j:"炼油化工、煤化工、精细化工、化工新材料",
+  r:"独山子/克拉玛依/乌石化/塔河炼化+准东/哈密现代煤化工；石油煤炭及其他燃料加工业投资+1.3倍。",w:"选新能源/半导体材料/精细化工方向，避传统高耗能；石河子化工有兵团基础。",city:"克拉玛依·乌昌·哈密"},
+ {n:"计算机类/软件工程",c:"工学",ch:"数字信息",t:"B",h:4,s:"新疆大学（计算机B+、双一流）／石河子大学／新疆财经大学",j:"软件开发、云计算、智慧口岸、跨境数字贸易",
+  r:"克拉玛依云计算产业园建成6座大型数据中心（规模算力新疆首位、西北前列）；新一代信息技术+65%；自贸试验区数字化。",w:"工程能力>文凭，疆内互联网岗位少于内地，可走数字+口岸/能源特色。",city:"克拉玛依·乌鲁木齐"},
+ {n:"机械设计制造及其自动化",c:"工学",ch:"能源装备",t:"B",h:4,s:"新疆大学（机械）／石河子大学／塔里木大学（电机电器智能化全国前三）",j:"风电/油气装备制造、智能产线、高端装备",
+  r:"乌昌石光伏、哈密风电装备、克拉玛依石油装备均为国家级集群；金风、特变装备需求大。",w:"锁能源装备方向，比泛机械更有产业对口。",city:"哈密·乌鲁木齐·克拉玛依"},
+ {n:"自动化",c:"工学",ch:"智能制造",t:"B",h:3,s:"新疆大学／石河子大学",j:"控制系统、工业自动化、机器人",
+  r:"制造业+11.2%、装备制造业+12.8%；油田/电站/棉纺厂自动化改造需求上行。",w:"强电+控制背景，比普机械有智能化溢价。",city:"乌鲁木齐·石河子"},
+ {n:"食品科学与工程",c:"工学",ch:"食品加工",t:"B",h:3,s:"新疆农业大学（食品/农产品）／石河子大学／塔里木大学",j:"果蔬深加工、粮油加工、质检、食品研发",
+  r:"粮食2432.3万吨、林果1400万吨、猪牛羊禽肉223万吨；红枣/杏/葡萄全国第一。",w:"进名企技术岗而非泛食品，南疆林果加工是蓝海。",city:"阿拉尔·喀什·阿克苏"},
+ {n:"物流工程/交通运输",c:"工学",ch:"现代物流",t:"B",h:3,s:"新疆大学（物流/交通）／石河子大学／新疆财经大学",j:"多式联运、供应链、口岸运营、海外仓",
+  r:"2025外贸5203.7亿（+19.9%全国第一），监管中欧班列1.8万列（+7.4%）；19口岸、阿拉山口/霍尔果斯双枢纽。",w:"贴通道+供应链金融比纯运输更有前景。",city:"阿拉山口·霍尔果斯·乌鲁木齐"},
+ {n:"国际经济与贸易/俄语",c:"文学",ch:"向西开放",t:"B",h:3,s:"新疆财经大学（国贸/金融）／新疆大学（俄语/中亚研究）／石河子大学",j:"跨境贸易、涉外法务、中亚市场拓展、翻译",
+  r:"对中亚五国贸易占全国36.4%，与228个国家地区贸易往来；自贸试验区72项制度创新成果。",w:"须叠加语言+贸易+法律，避纯语言内卷；俄语/哈萨克语是向西开放硬通货。",city:"乌鲁木齐·霍尔果斯·喀什"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"新疆医科大学（临床强、5+3）／石河子大学（临床医学B）／喀什大学",j:"三甲/地市医院、兵团医院、科研",
+  r:"新疆医科大是疆内医学龙头，临床医学/5+3一体化王牌，全疆三甲主要人才来源；基层/兵团医疗长期刚需。",w:"学制长（5+3本博）、分数高；石河子大学临床有兵团平台。",city:"乌鲁木齐·石河子·喀什"},
+ {n:"农学/植物保护/园艺",c:"农学",ch:"棉花/林果",t:"C",h:4,s:"新疆农业大学（草业/动物医学强）／石河子大学（农学顶尖）／塔里木大学（农学）",j:"农技推广、种业、植保、林果技术",
+  r:"新疆是全国最大商品棉基地、粮食单产全国第一、红枣/葡萄全国第一；石河子农学全球101—150。",w:"南疆现代农业技术岗缺口大，考公/事业编优势明显。",city:"石河子·阿拉尔·阿克苏"},
+ {n:"动物医学",c:"农学",ch:"绿色畜牧",t:"C",h:3,s:"新疆农业大学（动物医学强）／塔里木大学",j:"兽医、养殖场技术、检疫、宠物医疗",
+  r:"猪牛羊禽肉223万吨、奶业集群（天润/西域春）；新疆农大动物医学为传统强项。",w:"基层畜牧兽医站、现代牧场技术岗需求稳。",city:"昌吉·阿拉尔"},
+ {n:"水利水电工程",c:"工学",ch:"农业水利",t:"C",h:3,s:"石河子大学（水利工程王牌）／新疆农业大学",j:"农田水利、灌区管理、水务",
+  r:"新疆干旱半干旱，高效节水灌溉、高标准农田（新建2471万亩）需求刚性。",w:"兵团/水利系统就业稳，南疆水利建设仍是短板红利。",city:"石河子·乌鲁木齐"},
+ {n:"旅游管理",c:"管理学",ch:"文旅",t:"C",h:3,s:"新疆大学／石河子大学／喀什大学／伊犁师范大学",j:"景区运营、酒店、研学、文创",
+  r:"2025接待游客3.23亿人次、花费3700亿（+8%）；《我的阿勒泰》带动，文旅融合富民。",w:"须叠加数字营销/外语/文创，避纯理论。",city:"阿勒泰·伊犁·喀什"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:3,s:"新疆大学（法学/民族法）／石河子大学",j:"公检法、律所、企业法务、涉外合规",
+  r:"自贸试验区、口岸经济、中亚跨境贸易催生涉外法务需求；新疆大学法学（少数民族语言文学A+）有特色。",w:"须过法考，考公优势明显；涉外方向叠加俄语更吃香。",city:"乌鲁木齐·石河子"},
+ {n:"会计学/财务管理",c:"管理学",ch:"财经",t:"C",h:3,s:"新疆财经大学（会计/金融强）／新疆大学",j:"企业财务、审计、税务、金融",
+  r:"新疆财经大学会计/金融为全疆财经第一，银行/财税系统定向招聘主力。",w:"须考证（CPA等）。",city:"乌鲁木齐"},
+ {n:"教育学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"新疆师范大学（师范龙头）／新疆大学／石河子大学",j:"中小学教师、教研、特岗",
+  r:"南疆本科教育全覆盖、教师缺口大，公费师范生包分配；新疆师大为中小学师资主力。",w:"公费师范生考编优势大，南疆定向编制机会多。",city:"乌鲁木齐·喀什"},
+ {n:"土木工程/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:3,s:"石河子大学（水利方向）／新疆大学",j:"设计院、施工、基建、能源地面工程",
+  r:"新疆以能源/基建驱动，房地产并非主力，但传统土建受宏观地产调整影响，普通土建就业收缩。",w:"除重大能源基建（电网/油田地面工程/水利）外，普通房建设计院岗位有限；否则慎选。",city:"乌鲁木齐·石河子"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"新疆财经大学（会计/金融路径）／新疆大学",j:"企业职能管理、行政、行业管理",
+  r:"新疆国有经济主导、民营经济偏弱（民营经济主体占97.2%但多为中小微），泛管理岗位稀缺、内卷严重。",w:"除非叠加行业+管理（能源/医院/外贸管理）或冲财经名校，否则慎选。",city:"乌鲁木齐"}
+];
+
+var CHAINS = [
+ {n:"油气生产加工（新疆第一引擎）",u:["勘探开发","钻井","油服"],m:["炼油","乙烯","芳烃","天然气净化"],d:["成品油","合成树脂","化纤原料","化工新材料"],
+  mj:"石油工程、油气储运工程、化学工程与工艺、能源化学工程",
+  f:"2025原油3365.90万吨、天然气424.48亿m³，油气当量连续5年全国第一；独山子/克拉玛依/乌石化/塔河炼化一体化支撑炼油—芳烃—化纤—纺织服装链条；中石油克拉玛依校区、新疆大学化工为底。"},
+ {n:"煤炭清洁高效利用+现代煤化工",u:["煤炭开采"],m:["煤电","煤制气","煤制油","煤制烯烃"],d:["基础化工原料","塑料/化肥"],
+  mj:"采矿工程、化学工程与工艺、能源与动力工程、安全工程",
+  f:"2025原煤5.53亿吨；国能哈密400万吨煤制油、天池准东/国能准东20亿m³/年煤制气开工；准东、哈密为国家级现代煤化工基地。"},
+ {n:"新型电力系统+新能源大基地（风光）",u:["硅料/硅片","风机叶片塔筒","储能电池"],m:["光伏/风电机组制造","电站建设","特高压输电"],d:["疆电外送","绿氢","新型储能"],
+  mj:"新能源科学与工程、电气工程及其自动化、能源与动力工程、储能科学与工程",
+  f:"新能源装机超1.6亿kW、占64%为第一大电源；6个千万千瓦级基地；金风科技（风电链主）、特变电工（输变电链主）；哈密—重庆±800kV特高压投产。"},
+ {n:"棉花和纺织服装全产业链",u:["棉花种植","化纤（粘胶/聚酯）"],m:["纺纱","织造","印染"],d:["服装","家纺","产业用纺织品"],
+  mj:"纺织工程、服装设计与工程、轻化工程（印染）",
+  f:"棉花616.5万吨/占全国92.8%，纱335.5万吨（+20%）、布32.7亿米（+36.2%），总产值破千亿；阿拉尔建成皮棉—纺纱—织布—印染—毛巾/家纺全链；规划「1224」。"},
+ {n:"绿色矿业及加工（锂镍钴铅锌）",u:["矿产勘探"],m:["采选","冶炼"],d:["电池材料","钛基/碳基新材料","有色金属加工"],
+  mj:"地质工程、采矿工程、冶金工程、材料科学与工程",
+  f:"火烧云铅锌矿、大红柳滩锂铍矿首期投产；石河子碳硅铝新材料、乌鲁木齐先进结构材料/电子新材料为国家级集群；钛基新材料产量质量国内领先。"},
+ {n:"粮食和食品加工/林果畜牧",u:["小麦/玉米","棉花副产物","红枣/葡萄/苹果","畜禽"],m:["面粉","饲料","果品深加工","肉制品"],d:["商超","电商","餐饮"],
+  mj:"食品科学与工程、生物工程、园艺、动物科学",
+  f:"粮食2432.3万吨（单产全国第一）、林果1400万吨、猪牛羊禽肉223万吨；红枣/杏/葡萄面积产量全国第一。"},
+ {n:"丝绸之路核心区/现代物流/中欧班列",u:["口岸枢纽","自贸试验区"],m:["多式联运","班列集结","保税物流"],d:["跨境贸易","供应链金融","海外仓"],
+  mj:"物流工程、交通运输、国际经济与贸易、俄语等小语种",
+  f:"19个口岸、自贸试验区、2025监管中欧班列1.8万列（+7.4%）；对中亚五国贸易占全国36.4%；阿拉山口/霍尔果斯双枢纽。"},
+ {n:"文化和旅游（丝路文旅）",u:["景区/文化遗产"],m:["文旅运营","酒店","演艺"],d:["文创","电商","研学"],
+  mj:"旅游管理、会展经济与管理、设计学、网络与新媒体",
+  f:"2025接待游客3.23亿人次、游客花费3700亿元（分别+8%、+8.4%）；《我的阿勒泰》等带动，文旅融合富民。"}
+];
+
+var CITIES = [
+ {c:"乌鲁木齐市",i:"商贸物流、现代金融、先进装备制造、化工、新材料、纺织服装、新能源、信息产业",l:"特变电工、金风科技、乌石化、天山纺织",m:"电气、机械、材料、计算机、化工、金融、外语"},
+ {c:"克拉玛依市",i:"油气、石化、油气装备、数字信息（云计算产业园）",l:"中石油克拉玛依石化、新疆油田、华为云/克拉玛依云计算",m:"石油工程、油气储运、化工、计算机、自动化"},
+ {c:"昌吉州（准东）",i:"准东煤电煤化工、硅基铝基新材料、装备、特色农业",l:"特变电工、东方希望、其亚、准东开发区企业",m:"化工、材料（硅/铝）、电气、机械"},
+ {c:"石河子市（兵团）",i:"棉花纺织、化工、农产品加工、医学",l:"天业集团、天富能源、兵团农垦、石河子大学",m:"纺织、化工、农学、临床、食品"},
+ {c:"哈密市",i:"煤电、煤化工（煤制油）、新能源（风光）、疆电外送",l:"国能哈密、哈密金风、国网特高压",m:"电气、新能源、化工、机械"},
+ {c:"伊犁州（霍尔果斯）",i:"粮食、文旅、霍尔果斯口岸、能源",l:"霍尔果斯口岸、伊犁川宁、文旅集团",m:"国贸、外语、旅游、食品、物流"},
+ {c:"巴州（库尔勒）",i:"油气、棉花、香梨、纺织",l:"中石油塔里木油田、中泰、香梨股份",m:"石油工程、纺织、食品、化工"},
+ {c:"阿克苏地区",i:"棉花、苹果、红枣、纺织、光电材料",l:"阿克苏纺织、阿拉尔高新区（光电/光伏）",m:"纺织、农学、材料（光伏）、食品"},
+ {c:"喀什地区",i:"口岸、纺织服装、林果、边贸",l:"喀什经开区、喀什大学、棉纺企业",m:"纺织、外语、国贸、物流、旅游"},
+ {c:"吐鲁番市",i:"煤炭、风能、先进装备制造、建材",l:"火电/风电、装备企业",m:"电气、机械、新能源、化工"},
+ {c:"博州/塔城",i:"清洁能源、纺织服装、畜牧、口岸",l:"阿拉山口口岸、赛里木湖文旅",m:"电气、新能源、纺织、畜牧"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

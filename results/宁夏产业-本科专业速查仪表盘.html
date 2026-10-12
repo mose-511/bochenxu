@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宁夏产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f5;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#1a5e7a;
+  --brand-soft:#e6eef2;
+  --accent:#b5793a;
+  --accent-soft:#f6ede2;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#6a3f17;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>宁夏产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年宁夏统计公报</b> · <b>六大产业集群（宁东煤化工/新硅都/绿电/中卫算力/贺兰山东麓葡萄酒/中宁枸杞）</b> · <b>中国新硅都（硅片全国第一梯队）</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">5696.49亿</div><div class="note">增长5.3%，全国第29</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+6.9%</div><div class="note">制造业+11.2%、二产投资+18.3%</div></div>
+  <div class="stat"><div class="lab">硅片产能</div><div class="val">93GW</div><div class="note">中国新硅都、全国第一梯队</div></div>
+  <div class="stat"><div class="lab">宁东工业产值</div><div class="val">2000亿+</div><div class="note">占全区约1/3、煤制油460万吨全国第1</div></div>
+  <div class="stat"><div class="lab">可再生装机</div><div class="val">6559万kW</div><div class="note">占66.3%、绿电底盘</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-26.9%</div><div class="note">银川-20.6%、吴忠-41.4%</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：化工、硅、材料、电气、算力、计算机、临床、法学、葡萄酒、枸杞、羊绒、草学、师范、宁大、北方民大">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>储能科学与工程（对应宁夏绿电/储能）、生物制造（对应枸杞药食）、半导体材料（对应中国新硅都）、氢能（对应宁东绿电制氢）全部对得上宁夏产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。宁夏考生多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>宁夏有千亿/国家级集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/绿电/算力/特色农品，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应宁夏独有赛道（葡萄酒/枸杞/羊绒/草学/临床），分数友好但需选对方向。适合想留宁、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压拖累，或严重内卷、区内岗位稀薄。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>宁夏大学及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>宁夏大学（化工/草学双一流，材料/电气/计算机）、或冲外省 211/985（兰大、西安等西北强校）</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>北方民族大学（计算机/电子/化工，国家民委直属）、宁夏医科大（临床/药学）</td></tr>
+        <tr><td><b>中分</b><br>二本线</td><td>用行业校补分数差，贴宁夏产业链</td><td>宁夏理工学院（材料/化工/电气）、宁夏师范大学（师范）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的院校，锁特色专业</td><td>宁夏大学（葡萄酒/法学/旅游）、宁夏师大（师范）、北方民大（法学/语言复合）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在宁夏读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>化工/材料（硅）/电气/能源动力/计算机（算力）/自动化<br><span style="color:var(--ink-3);font-size:12.5px">（宁东+新硅都+绿电+算力硬科技）</span></td><td><b style="color:var(--green)">优先留宁或就近西北</b></td><td>宁夏大学化工/草学双一流壁垒独一，宁东/新硅都/中卫岗位密集，分数低于京沪苏浙</td></tr>
+        <tr><td>临床/药学/法学/师范/葡萄酒/旅游</td><td><b style="color:var(--green)">留宁或出省</b></td><td>宁夏医科大、宁大、宁夏师大在西北认可度高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统机械/纯语言</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产-26.9%、外贸仅209.93亿，区内土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a5e7a;border-left-color:var(--brand);margin-top:14px">
+      <b>宁夏独有特征：经济体量小（GDP全国第29）但产业极度聚焦——宁东煤化工 + 中国新硅都 + 中卫算力 + 贺兰山东麓葡萄酒 + 中宁枸杞 + 灵武羊绒，六条链各有全国乃至全球壁垒。</b>宁夏高教资源稀缺（<b>仅宁夏大学1所211/双一流</b>），行业校只有北方民大、宁医大、宁夏师大、宁夏理工等；<b>外省/河北考生来宁读「化工·材料（硅）·电气·算力计算机·临床·葡萄酒·草学」性价比中等</b>——产业对口但院校层级有限；土建·泛管理·纯语言不建议来宁；本区考生反而应算清「留宁vs出省（兰州/西安/成都）」，高教稀缺意味着保研要早规划。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>宁夏靠「宁东煤化工 + 中国新硅都 + 绿电 + 中卫算力 + 特色农品」五条主线，别被「宁夏太小」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>化工、材料（硅）、电气、计算机（算力）、能源动力、过程装备六者覆盖宁夏最有确定性的岗位，优先冲。</li>
+      <li><b>贴「宁东 + 银川高新区 + 中卫」三极点。</b>宁东（煤化工/绿电）、银川高新区（新硅都/总部）、中卫（算力）贡献最密集产业与院校重叠。</li>
+      <li><b>宁夏大学双一流学科是最大信息差。</b>化学工程与技术、草学两个双一流学科全国独一，分数远低于同档综合校，是留宁最优解。</li>
+      <li><b>中国新硅都是最被低估的王牌。</b>硅片约93GW全国第一梯队，材料（光伏/半导体）+电气+自动化在宁夏壁垒强，且抗周期优于组件制造。</li>
+      <li><b>特色农品是冷门优质通道。</b>贺兰山东麓葡萄酒（葡萄与葡萄酒工程）、中宁枸杞（食品/药学）、灵武羊绒（纺织）全国独一、分数友好、就业对口。</li>
+      <li><b>算力（中卫）是未来十年的上行极。</b>东数西算枢纽 + 21万+PFlops算力，计算机/人工智能/数据科学在宁夏首次有了本地确定性岗位。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被AI与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产投资-26.9%（银川-20.6%、吴忠-41.4%）；除非宁夏大学土木或志在央企驻宁基建。</li>
+      <li><b>算清「留宁 vs 出省（兰州/西安/成都）」。</b>宁夏仅1所211，高教稀缺；选专业时规划深造路径与就业地，保研要早准备，优等生应重点考虑西北强校或出省。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：宁夏回族自治区统计局《2025 年宁夏回族自治区国民经济和社会发展统计公报》（2026-03）、宁东能源化工基地管委会运行数据、宁夏工信厅「十五五」产业集群部署、中卫市云基地「东数西算」发布、贺兰山东麓葡萄酒产业管委会、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。统计公报原文「25696.49 亿元」为 OCR 录入错误，已按公报其余段落及政府工作报校正为 5696.49 亿元。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"化学工程与工艺（宁东现代煤化工）",c:"工学",ch:"宁东煤化工",t:"A",h:5,s:"宁夏大学（化学工程与技术双一流）／北方民族大学（化工）／宁夏理工学院",j:"煤化工工艺、精细化工、化工新材料、安环",
+  r:"宁东工业总产值2000亿+、占全区约1/3，煤制油460万吨全国第1，链条全国最完整之一。",w:"锁煤化工/精细化工/化工新材料方向；宁夏大学该学科是全区最硬双一流壁垒。",city:"宁东 · 银川"},
+ {n:"材料科学与工程（光伏硅材料/高性能金属）",c:"工学",ch:"新硅都/金属",t:"A",h:5,s:"宁夏大学（材料）／北方民族大学（材料）／宁夏理工学院",j:"硅材料、半导体材料、金属材料、复合材料",
+  r:"银川单晶硅棒约122GW、硅片约93GW（全国第一梯队）；中色东方钽铌铍、铝锰材料为隐形冠军。",w:"选光伏/半导体材料、稀有金属方向，避泛材料；比组件制造更抗PPI下行。",city:"银川 · 石嘴山 · 宁东"},
+ {n:"电气工程及其自动化（绿电/电网/化工电气）",c:"工学",ch:"绿电/电网",t:"A",h:4,s:"宁夏大学（电气）／北方民族大学（电气）",j:"电网、新能源电气、储能、化工电气",
+  r:"可再生装机6559万kW、占66.3%，电力投资+52.3%；宁东绿电园区、风光储全需电气底座。",w:"电网方向需提前准备国网考试；绿电+储能是长期上行。",city:"宁夏 · 宁东"},
+ {n:"计算机类（中卫算力/东数西算）",c:"工学",ch:"中卫算力",t:"A",h:4,s:"宁夏大学（计算机）／北方民族大学（计算机，国家民委直属）／宁夏理工学院",j:"云计算、数据中心运维、软件开发、AI工程",
+  r:"中卫为国家东数西算八大枢纽，算力21万+PFlops级、投资约150亿量级；亚马逊云/美利云落地。",w:"工程能力>文凭；中卫算力给本地计算机岗新增确定性。",city:"中卫 · 银川"},
+ {n:"能源与动力工程（宁东能源/煤制油/火电）",c:"工学",ch:"宁东能源",t:"A",h:4,s:"宁夏大学（能源动力）／北方民族大学",j:"动力厂、热动、煤化工动力、新能源场站",
+  r:"宁东煤制油460万吨、火电与绿电双底盘，能源动力是宁夏工业不可替代的底座专业。",w:"偏工程现场，适合能接受驻厂/基地环境的考生。",city:"宁东 · 银川"},
+ {n:"过程装备与控制工程（宁东化工装备）",c:"工学",ch:"化工装备",t:"A",h:4,s:"宁夏大学（过程装备）／北方民族大学（机械）",j:"化工设备、压力容器、仪表控制、运维",
+  r:"宁东庞大化工装置+天地奔牛煤机+吴忠仪表，过程装备/控制阀需求刚性、长期缺人。",w:"强化学控制+机械，比纯机械更有溢价。",city:"宁东 · 吴忠 · 石嘴山"},
+ {n:"自动化/测控技术与仪器（化工自动化/智能工厂）",c:"工学",ch:"化工自动化",t:"B",h:4,s:"宁夏大学（自动化/测控）／北方民族大学",j:"控制系统、工业自动化、仪表、机器人",
+  r:"宁东智能工厂、吴忠仪表（控制阀冠军）、工业智能升级全需自动化/测控。",w:"强电+控制背景，比普机械更贴产业。",city:"宁东 · 吴忠"},
+ {n:"人工智能/数据科学与大数据技术（中卫算力）",c:"工学",ch:"中卫算力",t:"B",h:4,s:"宁夏大学（人工智能/大数据）／北方民族大学",j:"算法、数据工程、算力运营、数据标注",
+  r:"中卫智算中心、AI训练与数据标注需求上行；数字信息为六新支柱。",w:"数学要求高，深造路径清晰。",city:"中卫 · 银川"},
+ {n:"电子信息类（数字信息/算力配套）",c:"工学",ch:"数字信息",t:"B",h:3,s:"北方民族大学（电子）／宁夏大学",j:"通信、嵌入式、光电、算力硬件",
+  r:"算力集群带动服务器/通信/光电配套，硅材料器件向上游延伸。",w:"区内电子产业链偏配套，深造更利。",city:"银川 · 中卫"},
+ {n:"环境科学与工程（煤化工环保/绿电）",c:"工学",ch:"煤化工环保",t:"B",h:3,s:"宁夏大学（环境）／北方民族大学",j:"环保工程、安环管理、碳管理",
+  r:"宁东环保与碳约束趋严，绿电+CCUS需求上行。",w:"贴化工安环+碳管理比纯监测更有岗。",city:"宁东 · 银川"},
+ {n:"食品科学与工程（枸杞/葡萄酒/牛奶）",c:"工学",ch:"枸杞/葡萄酒/奶",t:"B",h:3,s:"宁夏大学（食品）／北方民族大学",j:"食品加工、质检、酿造、研发",
+  r:"贺兰山东麓葡萄酒340亿品牌、中宁枸杞213亿、夏进/伊利奶产业，特色农品加工技术岗刚性。",w:"进名企技术岗而非泛食品。",city:"银川 · 中宁 · 贺兰"},
+ {n:"生物工程/生物技术（枸杞药食/发酵）",c:"理学",ch:"枸杞药食",t:"B",h:3,s:"宁夏大学（生物）／宁夏医科大学（基础）",j:"发酵、提取、生物制剂、质检",
+  r:"枸杞多糖/红素提取、葡萄酒酵母发酵、药食同源产业对接生物。",w:"医工/农工交叉，比纯生物更对产业口。",city:"中宁 · 银川"},
+ {n:"葡萄与葡萄酒工程（贺兰山东麓）",c:"工学",ch:"贺兰山东麓",t:"C",h:4,s:"宁夏大学（葡萄与葡萄酒工程）",j:"酿造、酒庄技术、品控、酒旅",
+  r:"60.7万亩、1.4亿瓶、品牌价值340亿，全国唯一明星产区；对口专业布点极少。",w:"全国独一、分数友好；贴产区酒庄就业对口率极高。",city:"贺兰 · 银川"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"宁夏医科大学（临床强）／宁夏大学（基础医学）",j:"三甲/地市医院、科研、公共卫生",
+  r:"老龄化+健康需求长期刚性；宁夏医科大附院平台强、留宁三甲比例高。",w:"学制长（5+3本博）、分数高。",city:"银川 · 宁医大"},
+ {n:"药学（枸杞药食/中药）",c:"医学",ch:"枸杞药食",t:"C",h:4,s:"宁夏医科大学（药学）／宁夏大学",j:"药物研发、质检、药食同源",
+  r:"枸杞提取物、中药标准化、宁夏中药资源丰富。",w:"须深造或进药企/监管，避纯销售。",city:"银川 · 中宁"},
+ {n:"草业科学（宁夏大学双一流）",c:"农学",ch:"饲草/生态",t:"C",h:3,s:"宁夏大学（草学双一流）",j:"草种质、饲草、生态修复",
+  r:"宁夏大学草学为双一流学科，服务滩羊/肉牛饲草与生态修复。",w:"全国布点少、竞争小，适合志在科研/生态。",city:"宁夏 · 宁大"},
+ {n:"纺织工程（灵武羊绒）",c:"工学",ch:"灵武羊绒",t:"C",h:3,s:"宁夏大学（纺织材料）／北方民族大学",j:"纺纱、面料、羊绒材料、品牌",
+  r:"灵武羊绒产值约28.2亿、全球份额前三，精深加工急需材料/纺织工程。",w:"贴羊绒材料+品牌比纯纺织更有前景。",city:"灵武 · 银川"},
+ {n:"法学（民族区域自治/法务）",c:"法学",ch:"法律服务",t:"C",h:3,s:"宁夏大学（法学）／北方民族大学",j:"公检法、律所、企业法务、民族事务",
+  r:"民族区域自治地方对政法/法务/合规需求稳定；北方民大、宁大法学本地认可度高。",w:"须过法考，考公优势明显。",city:"银川"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"宁夏师范大学（师范）／宁夏大学",j:"中小学教师、教研、心理咨询",
+  r:"宁夏师大、宁夏大学师范为全区师资主源，公费师范生考编优势。",w:"公费师范生包分配，考编优势大。",city:"宁夏 · 银川"},
+ {n:"旅游管理（沙湖/沙坡头/西夏陵/酒庄游）",c:"管理学",ch:"文旅",t:"C",h:3,s:"宁夏大学（旅游）／北方民族大学",j:"景区运营、酒旅、文旅策划",
+  r:"沙坡头、沙湖、西夏陵、贺兰山东麓酒庄游，文旅为六优之首。",w:"须叠加酒庄/数字营销技能，避纯导游。",city:"中卫 · 银川 · 贺兰"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"宁夏大学（土木）",j:"设计院、施工、基建、智能建造",
+  r:"房地产投资309.04亿（-26.9%）、银川-20.6%、吴忠-41.4%，土建链承压。",w:"仅宁夏大学土木，或志在央企驻宁基建/水利；否则慎选。",city:"宁夏"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"宁夏大学／北方民族大学",j:"企业职能管理、行政、咨询",
+  r:"宁夏以能源/制造/农品为主，泛管理岗位稀缺、内卷严重。",w:"叠加行业+管理（能源/医院/酒企管理），否则慎选。",city:"宁夏"},
+ {n:"机械设计制造及其自动化（偏传统）",c:"工学",ch:"装备制造",t:"D",h:2,s:"宁夏大学／北方民族大学",j:"煤机、仪表、通用机械",
+  r:"区内装备以煤机/仪表/稀有金属设备为主，通用机械岗位稀薄。",w:"锁化工装备/煤机/仪表方向，否则区内机会少。",city:"宁东 · 吴忠 · 石嘴山"},
+ {n:"外国语言文学（纯语言）",c:"文学",ch:"跨境",t:"D",h:2,s:"宁夏大学／北方民族大学",j:"跨境贸易、外事、涉外",
+  r:"宁夏外贸体量仅209.93亿、涉外需求弱；纯语言内卷。",w:"须叠加贸易/国贸/法律，避纯语言；走羊绒/葡萄酒出口复合路线。",city:"银川 · 灵武"}
+];
+
+var CHAINS = [
+ {n:"宁东现代煤化工（全区工业压舱石）",u:["煤炭","煤化工原料"],m:["煤制油（460万吨全国第1）","煤基烯烃","精细化工"],d:["化工新材料","工程塑料","下游应用"],
+  mj:"化学工程与工艺、过程装备、能源动力、应用化学",
+  f:"宁东工业总产值2000亿+、占全区约1/3，对规上工业增长贡献率50%+；国家能源宁煤、宝丰能源双核；链条全国最完整之一。"},
+ {n:"中国新硅都（光伏硅材料，全国第一梯队）",u:["工业硅","多晶硅"],m:["单晶硅棒（约122GW）","硅片（约93GW）","电池片"],d:["组件","光伏电站","储能"],
+  mj:"材料（光伏/半导体）、新能源材料、电气、自动化",
+  f:"银川（含宁东、银川高新区）硅材料产能爆发，硅片约93GW居全国第一梯队；但2025光伏内卷、PPI-5.7%，制造端承压、材料底座更稳。"},
+ {n:"清洁能源与绿电（风光储底盘）",u:["风机","光伏组件"],m:["风光电场","储能","绿电制氢"],d:["电网","绿电消纳","算力供电"],
+  mj:"电气工程、能源动力、储能科学",
+  f:"可再生装机6559万kW、占66.3%；电力投资+52.3%；宁东绿电园区支撑煤化工与算力双耗电大户。"},
+ {n:"中卫算力/东数西算（西部数字极点）",u:["服务器","数据中心硬件"],m:["云计算","智算中心","数据标注"],d:["AI训练","政务云","算力服务"],
+  mj:"计算机、人工智能、数据科学",
+  f:"中卫为国家东数西算八大枢纽之一，算力21万+PFlops级、投资约150亿量级；亚马逊云、美利云、中国电信云落地。"},
+ {n:"贺兰山东麓葡萄酒（世界级特色集群）",u:["酿酒葡萄种植（60.7万亩）"],m:["酿造","陈酿","酒庄"],d:["品牌","文旅酒庄游","出口"],
+  mj:"葡萄与葡萄酒工程、食品、旅游",
+  f:"年产约1.4亿瓶、产区品牌价值340亿，国际机构称世界葡萄酒版图崛起的明星产区；全国对口专业布点极少。"},
+ {n:"中宁枸杞（药食同源特色集群）",u:["枸杞种植（中宁核心区）"],m:["干果","原浆","提取物"],d:["保健品","药食同源","电商"],
+  mj:"食品、生物工程、药学",
+  f:"中宁枸杞综合产值约213亿，掌握全国价格与标准话语权；枸杞多糖/红素提取对接生物与药学。"},
+ {n:"灵武羊绒（精品纺织，全球份额前三）",u:["羊绒原料"],m:["分梳","纺纱","面料"],d:["高端服饰","品牌","出口"],
+  mj:"纺织工程、材料（纺织材料）、国贸",
+  f:"灵武羊绒产值约28.2亿，全球羊绒精深加工份额前三；中银绒业、嘉源绒业为代表。"},
+ {n:"高性能金属材料/装备制造（石嘴山+宁东）",u:["铝","锰","稀有金属"],m:["铝材","锰系材料","煤机装备","仪表"],d:["航空航天","化工装备","新能源装备"],
+  mj:"材料、机械、自动化、测控",
+  f:"中色东方（钽铌铍稀有金属）、天地奔牛（煤机）、吴忠仪表（控制阀）为隐形冠军；石嘴山煤基碳材、杉杉锂电材料布局。"}
+];
+
+var CITIES = [
+ {c:"银川市（首府）",i:"高新区新材料、经开区、总部经济、文旅",l:"隆基（银川）、宝丰、共享装备、天地奔牛",m:"材料、电气、计算机、临床、师范"},
+ {c:"宁东能源化工基地",i:"现代煤化工、煤制油、精细化工、绿电",l:"国家能源宁煤、宝丰能源、国能集团",m:"化工、能源动力、电气、自动化、装备"},
+ {c:"石嘴山市",i:"高性能金属（铝/锰）、煤基碳材、装备制造",l:"中色东方、天地奔牛、杉杉锂电",m:"材料、冶金、机械、化工"},
+ {c:"吴忠市",i:"装备制造、仪表、奶产业、滩羊、绿色食品",l:"吴忠仪表、夏进乳业、伊利（吴忠）",m:"机械、自动化、食品、生科"},
+ {c:"中卫市",i:"算力（东数西算）、云计算、文旅（沙坡头）",l:"亚马逊云、美利云、中国电信云",m:"计算机、人工智能、数据科学、旅游"},
+ {c:"固原市",i:"特色农业、中药材、文旅（六盘山）",l:"中药材基地、冷凉蔬菜",m:"食品、生科、中医、旅游"},
+ {c:"灵武市",i:"羊绒精深加工（全球份额前三）、宁东部分",l:"中银绒业、嘉源绒业",m:"纺织工程、材料、国贸"},
+ {c:"贺兰县（贺兰山东麓）",i:"酿酒葡萄种植与酿造、文旅酒庄",l:"贺兰山东麓酒庄集群",m:"葡萄与葡萄酒工程、食品、文旅"},
+ {c:"中宁县",i:"枸杞种植加工（中宁枸杞核心区）",l:"枸杞深加工企业",m:"食品、药学、生物工程"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

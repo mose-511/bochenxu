@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>河北产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f5f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#2a4a7a;
+  --brand-soft:#e8edf5;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>河北产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年河北统计公报</b> · <b>8大产业「四梁八柱」+ 七大新兴支柱</b> · <b>107个县域特色产业集群（营收3.6万亿）</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+  <div class="sub" style="margin-top:4px">核心骨架一句话：<b>「传统产业减量提质 + 新兴产业提速 + 县域集群托底」的制造业大省</b>，2025 年是近十年工业表现最好的一年；短板是 PPI -5.3%、人均 GDP 低于全国、双一流仅河北工业大学 1 所（主校区在天津）。</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">4.93万亿</div><div class="note">49305.2亿、+5.6%，增速全国第3</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+7.9%</div><div class="note">增速全国第6，近10年最高</div></div>
+  <div class="stat"><div class="lab">工业利润</div><div class="val">1640.3亿</div><div class="note">+29.9%，制造业利润+37.7%</div></div>
+  <div class="stat"><div class="lab">风光装机</div><div class="val">破1亿千瓦</div><div class="note">全国第2，可再生能源占73.4%</div></div>
+  <div class="stat"><div class="lab">社会零售</div><div class="val">15483.2亿</div><div class="note">+5.6%，增速全国第2</div></div>
+  <div class="stat"><div class="lab">建筑业增加值</div><div class="val">-0.7%</div><div class="note">水泥-2.8%、平板玻璃-5.8%，土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：电气、机械、燕大、材料、药学、铁路、师范、雄安、储能、冶金、华北电力">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>河北「十五五」规划的新兴支柱与未来产业几乎逐条对上</b>：低空经济（七大新兴支柱之一）、生物制造与具身智能（四大未来产业之二）、半导体工艺与装备（电子信息三年「倍增」计划）。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟——河北工业大学、燕山大学等省属强校的新专业相对有保障，普通院校需谨慎。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。河北高校多按专业组投档，更要查清专业组包含的具体专业，<b>避免被调剂到 D 档（土木/建材/泛管理）</b>。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>河北有 8 大产业「四梁八柱」/国家集群/千亿集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业、优先留河北的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴支柱/未来产业，增速快但波动大、部分环节尚在爬坡。适合有冲劲、愿意持续学习、可接受深造的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应河北独有刚需赛道（医药/师范/公安司法/食品/轨道交通/冶金安全），分数友好。适合想留河北、看重稳定编制或行业资源的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/建材收缩、产量下滑或严重内卷拖累。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略（含历史组）</h3>
+    <table>
+      <thead><tr><th style="width:24%">分数段</th><th style="width:28%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>华北电力（保定）/河北工大线及以上</td><td>学校优先 + 专业不将就，锁双一流/国家重点学科；<b>这一档应认真考虑出省冲 985/强 211</b></td><td>华北电力（保定）电气 A、河北工业大学（电气为国家双一流建设学科）；或出省读计算机/电子信息/临床/航空航天（河北本土无 A 类计算机、无航空宇航 A 类）</td></tr>
+        <tr><td><b>中高分</b><br>燕山大学/河北医科大学线</td><td>选「A 类学科/行业顶尖专业」优于「综合排名略高但专业弱」</td><td>燕山大学（机械 A-、材料 B+）、河北医科大学（临床 B-）、石家庄铁道大学（土木 B+、交通运输特色）</td></tr>
+        <tr><td><b>中分</b><br>省属重点线</td><td>用行业特色校补分数差，贴河北 8 大产业与本地产业集群</td><td>河北科技大学（化工/制药/材料）、华北理工大学（冶金/矿业/安全）、河北农业大学（食品）、河北中医药大学（中药→安国）</td></tr>
+        <tr><td><b>中低分</b><br>省属一般本科/民办</td><td>优先有行业背景或属地就业资源的院校，锁特色专业</td><td>北华航天工业学院（航天软件）、防灾科技学院（防灾减灾）、河北建筑工程学院（建筑）、地市师范（唐山/廊坊/邢台/保定学院，本地考编）</td></tr>
+        <tr><td><b>专科/职业本科</b></td><td>河北职业院校在校生 173 万余人；<b>撤并 1265 个低就业率专业点、新增 1166 个紧缺专业点</b></td><td>优先选「先进制造/新能源/康养/轨道交通」类，避开已撤并专业的同类高职专业</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:14px;margin-top:10px"><b>历史组建议（单独列）：</b></p>
+    <ul>
+      <li><b>师范类</b>：河北师范大学 + 地市师范（唐山/廊坊/邢台/保定/河北民族师范），公费师范生/优师计划包分配，是历史组最稳的选择；</li>
+      <li><b>公安司法类</b>：中央司法警官学院（保定）、中国人民警察大学（廊坊），提前批、入警通道明确（需政审体检体测）；</li>
+      <li><b>财经类</b>：河北经贸大学（会计/审计/金融）、河北金融学院（保定）、河北地质大学（经管）；</li>
+      <li><b>法学</b>：河北大学、河北经贸大学法学，须过法考；<b>中医/护理</b>：河北中医药大学（对接安国集群）、河北医科大学护理学；<b>新闻传播</b>：河北大学新闻传播学 B，为河北文科最强学科之一。</li>
+      <li><b>历史组须避开</b>：要求物理/化学的工科专业（河北 8 大产业对口专业绝大多数限物理）、纯管理类、以及分数虚高但无行业壁垒的「校名好听」专业。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>四、留省读，还是出省读？（本篇重点）</h3>
+    <table>
+      <thead><tr><th style="width:36%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>电气、机械、材料/冶金、自动化、车辆、药学<br><span style="color:var(--ink-3);font-size:12.5px">（河北 8 大产业「四梁八柱」硬核对口）</span></td><td><b style="color:var(--green)">优先留省</b></td><td>燕大机械 A-、华北电力（保定）电气 A、河北工大电气双一流学科；石药/河钢/长城/中车唐山就在家门口——同分数段在外省只能读普通 211 的弱势专业，留省能读 A 类/B+ 学科 + 拿本地龙头实习与校招</td></tr>
+        <tr><td>食品、师范、公安司法、地质矿业安全、中药、轨道交通</td><td><b style="color:var(--green)">优先留省</b></td><td>高度依赖本地体制内招录与属地资源（教师编制、警司系统、省内地勘与矿业、安国中药、铁路局），出省读反而丢失属地优势</td></tr>
+        <tr><td>计算机（算法/AI）、航空航天、微电子/IC 设计、数据科学（算法岗）、金融（投研/量化）</td><td><b style="color:var(--brand)">建议出省</b></td><td>河北本土无 A 类计算机、无航空宇航 A 类学科，算力优势偏存储与调度；IC 产量 2025 年 -37.6%；高价值岗位集中在京津沪深杭，出省读 = 就近进入产业与实习圈</td></tr>
+        <tr><td>临床医学、法学、会计金融、新闻传播</td><td><b style="color:var(--accent)">留省或出省均可，看分数</b></td><td>河北医科大学临床 B- + 5 所直属三甲在省内够用；冲名校（985/五院四系/两财一贸）则果断出省</td></tr>
+        <tr><td>土木工程、传统建材、泛管理</td><td><b style="color:var(--red)">两条路都要谨慎</b></td><td>建筑业增加值 -0.7%、建筑企业利润 -27.0%、水泥 -2.8%、平板玻璃 -5.8%；留省与出省都无法回避行业下行，只能靠转向（智能建造/光伏玻璃/物流管理）</td></tr>
+      </tbody>
+    </table>
+    <ul style="margin-top:10px">
+      <li><b>① 留省读「行业顶尖学科」的性价比全国罕见地高。</b>燕大机械 A- 却非双一流、石铁大土木 B+、河北工大化工 B+——这些学科的录取分数远低于同等学科实力的外地 211。河北家长最容易犯的错，是「为了 211 名头把孩子送出省，结果读了该校最弱势的专业」。</li>
+      <li><b>② 三类孩子必须出省：</b>冲 985/顶尖 211 的、想做算法/芯片设计/航空航天的、想进投研与量化金融的。河北的强项是「制造与工程落地」，不是「前沿研发与资本密集」。</li>
+      <li><b>③ 京津虹吸既是风险也是机会。</b>超 220 家河北零部件企业进入京津汽车产业链，保定与雄安共建「车路云一体化测试基地」、年配套产值超 200 亿元，278 项京雄政务服务同城化、209 项资质资格互认——在河北读「制造/工程/医药」类专业，未来在京津冀一体化产业链里就业，是被政策明确支持的路径。</li>
+      <li><b>④ 长期变量要算人口。</b>2025 年出生 36 万人、自然增长率 -3.59‰，师范与基础教育岗位长期收缩；60 岁以上占 23.82%，医疗、康养、药学长期向好。选专业时把「这个行业 15 年后还有没有增量」问一遍。</li>
+    </ul>
+    <div class="warn" style="background:var(--brand-soft);color:#2a4a7a;border-left-color:var(--brand);margin-top:14px">
+      <b>河北独有优势：先进钢铁减量提质的全国转型样本 + 风光装机全国第2/抽蓄规划全国第1 + 综合算力指数连续两年全国第一 + 107个县域集群「一县一品」就业底盘。</b>但全省双一流仅河北工业大学 1 所（主校区在天津）、无本土 985；<b>留省读「燕大机械 A-、华北电力电气 A、石铁大土木 B+」的学科性价比全国罕见</b>；算法/IC 设计/航空航天等学科制高点须出省获取。填报顺序：先定专业方向，再定地域，顺序不能反。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>河北靠「钢铁（材料级）+ 装备制造 + 绿色化工 + 健康食品 + 现代轻纺」五大传统底盘，加上电子信息、生物医药、新能源和智能网联汽车、机器人、空天信息等新兴动能，别被「京津冀后花园」「高考大省」的标签误导去挤纯管理。</li>
+      <li><b>A 档六个专业是压舱石。</b>电气、机械、材料/冶金、计算机、药学、自动化——覆盖河北最有确定性的岗位池，中等及以上分数优先冲。</li>
+      <li><b>贴「石家庄 + 唐山 + 保定」三极 + 雄安一个新极。</b>石家庄（生物医药 + 电子信息双千亿）、唐山（精品钢铁 + 机器人 + 轨道交通）、保定（两大国家级先进制造业集群）、雄安（空天信息 + 软件信息服务）。</li>
+      <li><b>燕山大学机械 A- 是河北最大的分数洼地，华北电力（保定）电气 A 是河北最强的学科。</b>前者「非双一流但学科顶尖」，后者「分数高但回报最稳」——这是河北家长必须知道的两个坐标。</li>
+      <li><b>河北工业大学是河北人的双一流，但它在天津。</b>报它之前先确认：能否接受四年在天津（红桥区）就读、毕业后回河北还是留津。它的电气（国家双一流建设学科）、化工（B+）、机械、材料在京津冀都很好用。</li>
+      <li><b>钢铁要重新认识：从「原料级」到「材料级」是河北最成功的转型样本。</b>吨钢盈利高出全国 31.42%、河钢是第一大家电用钢制造商——但必须是材料/冶金/自动化/机械方向，绝不是传统建材方向（水泥 -2.8%、平板玻璃 -5.8%）。</li>
+      <li><b>别忽视 107 个县域集群的就业底盘。</b>清河羊绒、安平丝网、临西轴承、白沟箱包、宁晋线缆、青县化妆刷……集群 2024 年营收 3.6 万亿元，招聘需求真实存在，且外地毕业生几乎不会来竞争——本地生源回去做技术与外贸，是很实际的路径。</li>
+      <li><b>新兴方向要分层：整机涨、IC 产量跌。</b>计算机通信电子 +21.1%、锂离子电池 +35.2%、太阳能电池 +30.6%，但集成电路产量 -37.6%、新能源汽车产量 -3.8%。选微电子要偏设计/应用，选车辆要偏智能网联。</li>
+      <li><b>土建链与建材链坚决回避传统方向。</b>建筑业增加值 -0.7%、建筑企业利润 -27.0%（国有控股 -45.5%）、房地产用地 -21.1%。唯一例外是石家庄铁道大学的铁路/轨道方向与光伏玻璃（沙河占全国 35%）。</li>
+      <li><b>把「留省 vs 出省」当成一次家庭会议，而不是填报当天临时决定。</b>留省能读到外省读不到的学科性价比（燕大机械 A-、石铁大 B+），出省才能读到河北没有的学科制高点（985、算法、IC 设计、航空航天）。先定专业方向，再定地域，顺序不能反。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：河北省统计局、国家统计局河北调查总队《河北省 2025 年国民经济和社会发展统计公报》（2026-04-13）、河北省政府新闻办「2025 年河北经济运行情况新闻发布会」（2026-01-22）、《河北省国民经济和社会发展第十五个五年规划纲要》、河北省工信厅《加快河北省战略性新兴产业融合集群发展行动方案（2023—2027 年）》、中国雄安官网疏解进展通报、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以河北省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值与增速跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"电气工程及其自动化（电网/新能源并网/智能电网装备）",c:"工学",ch:"电网/新能源/电力装备",t:"A",h:5,s:"华北电力大学（保定校区，电气A类、全国最高档）／河北工业大学（电气为国家双一流建设学科，主校区在天津）／燕山大学（国家一流本科专业）",j:"国家电网/冀北电力、发电集团（风电光伏储能）、电气设备制造（保变、风帆）、新能源车企三电、设计院",
+  r:"风光装机破1亿千瓦全国第2、抽蓄规划规模全国第1、保定「中国电谷」国家级集群、电气机械+13.6%。",w:"华北电力（保定）电气A类分数最高；电网方向需提前准备国网考试；电气是河北最「稳」的选择之一。",city:"保定 · 石家庄 · 张家口"},
+ {n:"机械设计制造及其自动化（含机器人/车辆/重型装备）",c:"工学",ch:"装备/机器人/汽车",t:"A",h:5,s:"燕山大学（机械工程A-、河北唯一A类学科）／河北工业大学（机械B）／石家庄铁道大学／华北理工大学",j:"汽车及零部件（长城、中信戴卡）、工程机械、机器人集成、钢铁装备、轧机/连铸装备、产线自动化",
+  r:"高端装备+10.9%、通用设备+18.2%；「唐山造」特种/巡检/焊接机器人市占率全国第一。",w:"燕大机械A-非双一流却行业认可度极高，是最大分数洼地；锁机器人/新能源装备/智能装备方向，避泛机加工。",city:"唐山 · 秦皇岛 · 保定"},
+ {n:"材料科学与工程/冶金工程（先进钢铁·高端材料方向）",c:"工学",ch:"先进钢铁/新材料",t:"A",h:4,s:"燕山大学（材料B+、亚稳材料国家重点实验室）／河北工业大学（材料B）／华北理工大学（冶金传统优势）／河北科技大学",j:"钢铁研发与工艺（河钢、首钢）、汽车板/电工钢/特钢、新能源材料、钒钛储能、增材制造",
+  r:"先进钢铁+9.6%、吨钢盈利149.96元高出全国31.42%；河钢为第一大家电用钢、第二大汽车用钢制造商。",w:"锁先进钢铁/高端材料/新能源材料/钒钛储能方向，避开传统建材（水泥-2.8%、平板玻璃-5.8%）。",city:"唐山 · 邯郸 · 承德"},
+ {n:"计算机类/软件工程（算力第一+软件信息服务）",c:"工学",ch:"算力/软件/AI",t:"A",h:5,s:"河北工业大学（计算机相关国家一流专业）／燕山大学（计算机B）／河北大学／石家庄铁道大学／北华航天工业学院（廊坊，航天与软件特色）",j:"软件开发、数据服务与运维、工业软件、人工智能应用、信创（鸿蒙欧拉生态布局于雄安）",
+  r:"综合算力指数连续两年全国第一、信息传输软件投资+74.5%；钢铁行业垂直大模型平台已上线。",w:"河北无A类计算机，高分宜出省冲985；留省务必选工业软件/数据服务/信创等贴本地产业方向；工程能力＞文凭。",city:"廊坊 · 雄安 · 张家口"},
+ {n:"药学/制药工程/生物制药（石家庄「中国好药」）",c:"医学",ch:"生物医药",t:"A",h:4,s:"河北医科大学（药学ESI全球前1%）／河北中医药大学（中药学，对接安国）／河北科技大学（制药工程）／河北工业大学／华北理工大学",j:"创新药研发、仿制药一致性评价、生产质量（QA/QC）、药品注册、医药流通、CRO/CDMO",
+  r:"石家庄生物医药营收2025年达1400亿元；石药/华药/以岭/石四药/神威连续中国医药工业百强；「十四五」9个创新药获批。",w:"研发岗硕士起步，本科多做生产/质量/注册；中药方向可对接安国「现代中医药产业集群」；药企集中在石家庄。",city:"石家庄"},
+ {n:"自动化/机器人工程（智能制造·智能炼钢）",c:"工学",ch:"智能制造/机器人",t:"A",h:4,s:"河北工业大学（自动化、机械电子工程国家一流本科专业）／燕山大学（自动化国家重点）／华北理工大学／河北科技大学",j:"产线自动化与系统集成、工业机器人调试与维护、过程控制（钢铁/化工）、智能装备研发",
+  r:"工业设备上云率37.5%连续五年全国第一；高端装备+10.9%、通用设备+18.2%。",w:"强电+控制背景比纯机械更有智能化溢价；就业池主要在「钢铁/化工过程控制」与「汽车/机器人产线集成」两大方向。",city:"唐山 · 石家庄 · 秦皇岛"},
+ {n:"车辆工程（新能源与智能网联方向）",c:"工学",ch:"新能源智能网联汽车",t:"B",h:4,s:"河北工业大学（车辆工程国家一流本科专业）／燕山大学（智能电动车辆方向）／河北科技大学／河北工程大学",j:"整车研发、三电系统、智能网联、零部件（线束/电池模组/底盘）",
+  r:"保定集群2025年预计破2100亿元、本地配套率70%+；超220家河北零部件企业进入京津汽车产业链。",w:"全省新能源汽车产量34.3万辆、同比-3.8%（结构改善但绝对量回落），且保定长城一家独大；须锁新能源/智能网联方向、避传统燃油车底盘。",city:"保定 · 唐山"},
+ {n:"新能源科学与工程/储能科学与工程",c:"工学",ch:"风光储氢",t:"B",h:4,s:"华北电力大学（保定，国家级一流本科专业建设点）／河北工业大学（新能源材料与器件）／河北科技大学／河北建筑工程学院（张家口）",j:"风光电站开发与运维、储能系统集成、氢能、能源管理",
+  r:"风光装机破1亿千瓦全国第2、抽蓄规划2997万千瓦全国第1（丰宁360万千瓦全球最大）、新型储能突破700万千瓦；锂离子电池+35.2%。",w:"电站运维岗多在县域/偏远地区，研发岗集中在保定、张家口；氢能方向尚在早期，谨慎押注。",city:"张家口 · 承德 · 保定"},
+ {n:"电子信息/微电子/通信工程",c:"工学",ch:"半导体/通信/空天",t:"B",h:4,s:"河北工业大学（电子科学与技术、电子信息工程国家一流本科专业）／燕山大学（电子科学与技术C+）／石家庄铁道大学／北华航天工业学院（航天电子特色）",j:"半导体器件与工艺、通信设备、新型显示、汽车电子、卫星载荷与终端",
+  r:"计算机通信电子+21.1%全省大类第一；石家庄电子信息营收1500亿、鹿泉聚集中电科13所/54所。",w:"集成电路产量-37.6%、IC制造承压，选微电子应偏设计/器件/应用并准备深造；通信方向依托54所，行业就业稳定。",city:"石家庄 · 廊坊 · 秦皇岛"},
+ {n:"航空航天类（空天信息与卫星互联网）",c:"工学",ch:"空天信息/卫星互联网",t:"B",h:3,s:"北华航天工业学院（廊坊，省内最对口）／河北工业大学（机械/电子/材料支撑）／燕山大学／河北科技大学",j:"卫星制造与总装测试、地面设备、卫星互联网运营、北斗应用、无人机",
+  r:"中国星网总部及4家二级子公司入驻雄安、带动60余家空天企业；「雄安一号」卫星下线，量产后年产100颗以上。",w:"产业体量尚小、属押注未来；河北无航空宇航A类学科，高分宜出省（北航/西工大/南航），留省要有读研准备。",city:"雄安新区 · 廊坊"},
+ {n:"数据科学/大数据管理与应用",c:"理学",ch:"算力/数据服务",t:"B",h:3,s:"河北工业大学（应用统计学、大数据管理与应用）／河北大学／河北经贸大学（统计学C+）／燕山大学",j:"数据中心运维、数据分析、数据标注与治理、AI训练数据服务",
+  r:"综合算力指数两年全国第一、张家口172万台服务器落地、信息传输软件投资+74.5%。",w:"河北算力优势偏「存储与算力调度」，高价值算法岗仍在京津；留省多做数据工程/治理，做算法研究建议出省或读研。",city:"张家口 · 廊坊 · 保定"},
+ {n:"生物医学工程/生物技术（生物制造未来产业）",c:"工学",ch:"生物医药/生物制造",t:"B",h:3,s:"河北医科大学／河北科技大学（生物工程、发酵工程）／河北工业大学（生物工程国家一流本科专业）／华北理工大学",j:"医疗器械、生物试剂、发酵工程、生物制造工艺",
+  r:"生物制造列入「十五五」四大未来产业；生物医药+6.7%；石家庄布局基因与细胞产业。",w:"生物制造仍在起步，本科就业面偏窄，建议「生物+工程/信息」复合或继续深造。",city:"石家庄"},
+ {n:"临床医学/口腔医学",c:"医学",ch:"大健康",t:"C",h:5,s:"河北医科大学（临床B-、5所直属三甲）／华北理工大学／承德医学院／河北北方学院／河北大学医学部",j:"省市三甲、县域医院、基层医疗、公共卫生",
+  r:"60周岁以上占23.82%、老龄化高于全国；协和雄安院区开工、北大人民医院雄安院区在建。",w:"学制长（5+3/本博）、分数高；河北县域医疗缺口大，地市级医院就业现实且稳定；口腔分数更高但回报更稳。",city:"石家庄 · 保定 · 雄安"},
+ {n:"交通运输/交通工程/轨道交通信号与控制",c:"工学",ch:"轨道/物流",t:"C",h:4,s:"石家庄铁道大学（土木B+、交通运输国家级特色专业）／河北工业大学（交通工程）",j:"铁路局/工程局、轨道交通装备、城市轨道运营、物流与供应链",
+  r:"石铁大土木B+（河北仅3个B+之一）；中欧班列1282列+52.8%居华北首位；中车唐山带动丰润150多家配套企业。",w:"石铁大是河北性价比最高的行业特色校之一——分数不高但铁路系统认可度极高；工程局岗需接受流动施工。",city:"石家庄 · 唐山"},
+ {n:"食品科学与工程/食品质量与安全",c:"工学",ch:"健康食品",t:"C",h:3,s:"河北农业大学（食品科学与工程）／河北科技大学（食品质量与安全）／河北工程大学／河北经贸大学",j:"食品研发与工艺、质量检测、供应链、宠物食品（高增长细分）",
+  r:"健康食品+7.0%；石家庄现代食品跨过千亿门槛（君乐宝、同福）；邱县聚集食品企业200余家。",w:"进名企技术岗/研发岗而非泛食品；宠物食品是河北县域集群里增速最快的细分方向之一。",city:"石家庄 · 邢台 · 邯郸"},
+ {n:"化学工程与工艺（绿色化工方向）",c:"工学",ch:"绿色化工",t:"C",h:3,s:"河北工业大学（化学工程与技术B+）／河北科技大学（国家一流本科专业）／燕山大学／华北理工大学",j:"石化、煤化工、盐化工、精细化工、化工新材料、氢能/CCUS",
+  r:"绿色化工+5.1%、石油煤炭燃料加工+13.1%；沧州为全国一流绿色石化及合成材料基地。",w:"化学原料和化学制品制造业仅+1.0%，传统大宗化工增长乏力，须选化工新材料/精细化工/绿色低碳方向。",city:"沧州 · 石家庄 · 邯郸"},
+ {n:"师范类（汉语言文学/数学/物理学/英语，含公费师范）",c:"教育学",ch:"教育",t:"C",h:4,s:"河北师范大学（省内师范第一）／河北大学（中国语言文学B）／河北民族师范学院、唐山/廊坊师范学院等地市师范（本地考编优势）",j:"中小学教师、教研、教育管理",
+  r:"教育增加值+7.4%；基础教育体量巨大（小学在校572万），教师需求刚性；公费师范生包分配、考编优势明显。",w:"出生人口下降（2025年出生36万）意味着长期需求收缩；优先选高中段学科、避开小学段过剩风险。",city:"石家庄 · 各地市"},
+ {n:"法学/公安类/司法类",c:"法学",ch:"公共服务",t:"C",h:3,s:"中央司法警官学院（保定，司法部直属、全国唯一司法警察类本科）／中国人民警察大学（廊坊，公安部直属）／河北大学／河北经贸大学",j:"公检法司、监狱/戒毒系统、律师、企业法务、消防救援",
+  r:"两所部属行业院校在冀，入警/入编通道明确，是河北独有的高性价比「编制赛道」。",w:"公安/司法类需政审、体检、体测，按提前批录取须提前准备；普通法学须过法考，河北本地法考竞争较激烈。",city:"保定 · 廊坊 · 石家庄"},
+ {n:"会计学/金融学/审计学",c:"管理学",ch:"财经",t:"C",h:3,s:"河北经贸大学（会计学、金融学国家级一流本科专业，省内财经第一）／河北大学／河北金融学院（保定）／河北地质大学",j:"企业财务、会计师事务所、银行、税务",
+  r:"金融业增加值3397.7亿；经营主体924.17万户、2025年新登记113.35万户，财务与审计需求稳定。",w:"须考证（CPA/初级/中级）；纯金融就业集中在石家庄与唐山，地市机会有限；建议叠加数据分析能力。",city:"石家庄 · 唐山 · 保定"},
+ {n:"地质/矿业/安全应急（安全应急装备国家集群）",c:"工学",ch:"安全应急/资源",t:"C",h:3,s:"华北理工大学（矿业工程、安全工程）／河北地质大学（地质学、资源勘查工程国家一流本科专业）／防灾科技学院（廊坊，全国唯一防灾减灾特色本科）／河北工程大学",j:"地勘、矿山、安全评价、应急管理、地震监测、资源勘查",
+  r:"安全应急装备等4个集群入选国家先进制造业集群（与京津共建）；防灾科技学院行业对口独特。",w:"矿业/地勘受资源周期影响大、部分岗位环境艰苦；安全工程与应急管理因政策刚性需求，稳定性相对更好。",city:"唐山 · 石家庄 · 廊坊"},
+ {n:"土木工程/建筑学/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"石家庄铁道大学（土木B+、铁路/轨道基建方向行业就业仍强）／河北建筑工程学院（张家口，省内唯一建筑类本科）",j:"设计院、施工、基建、智能建造",
+  r:"建筑业增加值-0.7%、建筑企业利润-27.0%（国有控股-45.5%）、建筑业固投-15.7%、房地产用地-21.1%。",w:"仅志在铁路/轨道交通基建（石铁大）、央企工程局（接受流动施工）或「智能建造/被动式超低能耗建筑」方向可报。",city:"石家庄 · 张家口"},
+ {n:"传统建材方向（水泥/平板玻璃/建筑陶瓷）",c:"工学",ch:"建材",t:"D",h:1,s:"河北科技大学／燕山大学（须转光伏玻璃方向）",j:"水泥、玻璃、新型功能陶瓷、光伏玻璃",
+  r:"水泥-2.8%、平板玻璃-5.8%、房地产用地-21.1%，为河北产业结构里收缩最明确的一块。",w:"唯一例外是光伏玻璃（沙河产能占全国35%，建材里唯一上行细分）、特种玻璃、电子玻璃、新型功能陶瓷方向。",city:"邢台 · 邯郸"},
+ {n:"工商管理/行政管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"河北经贸大学（须走财经/物流方向）",j:"企业职能管理、行政、咨询、供应链管理",
+  r:"民营经济占65.6%但单体规模小，泛管理岗位稀缺、可替代性强、起薪低。",w:"须叠加「行业+管理」（钢铁生产管理/药企注册/物流供应链管理）或冲名校，否则慎选；县域集群更需要懂工艺+懂管理的人。",city:"石家庄"}
+];
+
+var CHAINS = [
+ {n:"先进钢铁（从「原料级」到「材料级」的第一支柱）",u:["铁矿石（原矿-10.6%）","焦炭","废钢","铁合金"],m:["冶炼（生铁-8.8%/粗钢-4.6%/钢材+7.8%）","电工钢","汽车板","特型钢/家电板"],d:["汽车","家电","造船","钒钛材料"],
+  mj:"材料、冶金、材料成型、金属材料、机械（轧制装备）、自动化（智能炼钢）",
+  f:"2025年先进钢铁增加值+9.6%、拉动规上工业增长2.6pct；吨钢盈利149.96元、高出全国31.42%；河钢研发投入超140亿、156个高附加值新产品，为中国第一大家电用钢、第二大汽车用钢制造商；首钢智新电工钢「国内每3辆新能源车有1辆搭载其电机铁芯」；环保绩效A级钢企55家全国第一。"},
+ {n:"新能源和智能网联汽车（保定为核心，京津冀分工）",u:["锂/钒资源","电工钢","正负极材料（唐山国轩）"],m:["动力电池（锂离子电池+35.2%）","电机电控","整车制造","智能座舱/智驾"],d:["充换电","氢燃料重卡","后市场","出口"],
+  mj:"车辆、电气、自动化、材料（电工钢/轻量化）、机械、能源动力",
+  f:"2025年汽车产量96.9万辆、新能源34.3万辆占35.4%；保定集群2025年预计破2100亿、本地配套率70%+；京津冀新能源汽车108.4万辆+52.7%；超220家河北零部件企业进入京津汽车产业链。"},
+ {n:"生物医药（石家庄「中国好药·石家庄造」）",u:["原料药（化学原药+10.8%）","中药材（安国）","医药中间体（晋州）"],m:["创新药","高端仿制药","现代中药","高端医疗器械"],d:["流通","医疗服务","康养"],
+  mj:"药学、制药工程、生物制药、中药学、生物医学工程、临床医学",
+  f:"石家庄生物医药营收2025年达1400亿元；石药/华药/以岭/石四药/神威连续位居中国医药工业百强；「十四五」累计9个创新药获批；石药在研创新药和创新制剂200余项；集群入选第一批河北省先进制造业集群。"},
+ {n:"电子信息与半导体（石家庄鹿泉+廊坊固安双核）",u:["硅材料/外延片（宁晋、普兴电子）","电子特气（邯郸718所）"],m:["半导体芯片与器件（中电科13所）","现代通信（54所）","新型显示（固安云谷）","汽车电子/空天信息载荷"],d:["智能终端","人工智能应用","算力服务"],
+  mj:"电子信息工程、微电子、集成电路、通信工程、光电信息、计算机",
+  f:"计算机通信电子+21.1%（全省大类第一）；石家庄新一代电子信息营收1500亿元、国家级创新平台10个；廊坊固安新型显示为省级特色集群；但集成电路产量-37.6%，IC制造环节明显承压。"},
+ {n:"新能源（风电/光伏/储能/氢能）",u:["硅料","风机零部件（叶片/主轴）","钒钛（承德）"],m:["光伏组件（太阳能电池+30.6%）","风电整机（张家口年产能1500台）","储能电池","制氢装备"],d:["绿电外送","数据中心","氢燃料重卡","绿氢化工"],
+  mj:"新能源科学与工程、储能科学与工程、电气工程、能源与动力工程、材料（光伏/电池）",
+  f:"风电光伏装机突破1亿千瓦、总量全国第2；可再生能源占电力总装机73.4%；抽蓄规划建设总规模2997万千瓦全国第1（丰宁360万千瓦全球最大已投产）；新型储能突破700万千瓦；沙河光伏玻璃产能占全国35%。"},
+ {n:"空天信息和卫星互联网（雄安「从无到有」的第一未来产业）",u:["星载芯片及元器件","火箭发动机","钛合金增材制造（煜鼎增材）"],m:["卫星总装测试与载荷（中国星网、蓝箭鸿擎、银河航天）","地面设备"],d:["卫星互联网运营","北斗时空信息服务","通导遥应用"],
+  mj:"航空航天类、电子信息、通信工程、计算机、自动化、材料（复合材料/高温合金）、测绘（北斗应用）",
+  f:"中国星网（首家注册落户雄安的央企）总部及4家二级子公司全部入驻，带动60余家空天信息企业聚集；「雄安一号」卫星下线、量产后具备年产100颗以上卫星交付能力；「十五五」明确建雄安空天实验室。"},
+ {n:"机器人与高端装备（唐山/秦皇岛/石家庄/邯郸四极）",u:["伺服电机","减速机（智昆科技RV减速机）","传感器（柏乡PMNT压电单晶）"],m:["特种/巡检/焊接机器人","轨道交通装备（中车唐山）","铝车轮（中信戴卡全球龙头）","氢能储运装备（安瑞科）"],d:["产线集成","运维","出口"],
+  mj:"机械设计制造及其自动化、机器人工程、自动化、测控技术与仪器、车辆工程",
+  f:"高端装备+10.9%、通用设备+18.2%；「唐山造」特种/巡检/焊接机器人市占率均居全国第一；设备上云率37.5%连续五年全国第一。"},
+ {n:"县域特色产业集群「一县一品·共享智造」（河北独有底盘）",u:["原料集采","共享工厂（222家）"],m:["丝网/羊绒/轴承/紧固件","箱包/童车/玻璃/线缆","化妆刷/宠物食品/服装"],d:["电商（青县化妆刷年产5亿支、市占50%+）","跨境电商","区域公用品牌"],
+  mj:"机械、材料、纺织（服装设计与工程）、工业设计、电子商务、市场营销、供应链管理",
+  f:"107个省级重点集群2024年营收3.6万亿元、+9.3%；2025年共享智造全覆盖、共享工厂222家带动近2万家企业；国家级中小企业特色产业集群24个居全国前列；邱县聚集食品企业200余家。"}
+];
+
+var CITIES = [
+ {c:"石家庄（省会增长极）",i:"生物医药（1400亿）、新一代电子信息（1500亿）、先进装备制造、现代食品、现代商贸物流——五大产业全部破千亿",l:"石药、华北制药、以岭、中电科13所/54所、晶澳、君乐宝",m:"药学、生物制药、微电子、通信、机械、食品"},
+ {c:"唐山（增长极）",i:"精品钢铁、高端装备、绿色化工、新型绿色建材、新能源新材料；特种/巡检/焊接机器人市占率全国第一",l:"河钢唐钢、首钢智新（迁安）、中车唐山、中信重工开诚",m:"冶金、材料、机械、车辆、自动化、机器人"},
+ {c:"保定（环京高新技术产业带）",i:"智能网联新能源汽车、电力及新能源高端装备两大国家级先进制造业集群、「中国电谷」、现代中医药（安国）",l:"长城汽车（新能源年产能破100万辆）、天威保变、风帆、英利中国",m:"车辆、电气、能源动力、自动化、中药"},
+ {c:"雄安新区（非首都功能疏解承载地）",i:"空天信息和卫星互联网（中国星网为链主）、软件和信息服务、人工智能、新材料、生命科学",l:"中国星网、中国中化、中国华能、中国矿产；首批4所疏解高校全面施工、第二批5所明确选址",m:"航空航天、电子信息、计算机、软件、人工智能、材料、医学"},
+ {c:"廊坊（环京·临空）",i:"信息技术与人工智能、新型显示（固安）、高端装备零部件、现代商贸物流；综合算力指数全国第一",l:"华为技术服务、润泽科技、云谷科技、北华航天工业学院",m:"计算机、软件、电子信息、自动化、物流"},
+ {c:"沧州",i:"绿色石化及合成材料、高端装备（管道装备、绿色铸造）、生物医药、海水淡化、海洋经济",l:"沧州临港经开区、盐山管道装备集群、渤海新区黄骅五金模具",m:"化工、机械、材料、药学、海洋科学"},
+ {c:"邯郸",i:"精品钢材、装备制造、新型功能材料（特种气体、高纯生铁）、食品加工、氢能装备",l:"河钢邯钢、中船重工718所、龙凤山铸业、晨光生物",m:"冶金、材料、化工、机械、食品"},
+ {c:"秦皇岛",i:"高端装备（铝车轮全球龙头）、汽车零部件、信息技术（消费电子、智慧医疗）、生命健康、葡萄酒",l:"中信戴卡、威卡威、秦皇岛经开区",m:"车辆、材料（铝）、机械、电子信息、食品"},
+ {c:"张家口（可再生能源示范区）",i:"风电/光伏/储能、大数据（「东数西算」节点、172万台服务器）、冰雪装备、氢能；新能源装机占全市电力总装机88%+",l:"阿里巴巴、秦淮数据、张北柔性直流（12项世界第一）",m:"能源动力、电气、计算机、数据科学、机械"},
+ {c:"承德",i:"钒钛新材料及制品（全钒液流储能电池、航空级片钒）、绿色食品及生物医药、清洁能源装备（丰宁抽蓄全球最大）",l:"承德钒钛、平泉食用菌、丰宁抽蓄",m:"冶金、材料、储能、食品、电气"},
+ {c:"邢台/衡水",i:"光伏装备（沙河光伏玻璃产能占全国35%）、先进装备、健康食品、县域集群（轴承/羊绒/童车/丝网/线缆）；衡水高性能复合材料、工程橡胶",l:"宁晋光伏、沙河玻璃、临西轴承、清河羊绒、安平丝网",m:"新能源材料、机械、食品、材料、化工"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

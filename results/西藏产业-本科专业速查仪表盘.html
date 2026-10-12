@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>西藏产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e6ea;
+  --brand:#1a5e8c;
+  --brand-soft:#e6eef5;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>西藏产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年西藏统计公报</b> · <b>4+4+X现代产业体系</b> · <b>雅江下游水电1.2万亿国家超级工程</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">3031.89亿</div><div class="note">增长7.0%，全国第31（倒数第一）</div></div>
+  <div class="stat"><div class="lab">增速位次</div><div class="val">8项第一</div><div class="note">GDP/规上工业/固投等增速全国第一</div></div>
+  <div class="stat"><div class="lab">清洁能源装机占比</div><div class="val">96%+</div><div class="note">全国第一，外送63.32亿度</div></div>
+  <div class="stat"><div class="lab">雅江下游水电</div><div class="val">1.2万亿</div><div class="note">装机6000万千瓦，林芝开工</div></div>
+  <div class="stat"><div class="lab">旅游总花费</div><div class="val">816.81亿</div><div class="note">游客7073万人次+10.7%</div></div>
+  <div class="stat"><div class="lab">进出口</div><div class="val">84.79亿</div><div class="note">-33.1%，下半年承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="经济学">经济学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：水电、雅江、电气、旅游、藏药、牦牛、生态、计算机、法学、藏大、农牧学院、民大、藏医药大学">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应西藏通航70家企业）、储能/氢能（对应水风光储与氢氧产业）、生物制造（对应藏医药/高原生物）全部对得上西藏产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。西藏高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>国家工程/支柱产业支撑，岗位多、政策稳、十年可期。适合求稳、希望毕业即就业、愿留藏发展的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/建设期产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应西藏独有赛道（藏医药/民族学/美术/师范/会计），分数友好但需选对方向。适合想留藏、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>产业基础薄弱、岗位稀缺或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>一本线以上</td><td>学校优先 + 专业不将就，冲双一流/国家一流</td><td>西藏大学（生态学双一流、计算机/法学国家一流），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校王牌」优于「综合排名略高但专业弱」</td><td>西藏藏医药大学（藏医/藏药 A+）、西藏农牧学院（动物/农学）、西藏民族大学（法学/会计/统计）</td></tr>
+        <tr><td><b>中分</b><br>二本线边缘</td><td>用行业校补分数差，贴西藏产业链</td><td>西藏大学（二批专业）、农牧学院、民大（咸阳校区）、拉萨师范</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>拉萨师范（师范）、西藏民族大学（文法/财经）、藏医药大学（藏药）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在西藏读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>水利水电/电气/土木地质/计算机/藏药/动物科学/生态学<br><span style="color:var(--ink-3);font-size:12.5px">（雅江水电+清洁能源+特色农牧+藏医药硬赛道）</span></td><td><b style="color:var(--green)">优先留藏</b></td><td>国家工程+支柱产业双密集，藏大/农牧学院/藏医药大学特色独一，分数低于京沪苏浙 20–40 分</td></tr>
+        <tr><td>旅游/法学/会计/民族学/师范/设计/外语</td><td><b style="color:var(--green)">留藏或出省</b></td><td>藏大/民大/藏医药大学在区内认可度极高，冲名校财经/综合可出省</td></tr>
+        <tr><td>工商管理/金融/泛管理</td><td><b style="color:var(--accent)">考虑他省</b></td><td>西藏产业基础弱、金融体量小，泛管理内卷更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a5e8c;border-left-color:var(--brand);margin-top:14px">
+      <b>西藏独有优势：雅江下游水电 1.2 万亿国家超级工程 + 清洁能源装机占比 96% 全国第一 + 藏医药 A++ 独有赛道 + 青稞牦牛特色种质 + 高原生态双一流学科。</b>西藏高教梯度：西藏大学（211 双一流）为核 + 藏医药大学/农牧学院/民族大学/拉萨师范行业特色校，但<b>全区仅 1 所 211</b>；<b>外省/河北考生来藏读「水利水电·电气·藏药·动物科学·生态学·旅游·民族学」性价比极高</b>——国家工程对口、院校特色独一、分数低于同档京沪苏浙；泛管理·金融不建议来藏；长期须算清「留藏就业 vs 出省发展」（人才外流、374 万小人口市场）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>西藏靠「雅江水电 + 清洁能源 + 文旅 + 藏医药 + 特色农牧 + 绿色矿业」六引擎，别被「高寒落后」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>水利水电、电气、生态旅游、生态学、动物科学、藏药学六者覆盖西藏最有确定性的岗位，优先冲。</li>
+      <li><b>死咬「雅江下游水电」十年窗口。</b>2025–2035 建设期，水利/电气/土木/地质需求集中爆发，是西藏版「基建红利」，且分数友好。</li>
+      <li><b>行业特色校是最大信息差。</b>西藏藏医药大学（藏医/藏药 A+）、西藏农牧学院（动物/农学）、西藏民族大学（法学/会计/统计，校区在咸阳）、拉萨师范（师范）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>藏医药是「封口赛道」。</b>藏医学 A+、藏药学 A++ 全国第一，1497 种藏成药入医保，全国认可、竞争小、就业封闭性强。</li>
+      <li><b>清洁能源比旅游更硬核。</b>装机占比 96% 全国第一、外送特高压建设，电气/水利的确定性高于旅游管理；旅游管理要贴「智慧/精品/跨境」才不内卷。</li>
+      <li><b>生态学是双一流独苗。</b>西藏大学生态学为「双一流」学科、工程科学 ESI 前 1%，国家公园/碳市场长期用人，深造友好。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯金融必须叠加硬技能（数据/国贸/法律/行业管理），否则被内卷双重挤压。</li>
+      <li><b>外贸波动要看清。</b>2025 全年进出口 -33.1%（下半年显著回落），边贸物流（B 档）贴「口岸+供应链」而非纯运输，谨慎追高。</li>
+      <li><b>算清「留藏 vs 出省」。</b>西藏仅 1 所 211、人才外流明显，选专业时规划深造路径与就业地；雅江水电建设期是「留藏就业」黄金窗口，错过要等下一轮。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：西藏自治区统计局、国家统计局西藏调查总队《2025 年西藏自治区国民经济和社会发展统计公报》（2026-03-31）、西藏自治区人民政府网经济运行解读与新闻发布会、西藏自治区「十五五」规划纲要及纲要解读（2026-05/07）、雅鲁藏布江下游水电工程开工报道（2025-07-19）、西藏自治区 2025 年计划执行与 2026 年计划草案报告、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及校友会/软科专业排名。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"水利水电工程（含水文与水资源）",c:"工学",ch:"雅江水电/清洁能源",t:"A",h:5,s:"西藏大学（土木/水利硕士点、工程科学ESI前1%）／西藏农牧学院",j:"梯级电站设计施工、水轮机组、隧洞工程、运维",
+  r:"雅江下游水电1.2万亿、装机6000万千瓦、建设期10年；水能占全国1/6。",w:"建设期（2025–2035）黄金窗口，需适应高原工地；深造更有利。",city:"林芝 · 山南 · 昌都"},
+ {n:"电气工程及其自动化（电网/输配电/新能源）",c:"工学",ch:"清洁电力外送",t:"A",h:5,s:"西藏大学（电气相关、工程科学ESI前1%）",j:"电网、输变电、新能源场站、储能",
+  r:"清洁能源装机占比96%+全国第一、外送63.32亿度；藏粤/金上至湖北特高压。",w:"电网方向需准备国网考试；电气是绿电外送长期刚需。",city:"拉萨 · 林芝 · 山南"},
+ {n:"旅游管理（高原生态旅游）",c:"管理学",ch:"文化旅游",t:"A",h:4,s:"西藏大学（旅游管理B++）／西藏民族大学",j:"景区运营、文旅策划、智慧旅游、跨境文旅",
+  r:"游客7073万人次+10.7%、花费816.81亿；文化产业150亿+35.3%；旅游强区。",w:"贴智慧/精品/跨境而非纯导游；藏大旅游管理区内第一。",city:"拉萨 · 日喀则 · 林芝"},
+ {n:"生态学/环境科学与工程",c:"理学",ch:"生态文明高地",t:"A",h:4,s:"西藏大学（生态学双一流、工程科学ESI前1%）",j:"自然保护区、环评、生态修复、碳市场、科研",
+  r:"生态学为双一流学科、全国前列；国家生态安全屏障、国家公园长期用人。",w:"偏科研/公职，深造路径清晰；生态岗政策红利长。",city:"拉萨 · 林芝 · 那曲"},
+ {n:"动物科学/动物医学（青稞牦牛特色农牧）",c:"农学",ch:"高原农牧",t:"A",h:4,s:"西藏农牧学院（动物科学/动物医学B++）／西藏大学",j:"畜禽育种、兽医、草业、农畜产品加工",
+  r:"农畜产品加工96.8亿+10.3%、青稞90.53万吨；农牧学院动物/农学区内最好。",w:"贴特色种质+加工而非泛养殖；农牧学院是西藏农牧第一校。",city:"拉萨 · 日喀则 · 那曲"},
+ {n:"藏药学/中药学",c:"医学",ch:"藏医药",t:"A",h:4,s:"西藏藏医药大学（藏医学A+、藏药学A++）／西藏大学",j:"藏药研发、生产质控、藏医医疗、药材种植",
+  r:"藏药生产总值约36亿；藏医药大学藏医学A+、藏药学A++全国第一；1497种藏成药入保。",w:"西藏独有赛道，全国认可高、竞争小、就业封闭性强。",city:"拉萨 · 林芝"},
+ {n:"计算机类/电子信息（数字经济/智算）",c:"工学",ch:"数字经济",t:"B",h:4,s:"西藏大学（计算机国家一流）／西藏民族大学",j:"软件开发、算力运维、政务大数据、工业互联网",
+  r:"数字经济200亿、5G基站2.6万、雅江1号智算中心；国家高新企业破200家。",w:"西藏IT岗小于内地，但数字政府/智算需求上行。",city:"拉萨 · 林芝"},
+ {n:"食品科学与工程（农畜产品加工）",c:"工学",ch:"农畜加工",t:"B",h:3,s:"西藏农牧学院（食品/农产加工）／西藏大学",j:"食品加工、质检、牦牛骨瓷/青稞主食研发",
+  r:"农畜产品加工96.8亿+10.3%；青稞功能食品/天然饮用水3.68亿品类扩张。",w:"进名企技术岗而非泛食品。",city:"拉萨 · 日喀则 · 昌都"},
+ {n:"土木工程/地质工程（雅江+川藏铁路建设期）",c:"工学",ch:"水电建设/矿业",t:"B",h:4,s:"西藏大学（土木/地质硕士点）／西藏农牧学院",j:"隧道/地下工程、岩土、矿山地质、基建",
+  r:"雅江水电前期配套+川藏铁路+绿色矿山（巨龙铜矿二期）共同拉动；建筑业+10.3%。",w:"建设期需求大但周期性强，需驻高原工地。",city:"林芝 · 昌都 · 山南"},
+ {n:"临床医学/基础医学（高原医学）",c:"医学",ch:"大健康",t:"B",h:4,s:"西藏大学（临床医学B++）／西藏民族大学／西藏藏医药大学",j:"三甲/地市医院、藏医结合、公共卫生、边防医疗",
+  r:"自治区藏医院获批全国首个民族医类国家中医医学中心；基层医疗缺口大。",w:"学制长（5+3），高原病/藏医结合是特色方向。",city:"拉萨 · 日喀则"},
+ {n:"交通运输/物流工程（南亚通道/口岸）",c:"工学",ch:"边贸物流",t:"B",h:3,s:"西藏大学（交通运输硕士点）／西藏民族大学",j:"口岸物流、跨境供应链、多式联运",
+  r:"日喀则国际陆地港、吉隆/樟木/普兰/里孜口岸升级，南亚班列25列；但全年进出口-33.1%。",w:"贴口岸+供应链而非纯运输；外贸波动大。",city:"日喀则 · 拉萨"},
+ {n:"民族学/中国少数民族语言文学",c:"法学",ch:"文化保护",t:"B",h:4,s:"西藏大学（中国少数民族语言文学A+）／西藏民族大学",j:"文化研究、非遗保护、文旅策划、公职、教育",
+  r:"藏大中国少数民族语言文学A+全国第3；民族学为区内独有优势。",w:"对口公职/文化岗，深造友好；A+全国稀缺。",city:"拉萨 · 山南"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:3,s:"西藏大学（法学国家一流）／西藏民族大学",j:"公检法、涉边法务、公职、合规",
+  r:"藏大/民大法学均为国家一流；对边疆治理、民宗、涉边法务需求稳定。",w:"须过法考，考公优势明显。",city:"拉萨 · 咸阳"},
+ {n:"会计学/财务管理",c:"管理学",ch:"财经",t:"C",h:3,s:"西藏民族大学（会计国家一流）",j:"企业财务、审计、税务、国资",
+  r:"民大会计国家一流（全国第43）；西藏国资监管企业利润+44.8%。",w:"须考证（CPA等）。",city:"咸阳 · 拉萨"},
+ {n:"设计学/美术学（唐卡/民族手工业）",c:"艺术",ch:"文创",t:"C",h:3,s:"西藏大学（美术学B++）",j:"文创设计、数字媒体、非遗工艺、文旅视觉",
+  r:"藏大美术学B++；唐卡/藏毯/牦牛骨质瓷等民族手工业出海欧美。",w:"需专业功底；作品集>文凭。",city:"拉萨 · 日喀则"},
+ {n:"外国语言文学（南亚开放/跨境）",c:"文学",ch:"南亚开放",t:"C",h:3,s:"西藏大学（英语B++）／西藏民族大学",j:"跨境贸易、涉外文旅、边境外事",
+  r:"面向南亚开放重要通道，吉隆/普兰口岸、跨境电商需尼泊尔语/英语人才。",w:"须叠加国贸/物流，避纯语言。",city:"拉萨 · 日喀则"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"拉萨师范学院（师范应用强）／西藏大学／西藏民族大学",j:"中小学教师、教研、心理咨询",
+  r:"拉萨师范升本、15年公费教育政策；公费师范生包分配、考编优势。",w:"公费师范生包分配，考编优势大。",city:"拉萨 · 咸阳"},
+ {n:"材料科学与工程/地质（绿色矿业）",c:"工学",ch:"绿色矿业",t:"C",h:3,s:"西藏大学（地质/材料硕士点）／藏青工业园",j:"选矿、盐湖化工、材料检测、矿山地质",
+  r:"巨龙铜矿二期、拉果错盐湖锂矿投运，全国首个非煤智能矿山评估体系。",w:"贴盐湖锂/铜方向，避泛材料。",city:"昌都 · 藏青工业园"},
+ {n:"统计学/数据科学（数字经济底座）",c:"理学",ch:"数字经济",t:"C",h:3,s:"西藏民族大学（统计学）／西藏大学",j:"政务数据、产业分析、商业智能",
+  r:"数字政府1+7+N体系、产业大脑、雅江1号智算中心依赖统计与数据底座。",w:"数学要求高，是数字政府通用底座。",city:"拉萨 · 咸阳"},
+ {n:"化学工程与工艺（绿色矿业/资源加工）",c:"工学",ch:"资源加工",t:"C",h:3,s:"西藏大学（化学/环境）／藏青工业园",j:"盐湖提锂、选冶、藏药提取、化工新材料",
+  r:"盐湖锂、铜冶炼、藏药提取均依赖化工；藏青工业园做有色金属/盐湖化工深加工。",w:"选盐湖/藏药提取方向，避传统煤化工。",city:"藏青工业园 · 拉萨"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"西藏民族大学／西藏大学",j:"企业职能管理、行政、咨询",
+  r:"西藏产业基础薄弱、经营主体仅61.57万户，泛管理岗位稀缺内卷。",w:"叠加行业+管理（能源/医院/文旅），否则慎选。",city:"拉萨 · 咸阳"},
+ {n:"金融学",c:"经济学",ch:"金融",t:"D",h:2,s:"冲外省名校金融",j:"银行、保险、政策性金融、国资",
+  r:"西藏金融体量极小（存贷款低增），本地金融机构少、岗位有限。",w:"除非读研冲外省985/211金融或志在政策性金融。",city:"拉萨"}
+];
+
+var CHAINS = [
+ {n:"雅鲁藏布江下游水电（国家超级工程，西藏第一引擎）",u:["勘察设计","隧洞掘进装备","水泥/钢材/民爆"],m:["梯级电站建设","水轮发电机组","输变电(±1100kV)","地下厂房"],d:["清洁电力外送","抽水蓄能","运维"],
+  mj:"水利水电、电气、土木、地质、自动化",
+  f:"2025-07-19开工，总投资约1.2万亿、装机约6000万千瓦(≈3个三峡)、年发电3000亿度、5座梯级，中国雅江集团专责；建设期约10年。"},
+ {n:"清洁能源（水风光储一体化基地）",u:["水能/光伏/风电资源","锂矿(储能)","电网设备"],m:["水电站","光伏电站","风电","新型储能","输配电"],d:["电力外送(藏粤/金上至湖北)","绿电交易"],
+  mj:"电气、新能源、储能、水利水电",
+  f:"2025清洁能源装机1300万千瓦+、占比96%+全国第一，外送63.32亿度；十五五末建成6000万千瓦、在建1.2亿千瓦。"},
+ {n:"文化旅游（高原生态旅游）",u:["景区资源(布达拉宫/珠峰/林芝)","文旅创意"],m:["旅行社","酒店","交通接驳","智慧旅游"],d:["文创","夜市街区","跨境文旅"],
+  mj:"旅游管理、设计、外语、文化产业",
+  f:"2025接待游客7073万人次+10.7%、花费816.81亿+9.5%；文化产业150亿+35.3%；十五五基本建成旅游强区。"},
+ {n:"藏医药",u:["藏药材种植(80.3万亩)","矿物药"],m:["藏药生产(甘露/奇正/神猴)","医疗器械(藏医放血包/热疗仪)"],d:["医疗机构","医保(1497种藏成药入保)","国际化"],
+  mj:"藏药学、中药学、药学、临床医学",
+  f:"2025全区藏药生产总值约36亿元；藏医药产业链科技创新计划启动；藏医药大学藏医学A+、藏药学A++。"},
+ {n:"高原特色农牧（青稞/牦牛/藏系绵羊）",u:["青稞/牦牛/藏系绵羊种养","饲草"],m:["农畜产品加工(粮油/肉奶/牦牛骨瓷)"],d:["商超","电商(网上零售349.3亿)","预制菜"],
+  mj:"动物科学、动物医学、农学、食品科学",
+  f:"2025农畜产品加工96.8亿+10.3%；青稞90.53万吨；首届青稞产业发展大会召开；农牧学院动物/农学区内最好。"},
+ {n:"绿色矿业",u:["铜/锂/铬战略性矿产勘查"],m:["绿色采矿","选矿","盐湖提锂"],d:["有色金属加工","新材料"],
+  mj:"地质、矿业、材料、化工",
+  f:"巨龙铜矿二期、拉果错盐湖锂矿建成投运；全国首个非煤智能矿山评估体系；自治区级绿色工厂11家。"},
+ {n:"边贸物流（面向南亚开放通道）",u:["口岸基础设施(吉隆/樟木/普兰/里孜)"],m:["南亚班列","海外仓","跨境物流"],d:["转口贸易","边民互市","跨境电商"],
+  mj:"国贸、物流、外语、交通运输",
+  f:"2025口岸通关货运19.14万吨、货值64.2亿；南亚班列25列；但全年进出口84.79亿-33.1%，下半年回落。"},
+ {n:"数字经济/高新数字",u:["算力(雅江1号智算中心)","5G基站"],m:["工业大脑","政务大数据","软件"],d:["数字政府","产业互联网","低空经济(通航70家)"],
+  mj:"计算机、电子信息、统计、人工智能",
+  f:"2025数字经济增加值200亿；5G基站2.6万；国家高新技术企业突破200家。"}
+];
+
+var CITIES = [
+ {c:"拉萨（首府主核）",i:"国际文化旅游名城、金融商贸物流中心、净土健康、生物医药、高新数字",l:"甘露藏药、文旅国企、数字企业",m:"旅游、药学、计算机、金融、法学、临床"},
+ {c:"日喀则（南亚开放先导）",i:"面向南亚开放中心、环喜马拉雅旅游核心区、有机种养加、南亚物流",l:"日喀则国际陆地港、吉隆口岸企业",m:"国贸、物流、旅游、外语、动物科学"},
+ {c:"山南（清洁能源/藏源文化）",i:"清洁能源基地、藏源文化旅游、高原种养、建材、民族手工业",l:"高争水泥、藏源文旅、藏药材基地",m:"电气、水利、旅游、材料、动物科学"},
+ {c:"林芝（雅下水电核心）",i:"雅鲁藏布江下游水电、国际生态旅游、清洁能源基地、高原生物产业",l:"中国雅江集团、水电建设单位、农夫山泉",m:"水利水电、电气、土木、地质、旅游、生物"},
+ {c:"昌都（藏东能源）",i:"西电东送接续能源基地、绿色矿业、特色农牧、藏羌彝文化",l:"藏东能源、昌都经开企业",m:"电气、地质、矿业、动物科学"},
+ {c:"那曲（高原生态畜牧）",i:"高原生态畜牧业基地、羌塘草原文化生态旅游、绿色矿产",l:"畜牧/草业企业、油气勘探",m:"动物科学、草业、生态、旅游"},
+ {c:"阿里（藏西边贸）",i:"冈底斯国际旅游合作区、藏西边贸物流基地、绿色矿产",l:"普兰口岸、边贸企业",m:"旅游、外语、地质、物流"},
+ {c:"藏青工业园（格尔木飞地）",i:"资源加工（有色金属/盐湖化工）",l:"园区资源加工企业",m:"化工、材料、矿业"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

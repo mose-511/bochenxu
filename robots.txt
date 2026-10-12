@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://star-map-folder.app.workbuddy.host/sitemap.xml

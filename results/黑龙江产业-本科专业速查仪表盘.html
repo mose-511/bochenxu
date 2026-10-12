@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黑龙江产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f4f7f9;
+  --card:#ffffff;
+  --ink:#1c2530;
+  --ink-2:#4a5765;
+  --ink-3:#7b8794;
+  --line:#e1e8ec;
+  --brand:#1a4d6e;
+  --brand-soft:#e3eef4;
+  --accent:#9a6b2f;
+  --accent-soft:#f6efe3;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#5a4b8a;
+  --purple-soft:#ece9f4;
+  --shadow:0 1px 2px rgba(28,37,48,.05),0 4px 16px rgba(28,37,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+/* header */
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+/* tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+/* filters */
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+/* major cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f0f3f7;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#7a521f;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+/* chain map */
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f0f3f7;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+/* city map */
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+/* advice */
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f0f3f7;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafbfc}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>黑龙江产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年黑龙江统计公报</b> · <b>「十五五」四大新引擎万亿级</b> · <b>战新5000亿</b> · <b>12个千亿级特色集群</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年全省GDP</div><div class="val">16878亿</div><div class="note">增长4.2%，全国第25</div></div>
+  <div class="stat"><div class="lab">粮食产量</div><div class="val">1640.1亿斤</div><div class="note">全国第一、22连丰</div></div>
+  <div class="stat"><div class="lab">装备工业增速</div><div class="val">+8.4%</div><div class="note">电气机械+23.7%</div></div>
+  <div class="stat"><div class="lab">软件和信息服务</div><div class="val">+22.7%</div><div class="note">规上研发+24.9%</div></div>
+  <div class="stat"><div class="lab">哈尔滨游客</div><div class="val">1.79亿</div><div class="note">旅游花费+36.7%</div></div>
+  <div class="stat"><div class="lab">对俄出口</div><div class="val">+59.4%</div><div class="note">哈俄班列货值+104%</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">地市产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：焊接、俄语、冰雪、哈工大">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：地市 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），其中<b>低空经济（对应黑龙江低空经济百亿级集群）、生物制造（对应绥哈大齐生物制造集群）、具身智能（对应哈工大机器人）全部对得上黑龙江产业</b>。但新专业没有往年录取数据、没有毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模，并优化院校专业组设置。黑龙江高校（尤其哈工大、哈工程、东北农大）专业分流透明度提升，可优先选专业志愿明确的高校，被调剂到冷门专业的风险下降。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>本地有万亿/国家集群支撑，岗位多、起薪稳。适合求稳、希望毕业后尽快就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应「北大仓/对俄/冰雪/兽医/林学」独有赛道，家门口就业友好。适合想留在本省、家庭有产业资源的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>或受投资地产承压，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>哈工大线及以上</td><td>学校优先 + 专业不将就，锁定「有博士点、有保研资格、有产业集群」的三有专业</td><td>哈工大（机械/计算机/航空/焊接/控制双一流）、或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌专业」优于「综合排名略高但专业弱」的省外校</td><td>哈工程（船舶/核/控制）、哈医大（临床）、东北农大（食品/兽医）、黑大（俄语）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴黑龙江产业链</td><td>哈理工（电气/机械/计算机）、东北石油（化工/石油）、东北林大（林业）</td></tr>
+        <tr><td><b>中低分段</b><br>历史组</td><td>最优解是「语言/经贸/师范 + 一条具体产业链」</td><td>黑大俄语、哈师大师范、哈商大财经/旅游、哈体院冰雪、牡丹江/齐齐哈尔医学院临床</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adv">
+    <h3>四、在黑龙江读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>机械/航空/计算机/电气/自动化/材料/机器人<br><span style="color:var(--ink-3);font-size:12.5px">（重工+数字硬科技）</span></td><td><b style="color:var(--green)">优先留黑</b></td><td>哈工大/哈工程全国顶尖或独一，产业（哈电/哈飞/一重/船舶）与高校双密集，分数低于京沪苏浙</td></tr>
+        <tr><td>食品/兽医/林学/俄语/冰雪/临床</td><td><b style="color:var(--green)">留黑或出省</b></td><td>东北农大/东北林大/黑大/哈医大在东北认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统石化<br><span style="color:var(--ink-3);font-size:12.5px">（承压方向）</span></td><td><b style="color:var(--accent)">考虑他省</b></td><td>固投-10.3%、地产与泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#143d57;border-left-color:var(--brand);margin-top:14px">
+      <b>黑龙江独有优势：大国重器工科 + 北大仓农畜加工 + 冰雪/对俄新引擎。</b>黑龙江高教梯度分明（哈工大 985/C9 + 哈工程/东北林大/东北农大 3 所 211 + 一众行业特色校），但<b>全省仅 4 所双一流</b>；<b>外省/河北考生来黑读「机械·航空·计算机·电气·船舶·食品·兽医·俄语·临床·冰雪」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土木·泛管理·传统石化不建议来黑；长期须算清「留黑 vs 出走」（常住人口长期净流出）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>黑龙江就业看「重工硬科技 + 农畜加工 + 冰雪对俄」，专业选机械/计算机/食品/兽医/俄语，比选泛泛「工商管理」稳得多。</li>
+      <li><b>A 档专业是基本盘。</b>计算机、电气、机械、航空、食品、自动化六者覆盖黑龙江最有确定性的岗位，优先冲。</li>
+      <li><b>别漏掉家门口的工科王牌。</b>哈工大机械/焊接/航空、哈工程船舶（全国第一），在黑龙江的壁垒全国无对手，且分数友好。</li>
+      <li><b>「北大仓」是最被低估的王牌。</b>粮食全国第一、玉米深加工全国首位、奶粉产量全国第一；食品/兽医/农业工程在黑龙江的壁垒全国独一档。</li>
+      <li><b>冰雪与对俄是增量叙事。</b>游客+32.2%、对俄出口+59.4%；俄语（黑大A类）、旅游/冰雪运动、跨境电商是「冷资源/北大门」真金。</li>
+      <li><b>文科生别慌，走「俄语 + 跨境」。</b>黑大俄语全国第一，叠加国贸/物流，在对俄贸易里有全国独有的出口。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学，在黑龙江必须叠加硬技能，否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>固投-10.3%、基建投资-11.4%，除非读哈工大土木双一流或志在央企基建。</li>
+      <li><b>新专业可冲不可押。</b>低空经济/生物制造/具身智能听着香，但无数据验证，本科先读计算机/机械/生物更稳，研究生再切方向。</li>
+      <li><b>河北/外省考生决策公式。</b>重工/农畜/对俄/冰雪→来黑；土建/泛管理/传统石化→去他省，别为「去北方」而盲目。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：黑龙江省统计局《2025 年黑龙江省国民经济和社会发展统计公报》、黑龙江省人民政府「开局起步『十五五』」专题新闻发布会、中共黑龙江省委《关于制定国民经济和社会发展第十五个五年规划的建议》、哈尔滨市人民政府 2025 年政府工作报告、教育部《普通高等学校本科专业目录（2026 年）》。<br>
+  本表用于专业方向判断与产业认知，正式填报请以黑龙江省/河北省教育考试院当年公布的招生计划与院校招生章程为准。部分细分产值跨源或有差异，已采信官方公报口径，未做估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"计算机科学与技术/人工智能",c:"工学",ch:"数字经济 · AI · 软件",t:"A",h:5,s:"哈尔滨工业大学（计算机A、人工智能顶尖）／哈尔滨工程大学（B+）／黑龙江大学",j:"软件开发、AI算法、算力运维、嵌入式",
+  r:"规上软件和信息服务业+22.7%、研究和试验发展+24.9%；中国移动哈尔滨万卡智算中心全国最大国产化单集群投用；哈工大计算机A类。",w:"AI对初级编码有替代风险，须向系统/算法/业务侧深耕；哈工大分数极高，黑大/哈理工计算机性价比高。",city:"哈尔滨"},
+ {n:"电气工程及其自动化",c:"工学",ch:"发电装备/电网",t:"A",h:4,s:"哈尔滨理工大学（电气B、高电压与绝缘「电线电缆黄埔」、国网校招）／哈尔滨工业大学",j:"电网、电气设备、新能源、发电运维",
+  r:"哈电集团为最大发电设备制造基地之一；黑龙江电网投资创历史最高、新能源装机占比高；哈理工电气国网就业优势明显。",w:"电网方向需提前准备国网考试；哈理工电气是分数洼地里的真金。",city:"哈尔滨 · 大庆"},
+ {n:"机械设计制造及其自动化",c:"工学",ch:"高端装备",t:"A",h:5,s:"哈尔滨工业大学（机械A+、焊接国家重点）／哈尔滨理工大学（机械B）／齐齐哈尔相关院校",j:"重型装备、航空航天制造、农机、机器人集成",
+  r:"装备工业+8.4%、通用设备+11.3%；哈工大机械A+、焊接全国顶尖；中国一重、哈电、齐重数控、中车齐车为骨干。",w:"锁「高端装备/焊接/农机」方向，避泛机加工；哈工大机械是国之重器对口。",city:"哈尔滨 · 齐齐哈尔"},
+ {n:"航空航天类",c:"工学",ch:"航空集群",t:"A",h:4,s:"哈尔滨工业大学（航空宇航双一流、飞行器设计国家重点）／哈尔滨工程大学",j:"飞机设计制造、航空电子、维修、国防央企",
+  r:"哈尔滨航空集群入选国家先进制造业集群；哈飞直升机、哈工大航空宇航双一流；5家企业进入国产大飞机配套体系。",w:"行业壁垒高、多为央企，就业稳但地域集中哈尔滨；适合有志国防重工者。",city:"哈尔滨"},
+ {n:"食品科学与工程",c:"工学",ch:"农畜加工",t:"A",h:4,s:"东北农业大学（食品B+、乳品/大豆特色）／黑龙江八一农垦大学／哈尔滨商业大学",j:"食品加工、乳品/粮油技术岗、质检、研发",
+  r:"粮食产量全国第一、玉米深加工能力全国首位、婴幼儿配方奶粉产量全国第一；东北农大食品B+、乳品与大豆深加工国内领先。",w:"进名企技术岗（伊利/蒙牛/飞鹤等）而非泛食品；黑龙江产业底座全国独一档。",city:"哈尔滨 · 绥化 · 齐齐哈尔"},
+ {n:"自动化/机器人工程",c:"工学",ch:"智能装备",t:"A",h:4,s:"哈尔滨工业大学（自动化/机器人国家一流）／哈尔滨工程大学（控制A-）／哈尔滨理工大学",j:"控制系统、工业机器人、智造产线、运动控制",
+  r:"装备工业+8.4%、电气机械+23.7%；黑龙江打造智能机器人百亿级集群；哈工大机器人入围工信部人形机器人「揭榜挂帅」。",w:"强数学+强动手；黑龙江机器人赛道有科研与产业双重底座。",city:"哈尔滨"},
+ {n:"船舶与海洋工程",c:"工学",ch:"船舶海工",t:"B",h:4,s:"哈尔滨工程大学（船舶A+全国第一）／相关涉海院校",j:"船舶设计、核动力、水声、海洋工程",
+  r:"哈工程船舶与海洋工程A+（全国第一）、「三海一核」；中船/中核/海军系统定向招聘，行业壁垒极高。",w:"全国就业集中在沿海船厂+军工，地域性强但不可替代。",city:"哈尔滨"},
+ {n:"材料科学与工程",c:"工学",ch:"新材料/石墨",t:"B",h:3,s:"哈尔滨工业大学（材料A、双一流）／哈尔滨理工大学／东北石油大学",j:"轻量化材料、半导体材料、石墨新材料、工艺工程",
+  r:"哈工大材料A、同创普润超高纯金属材料产业化；大庆石化新材料、鸡西石墨精深加工；新能源汽车零售+33%。",w:"锁「半导体/石墨/复合材料」方向，避泛材料。",city:"哈尔滨 · 大庆 · 鸡西"},
+ {n:"农业工程/智能农机",c:"工学",ch:"智慧农业",t:"B",h:3,s:"东北农业大学（农业工程B+）／黑龙江八一农垦大学／哈尔滨工业大学",j:"智能农机研发、农业信息化、无人化作业系统",
+  r:"建三江智慧农场实现耕种管收无人化；国家大型大马力高端智能农机先导区；东北农大农业工程B+、寒地农机特色。",w:"面向北大仓现代化刚需，深造路径清晰。",city:"佳木斯 · 哈尔滨"},
+ {n:"生物医学工程/药学",c:"工学",ch:"生物医药",t:"B",h:3,s:"哈尔滨医科大学（药学B+、临床强）／东北农业大学（兽医学B+）／黑龙江大学",j:"医疗器械、生物制剂、兽药疫苗、注册质控",
+  r:"哈尔滨生物医药国家战新集群、绥哈大齐生物制造国家先进制造业集群；哈兽研（国际）生物谷；医药制造业投资+27.1%。",w:"研发岗普遍硕士起；本科可走器械注册/质控/兽药。",city:"哈尔滨 · 绥化"},
+ {n:"软件工程/数据科学与大数据技术",c:"工学",ch:"软件智算",t:"B",h:4,s:"哈尔滨工业大学（软件A-）／哈尔滨工程大学／黑龙江大学",j:"后端开发、工业软件、数据分析、AI工程",
+  r:"规上软件和信息服务业+22.7%；万卡智算中心带动数据/云需求；哈工大软件A-、哈工程/黑大计算机。",w:"与计算机同源，选校看就业城市（哈尔滨最优）。",city:"哈尔滨"},
+ {n:"外国语言文学（俄语）",c:"文学",ch:"对俄跨境",t:"B",h:4,s:"黑龙江大学（俄语A类全国第一）／哈尔滨商业大学／牡丹江/黑河口岸院校",j:"对俄贸易、跨境运营、翻译、涉外法务",
+  r:"哈尔滨对俄出口+59.4%、哈俄班列货值+104%；黑大俄语A类全国顶尖、对俄贸易/外交人才培养重镇。",w:"须叠加国贸/物流/法律复合能力，否则纯语言内卷。",city:"哈尔滨 · 黑河 · 绥芬河"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"哈尔滨医科大学（临床强、东北标杆）／牡丹江医学院／齐齐哈尔医学院",j:"医生、科研、公共卫生",
+  r:"哈医大临床B+、公卫预防A-、麻醉全国前三、附属三甲医院强，留黑医疗圈认可度极高。",w:"学制长（5+3起步），分数高；临床5+3于维汉班634分。",city:"哈尔滨 · 牡丹江 · 齐齐哈尔"},
+ {n:"动物医学/兽医",c:"农学",ch:"畜牧/兽药",t:"C",h:4,s:"东北农业大学（兽医学B+）／黑龙江八一农垦大学",j:"兽医、兽药研发、检疫、养殖企业",
+  r:"东北农大兽医学B+；哈兽研兽用疫苗（高致病性禽流感等）覆盖全国、远销世界；生猪出栏2440.6万头（+4.0%）。",w:"黑龙江是全国兽医/兽药产业高地，特色独一档。",city:"哈尔滨 · 大庆"},
+ {n:"林学/林业工程",c:"农学",ch:"林下经济",t:"C",h:3,s:"东北林业大学（林业工程/林学A+，211）",j:"林业、生态、园林、北药开发",
+  r:"东北林大林业工程A+、林学A+（均全国第一）；伊春林都北药、森林食品产业。",w:"就业面偏生态/园林/自然资源系统，考公事业单位友好。",city:"哈尔滨 · 伊春"},
+ {n:"冰雪运动/旅游管理",c:"教育学",ch:"冰雪经济",t:"C",h:3,s:"哈尔滨体育学院（冰雪运动顶尖）／哈尔滨商业大学（旅游管理）",j:"冰雪赛事、景区运营、体育培训、文旅策划",
+  r:"亚冬会带动、哈尔滨游客+32.2%、旅游花费+36.7%；哈体院冰雪运动全国顶尖（培养冬奥冠军）。",w:"行业波动与季节性强，须叠加运营/管理复合能力。",city:"哈尔滨 · 牡丹江"},
+ {n:"化学工程与工艺",c:"工学",ch:"能源化工",t:"C",h:3,s:"东北石油大学（化工B、石油特色）／哈尔滨工业大学／齐齐哈尔大学",j:"炼化、精细化工、新材料",
+  r:"大庆油头化尾延链、乙烯产能较「十三五」末+48.3%、油化比优化至55:45；东北石油大学化工B。",w:"选「化工新材料/精细化工」方向，避传统煤化工。",city:"大庆 · 哈尔滨"},
+ {n:"设计学/数字媒体艺术",c:"艺术",ch:"创意设计",t:"C",h:3,s:"哈尔滨工业大学（数字媒体艺术国家一流）／哈尔滨师范大学／黑龙江大学",j:"工业设计、数字媒体、冰雪文创",
+  r:"「创意设计+」赋能10大领域、打造「龙江设计」；哈工大数字媒体艺术国家一流；冰雪装备/文创需要设计。",w:"需作品集，作品集>文凭。",city:"哈尔滨"},
+ {n:"石油工程",c:"工学",ch:"能源",t:"C",h:3,s:"东北石油大学（石油工程/油气储运，中石油中石化校招）",j:"油气开采、储运、页岩油开发",
+  r:"大庆油田稳3000万吨、天然气61亿方、古龙页岩油破百万吨；东北石油大学面向三大石油公司。",w:"油田峰值已过、用工自动化收缩，须接受可能外派/去南方石化；有情怀+愿去一线才报。",city:"大庆"},
+ {n:"土木工程/建筑学/城乡规划",c:"工学",ch:"土建（承压）",t:"D",h:2,s:"哈尔滨工业大学（土木A，仅数字化方向）",j:"数字化建造、智能土木、交通基建",
+  r:"全省固定资产投资-10.3%、基础设施投资-11.4%；传统土建岗持续出清。",w:"仅当分数极高且立志读数字化建造/智能土木/交通基建，或明确进央企基建才可考虑。",city:"哈尔滨"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"哈尔滨商业大学（会计强）",j:"企业财务、运营、行业职能管理",
+  r:"黑龙江以制造与农业为主，泛管理岗位稀缺、内卷严重；民营经济偏弱。",w:"纯管理本科就业弱，在黑龙江的价值在于嫁接产业资源+实战，不适合只想拿文凭的学生。",city:"哈尔滨"}
+];
+
+var CHAINS = [
+ {n:"粮食与农畜产品精深加工",u:["玉米/水稻/大豆","奶牛/生猪"],m:["玉米深加工","乳品加工","肉制品","粮油"],d:["商超","电商","餐饮","品牌"],
+  mj:"食品科学与工程、动物医学、农业工程、生物工程",
+  f:"粮食产量1640.1亿斤（全国第一、22连丰）；玉米深加工能力全国首位；婴幼儿配方奶粉产量全国第一；2025规上农产品加工企业利润增长、新入规221家。"},
+ {n:"发电装备/航空航天装备",u:["金属材料","复合材料","精密零部件"],m:["水火核电机组（哈电）","飞机/直升机（哈飞）","航空集群"],d:["电力运维","航空维修","国防央企"],
+  mj:"机械设计制造、航空航天类、材料科学与工程、自动化",
+  f:"哈电集团为最大发电设备制造基地之一；哈尔滨航空集群入选国家先进制造业集群；哈工大航空宇航、哈飞直升机体系；百万千瓦水电机组世界最大。"},
+ {n:"船舶与海洋工程",u:["船用钢材","核动力设备"],m:["船舶设计/制造","水声设备","海洋工程"],d:["中船集团","海军装备","海洋开发"],
+  mj:"船舶与海洋工程、核工程与核技术、水声工程、自动化",
+  f:"哈工程船舶与海洋工程A+（全国第一）、「三海一核」特色；毕业生主要进入中船、中核、海军系统。"},
+ {n:"生物医药与生物制造",u:["原料药","生物制剂","兽用疫苗"],m:["创新药","生物制造","医疗器械"],d:["医院","康养","出海"],
+  mj:"生物医学工程、药学、动物医学、生物科学",
+  f:"哈尔滨生物医药入选国家战略性新兴产业集群；绥哈大齐生物制造集群晋级国家先进制造业集群；哈兽研（国际）生物谷，高致病性禽流感等动物疫苗覆盖全国、远销世界。"},
+ {n:"对俄跨境贸易与口岸经济",u:["俄罗斯能源/木材/中药材进口"],m:["口岸保税","跨境电商","加工园区"],d:["国内分销","国际物流"],
+  mj:"国际经济与贸易、俄语、物流管理、跨境电子商务",
+  f:"哈尔滨对俄出口90.7亿元（+59.4%）、哈俄班列货值4.33亿美元（+104%）、对俄航空货运+40.8%；绥芬河/东宁/黑河/同江/抚远多口岸。"},
+ {n:"冰雪经济全产业链",u:["冰雪装备（索道/造雪机/冰刀/雪板）"],m:["景区运营","赛事","培训"],d:["文旅消费","文创","康养"],
+  mj:"旅游管理、冰雪运动、数字媒体艺术、体育经济",
+  f:"2025全省游客+10.3%、花费+16.5%；哈尔滨游客1.79亿（+32.2%）、旅游花费2314.2亿（+36.7%）；亚冬会带动；黑龙冰刀年产能300万副。"},
+ {n:"高端装备/智能农机",u:["特种钢材","数控系统","液压件"],m:["重型机床","轨道交通装备","大型农机"],d:["基建","矿山","农业无人化"],
+  mj:"机械设计制造、农业工程、自动化、测控技术与仪器",
+  f:"装备工业+8.4%（电气机械+23.7%、通用设备+11.3%）；中国一重、中车齐车、齐重数控为骨干；建三江智慧农场无人化；大型大马力高端智能农机先导区。"},
+ {n:"数字经济/软件与智算",u:["算力（万卡智算中心）","数据"],m:["软件","工业互联网","AI"],d:["政务","金融","制造数字化转型"],
+  mj:"计算机科学与技术、软件工程、人工智能、数据科学与大数据技术",
+  f:"规上软件和信息服务业+22.7%、研究和试验发展+24.9%；中国移动哈尔滨万卡智算中心（全国最大国产化单集群）投用；国家算电融合试点。"}
+];
+
+var CITIES = [
+ {c:"哈尔滨",i:"创新引领区：高端装备、航空航天、新材料、生物医药、新一代信息技术、汽车、冰雪经济",l:"哈电集团、哈飞、哈兽研、冰雪大世界",m:"机械/航空/材料/生物/计算机/软件/冰雪文旅"},
+ {c:"大庆",i:"石化（油头化尾）、油田、汽车、石化新材料",l:"大庆油田、大庆石化、沃尔沃大庆",m:"化工与材料、石油工程、车辆工程"},
+ {c:"齐齐哈尔",i:"高端装备、轨道交通、农机、钢铁新材料、冰雪装备",l:"中国一重、中车齐车、齐重数控、黑龙冰刀",m:"机械、材料、电气、自动化"},
+ {c:"牡丹江",i:"绿色食品、生物医药、木制品、对俄口岸（绥芬河/东宁）",l:"木业企业、中药材加工、口岸企业",m:"食品、药学、国贸、俄语"},
+ {c:"佳木斯",i:"智能农机、生物育种、对俄口岸（同江/抚远）、电机",l:"建三江垦区、农垦科研院所、电机企业",m:"农业工程、生物、俄语、电气"},
+ {c:"绥化",i:"食品（玉米/水稻/乳品）、生物医药、生物制造",l:"食品与发酵企业、生物制造园区",m:"食品、生物工程、药学"},
+ {c:"鸡西",i:"煤炭煤电化、石墨新材料、生物医药",l:"龙煤鸡西、石墨产业、生物医药园",m:"化工、材料（石墨）、药学"},
+ {c:"黑河/绥芬河",i:"对俄口岸经贸、跨境电商、进口资源加工",l:"黑河公路大桥、绥芬河综合保税区",m:"国贸、俄语、物流、跨境电商"},
+ {c:"伊春",i:"北药、森林食品、林下经济",l:"林都北药、寒地食品产业园",m:"中药、食品、林学"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要城市：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+// events
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

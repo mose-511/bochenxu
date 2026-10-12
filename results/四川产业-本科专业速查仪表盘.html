@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四川产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f8f4f5;
+  --card:#ffffff;
+  --ink:#2a1f23;
+  --ink-2:#57484d;
+  --ink-3:#8a7a80;
+  --line:#e8e0e2;
+  --brand:#7a2a3a;
+  --brand-soft:#f5e8ec;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(42,31,35,.05),0 4px 16px rgba(42,31,35,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(42,31,35,.06),0 8px 24px rgba(42,31,35,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f4f0f1;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f4f0f1;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f4f0f1;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fbf9fa}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>四川产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年四川统计公报</b> · <b>6个万亿级优势产业（电子信息1.7万亿中西部第一）</b> · <b>「15+N」重点产业链（营收3.3万亿）</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长（含外省/河北考生参考）</div>
+  <div class="sub" style="margin-top:4px">核心骨架一句话：<b>西部第一经济大省 + 全国独一份的航空航天/清洁能源赛道</b>；2025 年两个转折信号——人口首次机械净流出约 10 万（成都逆势增 6.1 万）、固投 -2.4%，动能正转向电子信息、装备制造、航空航天、清洁能源、动力电池。</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">6.77万亿</div><div class="note">67665.3亿、+5.5%，全国第5</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+6.5%</div><div class="note">高技术制造+12.3%、六大优势产业+6.8%</div></div>
+  <div class="stat"><div class="lab">电子信息</div><div class="val">1.7万亿</div><div class="note">营收居中西部第一</div></div>
+  <div class="stat"><div class="lab">水电装机</div><div class="val">破1亿千瓦</div><div class="note">全国率先；天然气728.8亿方全国第一</div></div>
+  <div class="stat"><div class="lab">进出口</div><div class="val">10318.1亿</div><div class="note">首次双过万，外贸企业破1万家</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-8.5%</div><div class="note">固投-2.4%，土建链承压</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="艺术">艺术</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+          <button class="chip" data-v="文学">文学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：电子、航空、材料、白酒、临床、飞行、核工程、西南交大、电子科大、宜宾、成都">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应四川自贡无人机/通航）、生物制造（对应成渝生物医药）、半导体装备（对应成都集成电路）、储能/氢能（对应德阳清洁能源）全部对得上四川产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。四川高校多按专业组投档，更要查清专业组包含的具体专业，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>四川有万亿产业/国家集群支撑，岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应新兴/未来产业，增速快但波动大。适合有冲劲、能持续学习的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应四川独有赛道（航空/白酒技术岗/民航飞行/地质能源）或强认可本地校，分数友好但需选对方向。适合想留川、行业资源强的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资承压，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略（含历史组）</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>川大/电子科大线及以上</td><td>学校优先 + 专业不将就，锁定双一流/国家重点学科</td><td>电子科大（电子/计算机/通信）、川大（临床/口腔/材料/计算机），或冲外省 985/211</td></tr>
+        <tr><td><b>中高分</b><br>行业顶尖省属</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>西南交大（交通运输/机械/电气）、西南财大（金融/会计）、成都理工（地质/核）、民航飞行学院（飞行）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用行业校补分数差，贴四川产业链</td><td>西南科技（材料/核）、西华（车辆/机械/电气）、成都信息工程（计算机/气象）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>四川师大（师范）、四川农大（食品/兽医）、西南医科（临床）、川大外语方向</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:14px;margin-top:10px"><b>历史组建议：</b>法学（川大/西南财大）、教育学/心理学（四川师大）、外国语言文学（川大）、金融/会计（西南财大）、数字媒体（川音）是历史组友好方向；避开纯理科/工科强校的理科专业。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在四川读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>计算机/电子/航空航天/材料/电气能源/自动化/机械<br><span style="color:var(--ink-3);font-size:12.5px">（电子+航空+绿电硬科技）</span></td><td><b style="color:var(--green)">优先留川</b></td><td>产业+高校双密集，电子科大/川大全国顶尖或特色独一，成都为西部唯一人口逆势增长极</td></tr>
+        <tr><td>临床/法学/食品/生医工/师范/金融/外语/设计</td><td><b style="color:var(--green)">留川或出省</b></td><td>川大华西/西南财大/四川师大/成都中医药在西南认可度极高，冲名校可出省</td></tr>
+        <tr><td>土木/泛管理/传统代工</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产 -8.5%、固投 -2.4%，土建/泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#7a2a3a;border-left-color:var(--brand);margin-top:14px">
+      <b>四川独有优势：航空航天全国独一份（C919机头唯一产地 + 航发占全国40%+）+ 清洁能源全国第一（水电破亿千瓦、天然气728.8亿方）+ 电子信息1.7万亿中西部第一 + 行业校壁垒。</b>四川高教梯度分明（川大/电子科大 985 双核 + 西南交大/西南财大/川农/成都理工/西南石油/成都中医药等双一流 + 一众行业特色校），<b>外省/河北考生来川读「计算机·电子·航空航天·材料·电气能源·临床·法学·生医工·金融」性价比极高</b>——产业对口、院校特色独一、分数低于同档京沪苏浙；土建·泛管理不建议来川；长期须算清「留成都 vs 出走」（2025 全省机械净流出约 10 万、成都逆势增 6.1 万）。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>四川靠「电子信息 + 航空航天 + 清洁能源 + 装备制造 + 白酒技术岗」五引擎，别被「安逸/火锅」标签误导去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>计算机、电子、航空航天、材料、电气能源、临床六者覆盖四川最有确定性的岗位，优先冲。</li>
+      <li><b>贴「成都极核 + 绵阳/德阳/宜宾」产业极点。</b>成都（电子/航天/医药/文创）+ 绵阳（核/航电）+ 德阳（清装）+ 宜宾（白酒/动力电池）贡献最密集产业与院校重叠。</li>
+      <li><b>行业特色校是最大信息差。</b>电子科大（电子/计算机）、西南交大（轨道/机械）、西南财大（金融）、成都理工（地质/核）、民航飞行学院（飞行/空管）、四川师大（师范）——专业全国顶尖或独一、分数远低于同档综合校。</li>
+      <li><b>航空航天是四川最被低估的王牌。</b>C919 机头唯一产地、歼 20 总装、航发占全国 40%+，全国能对口培养的省极少；民航飞行学院是低分高稳的隐藏出路。</li>
+      <li><b>清洁能源要从「绿电」看到「装备」。</b>水电破亿千瓦、天然气 728.8 亿方是底座，但真正就业在德阳重装（东方电气/国机重装）与国网，属稳定型央企而非造富赛道。</li>
+      <li><b>先进材料 + 钒钛/锂电是隐蔽硬核。</b>攀西钒钛全球第一、遂宁/宜宾锂电全国最大基地、乐山晶硅光伏；材料/化工/冶金在四川壁垒强，须锁方向避泛材。</li>
+      <li><b>警惕「虚拟热闹」专业。</b>纯管理、纯语言、纯法学必须叠加硬技能（数据/芯片/法律科技/国贸），否则被 AI 与内卷双重挤压。</li>
+      <li><b>土建链坚决回避传统方向。</b>房地产 -8.5%、固投 -2.4%；除非川大土木双一流或志在央企设计院/重大基建（成渝中线、引大济岷）。</li>
+      <li><b>算清「留成都 vs 出走」。</b>2025 全省机械净流出约 10 万、成都逆势增 6.1 万，「省弱市强」分化明显；选专业时规划深造路径与就业地，双一流稀缺意味着保研要早准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：四川省统计局、国家统计局四川调查总队《2025 年四川省国民经济和社会发展统计公报》（2026-03-17）、四川省人民政府《2025 年四川经济形势新闻发布会》（2026-01-21）、四川省发改委《关于四川省 2025 年国民经济和社会发展计划执行情况及 2026 年计划草案的报告》（2026-02-03）、四川省经信厅《「十四五」四川工业》及产业新赛道通知、四川省「开局起步『十五五』」新闻发布会、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第四轮/第五轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值跨源或有差异，已采信官方公报口径，未做跨年估算；部分承压面数据（如人口机械变动）来自专家解读而非公报直接指标。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"计算机类（软件/人工智能/网络安全）",c:"工学",ch:"电子信息/数字经济",t:"A",h:5,s:"电子科技大学（计算机A、双一流）／四川大学（软件A-、计算机B+）／成都信息工程大学（计算机强）",j:"软件开发、AI算法、网络安全、信创",
+  r:"电子信息营收1.7万亿居中西部第一；成都天府软件、英特尔/华为聚集；人工智能为「一号创新工程」。",w:"工程能力＞文凭；电子科大深造率领跑，进大厂比例高。",city:"成都"},
+ {n:"电子信息类（通信/微电子/光电）",c:"工学",ch:"集成电路/新型显示",t:"A",h:5,s:"电子科技大学（电子/通信双A+，国内电子信息人才摇篮）／成都信息工程大学／四川大学（微电子）",j:"通信、半导体、光电、智能终端",
+  r:"液晶屏破10亿片、集成电路+15.4%；成都集成电路/新型显示为国家战新集群。",w:"本科多去制造/封测，深造（微电子/集成电路）更有利。",city:"成都 · 绵阳"},
+ {n:"航空航天类（飞行器设计/航空工程/动力）",c:"工学",ch:"航空航天",t:"A",h:5,s:"四川大学（航空航天工程、材料）／中国民用航空飞行学院（广汉，飞行/空管/机务）／电子科技大学（航天电子）",j:"整机研发、航空发动机、无人机、商业航天",
+  r:"全国四大航空装备基地之一；C919机头唯一产地、歼20总装、中小型航发占全国40%+；成德绵自凉为国家先进制造业集群。",w:"川大航空航天+材料是「国家队」路径；民航飞行学院是低分高稳的隐藏出路（须体检/政审）。",city:"成都 · 德阳 · 自贡"},
+ {n:"电气工程/能源动力（清洁能源装备/电网）",c:"工学",ch:"清洁能源装备",t:"A",h:4,s:"四川大学（电气、能源动力）／西南交通大学（电气）／西华大学（电气/能源）",j:"电网、发电装备、能源央企、储能",
+  r:"水电破1亿千瓦；德阳造全国60%核电机组、40%水电机组；发电设备产量世界第一；国网/东方电气/国机重装校招体量巨大。",w:"电网方向需提前准备国网考试；央企签约稳定但起薪非暴富。",city:"德阳 · 成都"},
+ {n:"材料科学与工程（钒钛/锂电/半导体材料）",c:"工学",ch:"先进材料",t:"A",h:4,s:"四川大学（材料A-、高分子）／成都理工大学（材料/地质）／西南科技大学（材料、国防科研）",j:"钒钛冶金、锂电材料、半导体材料、复合材料",
+  r:"攀西钒钛为全球第一基地、遂宁/宜宾锂电为全国最大制造基地、乐山晶硅光伏协同；绿色低碳优势产业+7.8%。",w:"锁「锂电/半导体/钒钛」方向，避泛材料；川大材料双一流壁垒强。",city:"攀枝花 · 宜宾 · 遂宁"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"A",h:5,s:"四川大学（华西医学院，临床A、口腔A+）／西南医科大学（泸州，临床强）／成都中医药大学（中西医）",j:"三甲/地市医院、科研、公共卫生",
+  r:"华西医学全国顶尖；老龄化+健康需求长期刚性。",w:"学制长（5+3本博）、分数高；华西留川三甲比例高。",city:"成都 · 泸州"},
+ {n:"机械设计制造/智能制造（装备重装）",c:"工学",ch:"装备制造",t:"B",h:4,s:"西南交通大学（机械A-）／西华大学（机械/车辆强）／西南科技大学",j:"能源装备、汽车零部件、智能产线",
+  r:"装备制造增加值+10.3%；德阳重装/东方电气订单饱满。",w:"锁「能源装备/新能源装备」方向，避泛机加工。",city:"德阳 · 成都"},
+ {n:"自动化/测控技术与仪器（汽车电子/工业智能）",c:"工学",ch:"汽车电子/工业智能",t:"B",h:4,s:"电子科技大学／西南交通大学（测控）／四川大学",j:"控制系统、汽车电子、工业自动化、机器人",
+  r:"汽车+29.6%、工业机器人+45.9%，产线智能化全需自动化/测控。",w:"强电+控制背景，比普机械更有智能化溢价。",city:"成都 · 德阳"},
+ {n:"交通运输/车辆工程（轨道交通/汽车）",c:"工学",ch:"轨道/汽车",t:"B",h:4,s:"西南交通大学（交通运输A+全国第一、车辆）／西华大学（车辆）／吉利（成都）协同",j:"轨道交通、整车研发、智能网联",
+  r:"西南交大轨道是「黄埔军校」，国铁/中车定向培养；汽车重回百万辆级（115.1万辆+29.6%）。",w:"体制内稳定；车辆须锁智能网联方向。",city:"成都 · 宜宾"},
+ {n:"核工程与核技术（绵阳科技城）",c:"工学",ch:"核技术",t:"B",h:4,s:"四川大学（核工程与核技术）／成都理工大学（核技术）／西南科技大学（国防科研）",j:"核电、核医学、辐射防护、军工科研",
+  r:"绵阳中国科技城、中物院、核技术应用集群。",w:"对口央企/院所，稳定但地域集中（绵阳/广元）。",city:"绵阳 · 成都"},
+ {n:"生物医学工程/药学（成渝生物医药集群）",c:"工学",ch:"生物医药",t:"B",h:3,s:"四川大学（生医工/药学A-）／成都中医药大学（中药双一流）／西南医科大学（药学）",j:"医疗器械、生物制剂、药学研发",
+  r:"成渝生物医药为国家先进制造业集群；成都温江/资阳口腔器械国家级特色集群。",w:"医工交叉比纯生物更对产业口。",city:"成都 · 资阳"},
+ {n:"统计学/数据科学（AI底座/金融）",c:"理学",ch:"金融/AI",t:"B",h:3,s:"西南财经大学（统计/应用经济A类）／电子科技大学／四川大学",j:"量化、数据分析、商业智能",
+  r:"金融、AI、政务大数据均依赖统计底座；技术合同成交额超3000亿。",w:"数学要求高，是金融与AI通用底座。",city:"成都"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:4,s:"四川大学（法学B+）／西南财经大学（法学/经济法）",j:"公检法、律所、企业法务、合规",
+  r:"川内公检法/律所认可度高。",w:"须过法考，考公优势明显。",city:"成都"},
+ {n:"金融学/会计学（西南财大）",c:"管理学",ch:"财经",t:"C",h:4,s:"西南财经大学（金融/会计，应用经济学A，西南龙头）／四川大学（财管）",j:"银行、证券、审计、税务",
+  r:"银行/券商/四大校友遍布西南。",w:"须考证（CPA/CFA），冲名校更有溢价。",city:"成都"},
+ {n:"食品科学与工程（白酒技术岗）",c:"工学",ch:"白酒/食品",t:"C",h:3,s:"四川农业大学（食品）／四川大学（食品科学）",j:"酿酒工程、食品质检、名酒技术岗",
+  r:"川酒产量占全国35.28%、六朵金花开票数千亿；但四家川酒上市净利-56.58%，行业深度调整。",w:"进五粮液/泸州老窖技术体系，避泛食品内卷。",city:"宜宾 · 泸州"},
+ {n:"飞行技术（民航）",c:"工学",ch:"民航",t:"C",h:3,s:"中国民用航空飞行学院（广汉，全球最大飞行训练院校）",j:"民航飞行员、空管、机务维修",
+  r:"飞行/空管/机务是「低分高稳」隐藏出路，民航刚需长期存在。",w:"须体检/心理/政审，养成生包分配比例高。",city:"广汉（德阳）"},
+ {n:"地质/资源勘查工程（能源矿产）",c:"工学",ch:"能源矿产",t:"C",h:3,s:"成都理工大学（地质资源与地质工程A-、核技术/地质灾害全国知名）",j:"地质勘查、能源矿产、环境地质",
+  r:"四川油气/钒钛/锂矿资源密集。",w:"出野外的艰苦方向须权衡，锁「能源/核」方向。",city:"成都 · 攀枝花"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育",t:"C",h:3,s:"四川师范大学（教育学/心理学西南龙头）／西华师范大学（南充）",j:"中小学教师、教研、心理咨询",
+  r:"公费师范生考编优势明显。",w:"公费师范生包分配，考编优势大。",city:"成都 · 南充"},
+ {n:"外国语言文学（跨境/通道）",c:"文学",ch:"跨境/通道经济",t:"C",h:3,s:"四川大学（外语）／西南财经大学（商务英语）",j:"跨境贸易、外事、涉外法务",
+  r:"外贸实绩企业破1万家、成渝西部陆海新通道联动，涉外/跨境岗位需求上行。",w:"须叠加贸易/国贸/法律，避纯语言内卷。",city:"成都"},
+ {n:"数字媒体/设计学（文创）",c:"艺术",ch:"数字文创",t:"C",h:4,s:"四川大学（视觉传达/美术）／四川音乐学院（数字媒体艺术）",j:"数字媒体、工业设计、文创",
+  r:"成都「十四五」末数字文创六大核心赛道目标营收破6000亿，游戏/动漫/影视产业聚集。",w:"需专业功底/作品集，作品集＞文凭。",city:"成都"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"四川大学（土木，国家重点）",j:"设计院、施工、基建",
+  r:"房地产-8.5%、固投-2.4%，土建链深度承压；微型计算机设备-21.2%反映部分制造外迁。",w:"仅川大土木双一流或志在央企设计院/重大基建（成渝中线、引大济岷）可报；否则慎选。",city:"成都"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"西南财经大学（须走财经路径）",j:"企业职能管理、行政、咨询",
+  r:"四川以制造业/资源型经济为主，泛管理岗位稀缺、内卷严重。",w:"须叠加「行业+管理」（能源/医院/车企管理）或冲名校，否则慎选。",city:"成都"}
+];
+
+var CHAINS = [
+ {n:"电子信息（四川第一引擎，1.7万亿）",u:["半导体材料","PCB基材","面板玻璃"],m:["集成电路（成都设计/封测）","新型显示（京东方/惠科）","智能终端（笔电/AI服务器）"],d:["软件","消费电子","跨境电商"],
+  mj:"计算机、电子信息、微电子、光电、通信",
+  f:"电子信息产业增加值+14%（光电子、AI服务器爆发式增长）；液晶显示屏突破10亿片、集成电路+15.4%；但微型计算机设备-21.2%，制造端承压、研发端上行。"},
+ {n:"航空航天（全国独一份）",u:["航空材料","锻件/环件"],m:["整机（成飞歼20/C919机头）","中小型航空发动机（占全国40%+）","无人机（翼龙/双尾蝎）","商业火箭/卫星"],d:["维修保障","空管","商业航天应用"],
+  mj:"航空航天工程、飞行器设计、飞行器动力、自动化、空管/飞行技术",
+  f:"成德绵自凉集群为国家先进制造业集群（全国首个以「航空航天」命名）；全省航天产业2025约500亿、2030目标1000亿；自贡大型固定翼无人机年产能400架；西昌卫星发射中心。"},
+ {n:"清洁能源装备（德阳重装 + 全省绿电）",u:["水/核/气/风资源","特钢/锻件"],m:["水电机组","核电机组（华龙一号）","燃机","输变电"],d:["电网运营","储能","西电东送"],
+  mj:"能源动力、电气工程、机械、材料（锻件）、自动化",
+  f:"德阳造全国60%核电机组、40%水电机组、50%大型电站铸锻件；发电设备产量世界第一；四川水电装机破1亿千瓦、清洁能源装机超1.3亿千瓦。"},
+ {n:"装备制造（汽车 + 能源装备 + 机械）",u:["钢铁/铝材","零部件"],m:["汽车（115.1万辆，+29.6%）","能源装备","工程机械"],d:["后市场","运维"],
+  mj:"车辆工程、机械、电气、自动化、智能制造",
+  f:"装备制造产业增加值+10.3%；新能源汽车产量回升、汽车重回百万辆级；成都智能网联整车、宜宾智能座舱/自动驾驶。"},
+ {n:"先进材料（钒钛 + 锂电 + 半导体材料）",u:["钒钛矿","锂矿","硅料"],m:["钒制品（全球第一基地）","锂电材料（全国最大制造基地）","半导体材料"],d:["航空航天","动力电池","电子"],
+  mj:"材料科学与工程、冶金、化工、新能源材料",
+  f:"攀西钒钛集群、遂宁/宜宾锂电、乐山晶硅光伏协同；绿色低碳优势产业+7.8%。"},
+ {n:"白酒及食品轻纺（川酒全国35.28%）",u:["高粱/糯稻","包装"],m:["六朵金花酿造（五粮液/泸州老窖/剑南春/郎酒/水井坊/舍得）","食品轻纺"],d:["渠道","文旅","电商"],
+  mj:"食品科学与工程、酿酒工程、生物工程",
+  f:"2025川酒产量125.2万千升、占全国35.28%；但四家川酒上市净利-56.58%，利润超六成被茅台切走，行业深度调整。"},
+ {n:"生物医药（成渝国家先进制造业集群）",u:["原料药","生物制剂"],m:["创新药","医疗器械","中药"],d:["医疗服务","康养"],
+  mj:"生物医学工程、药学、临床医学、生物科学",
+  f:"成渝生物医药为国家先进制造业集群；成都温江生物技术、岳池原料药、资阳口腔器械等国家级特色集群；四川中药资源全国第一。"},
+ {n:"数字经济/软件信息 + 低空经济（新引擎）",u:["AI大模型","工业软件"],m:["软信服务","低空经济（无人机/通航）","通道物流"],d:["数字内容","信创","跨境贸易"],
+  mj:"软件工程、人工智能、统计学、交通运输、外国语言文学",
+  f:"信息传输软件+9.8%；人工智能为「一号创新工程」；成都/自贡低空经济与西部陆海新通道联动；技术合同成交额超3000亿。"}
+];
+
+var CITIES = [
+ {c:"成都（极核）",i:"电子信息、航空装备、医药健康、数字经济、数字文创",l:"成飞、京东方、英特尔、华为、天府软件",m:"计算机、电子、航空航天、临床/生科、软件"},
+ {c:"绵阳（科技城）",i:"核技术、航空电子（九洲）、新型显示、军民融合",l:"中国工程物理研究院、九洲、长虹",m:"核工程、电子、材料、光电"},
+ {c:"德阳（重装之都）",i:"清洁能源装备、航空锻件、机械",l:"东方电气（东电/东汽）、国机重装、二重",m:"能源动力、机械、材料、电气"},
+ {c:"宜宾",i:"白酒、动力电池、晶硅光伏、数字经济",l:"五粮液、宁德时代（四川）、英发",m:"食品、材料（锂电）、电气、计算机"},
+ {c:"泸州",i:"白酒、化工新材料、航天火工品",l:"泸州老窖、郎酒、北方化学",m:"食品、化工、材料"},
+ {c:"自贡",i:"无人机、通用航空、人工智能产品、数据标注",l:"中航无人机、腾盾、成飞（配套）",m:"航空航天、自动化、计算机"},
+ {c:"攀枝花",i:"钒钛新材料、氢能",l:"攀钢、钒钛高新区",m:"材料（冶金）、化工、能源"},
+ {c:"遂宁",i:"锂电新能源、食品饮料、电子信息",l:"天齐锂业、蜂巢能源",m:"材料（锂电）、化工、电子"},
+ {c:"乐山",i:"晶硅光伏、核技术应用",l:"通威、晶科、核技术园区",m:"材料（光伏）、核技术、化工"},
+ {c:"凉山",i:"清洁能源、西昌商业航天港、文旅",l:"西昌卫星发射中心、商业航天基金",m:"航空航天、能源、旅游"},
+ {c:"川东北/川南其他极点",i:"南充（新能源汽车/油气化工）、达州（能源化工/新材料）、广安（生物医药）、内江（钠电）、资阳（口腔药械/商业航天火箭）、眉山（新能源新材料）",l:"各地龙头",m:"车辆、化工、生科、材料、能源"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

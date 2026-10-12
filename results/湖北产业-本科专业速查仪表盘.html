@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>湖北产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f2f6f8;
+  --card:#ffffff;
+  --ink:#182830;
+  --ink-2:#42545e;
+  --ink-3:#74858f;
+  --line:#dfe7ea;
+  --brand:#1a5e7a;
+  --brand-soft:#e4eff4;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(24,40,48,.05),0 4px 16px rgba(24,40,48,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(24,40,48,.06),0 8px 24px rgba(24,40,48,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#eef3f5;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#eef3f5;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#eef3f5;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#fafcfd}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>湖北产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年湖北统计公报</b> · <b>5个万亿级支柱产业（光电子信息1.13万亿领跑）</b> · <b>7所双一流、32个学科全部在武汉</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">6.27万亿</div><div class="note">增长5.5%，全国第7位</div></div>
+  <div class="stat"><div class="lab">规上工业</div><div class="val">+6.9%</div><div class="note">高技术制造+15.5%、贡献率35.6%</div></div>
+  <div class="stat"><div class="lab">光电子信息</div><div class="val">1.13万亿</div><div class="note">+12.76%，光纤光缆占全球25%</div></div>
+  <div class="stat"><div class="lab">汽车产量</div><div class="val">183.6万辆</div><div class="note">新能源82.4万+43.9%、占比45%</div></div>
+  <div class="stat"><div class="lab">进出口</div><div class="val">8340.1亿</div><div class="note">+18.2%，增速居中部第1</div></div>
+  <div class="stat"><div class="lab">房地产投资</div><div class="val">-7.3%</div><div class="note">建筑业总产值-2.1%</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="农学">农学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：光电、遥感、芯片、存储、车辆、生医工、电气、水利、临床、口腔、法学、武大、华科、武理工">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种（含低空经济与管理、生物制造、具身智能、半导体工艺与装备），<b>低空经济与管理（对应湖北荆门低空经济示范基地、咸宁低空经济创新研究院）、生物制造（对应安琪酵母等 4 家国家级中试平台，数量全国第一）、半导体工艺与装备（对应长江存储与存算一体化基地）、储能（对应荆门储能示范基地）全部对得上湖北产业</b>。但新专业无往年录取数据、无毕业生验证、课程可能尚未成熟，建议优先选「成熟专业 + 新方向选修」。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生，严控大类招生数量与规模。湖北高校（尤其武大、华科）大类培养成熟，更要查清专业组包含的具体专业与分流规则，避免被调剂到 D 档。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>湖北有万亿/国家集群支撑，产业规模大、岗位多、起薪稳。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应战新/未来产业，增速快但周期波动大。适合有冲劲、能持续学习、愿意读研的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应湖北独有赛道（测绘遥感/药谷/水电/船舶/石油/农科），分数友好、壁垒高。适合想留鄂、看重行业资源的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/投资收缩拖累，或严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>武大/华科线及以上</td><td>学校优先 + 专业不将就，锁双一流与 A 类学科</td><td>华科（光电/机械/电气/计算机/临床/生医工）、武大（遥感测绘/法学/口腔/计算机/水利），或冲外省顶尖 985</td></tr>
+        <tr><td><b>中高分</b><br>211 线</td><td>选「行业特色校的王牌」优于「综合排名略高但专业弱」</td><td>武汉理工（材料/车辆/船舶）、华中师范（师范/政治/中文）、中南财经政法（法学/财经）、地大武汉（地质）、华中农大（园艺/动医/水产）</td></tr>
+        <tr><td><b>中分</b><br>省属一流学科线</td><td>用行业校补分数差，贴湖北产业链</td><td>武汉科技大学（冶金/材料/机械）、湖北大学、武汉工程大学（化工）、湖北工业大学（轻工/智能制造）、三峡大学（水电/电气）、长江大学（石油/作物）、武汉纺织大学、武汉轻工大学（食品）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景的省属校，锁特色专业</td><td>湖北汽车工业学院（车辆）、湖北医药学院（临床）、湖北师范大学（师范）、湖北中医药大学（中医）、黄冈师范学院、湖北经济学院（财经）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;color:var(--ink-2);margin-top:10px"><b>历史组建议：</b>法学（武汉大学 A、中南财经政法大学双一流）、师范（华中师范大学教育学双一流、湖北师范大学）、财经（中南财经政法大学）、新闻传播（武汉大学 A-）、图书情报与档案管理（武汉大学 A+）、马克思主义理论（武汉大学 A+）、中医（湖北中医药大学）是历史组友好方向；避开需要物理+化学的工科强校专业。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在湖北读，还是出省读？</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>光电信息/微电子/计算机/遥感测绘/电气/机械/车辆<br><span style="color:var(--ink-3);font-size:12.5px">（光电子 + 存储 + 汽车硬科技）</span></td><td><b style="color:var(--green)">优先留鄂</b></td><td>产业与高校双密集，华科/武大/武理工全国顶尖或特色独一，分数低于同档京沪苏浙</td></tr>
+        <tr><td>生医工/临床/口腔/药学/材料/化工</td><td><b style="color:var(--green)">留鄂或出省</b></td><td>同济、协和、武大口腔、中国药谷在中部认可度极高；冲清北复交可出省</td></tr>
+        <tr><td>水利水电/船舶/石油/农科/食品</td><td><b style="color:var(--green)">留鄂优先</b></td><td>三峡大学、长江大学、华中农大是行业定向就业的稀缺通道，外省无同类替代</td></tr>
+        <tr><td>土木（房建）/泛管理</td><td><b style="color:var(--accent)">考虑他省</b></td><td>房地产 -7.3%、建筑业总产值 -2.1%，土建与泛管理承压更明显</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#1a5e7a;border-left-color:var(--brand);margin-top:14px">
+      <b>湖北独有优势：光电子信息 1.13 万亿（全国独树一帜）+ 遥感技术连续 8 年软科世界第一 + 中国药谷（武汉生命健康 6600 亿、中部第一）+ 41 个工业大类全覆盖 + 7 所双一流 32 个学科。</b>湖北高教梯度分明（武大、华科 985 + 5 所 211），但<b>全部 7 所双一流都在武汉</b>；<b>外省/河北考生来鄂读「光电信息·微电子·计算机·遥感测绘·电气·机械·车辆·生医工·临床·口腔·法学」性价比极高</b>——产业对口、院校壁垒高、分数低于同档京沪苏浙；土建（房建）·泛管理不建议来鄂；长期须算清「留鄂 vs 出走」（常住人口一年净减 23 万、自然增长率 -4.60‰）。<b>对河北考生尤其要提醒：湖北高校在河北投放计划以武大、华科、武理工等部属院校为主，省属行业校（如湖北汽车工业学院、武汉工程大学）在河北计划少、分数波动大，报考前须核对当年河北招生计划与位次。</b>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>湖北靠「光电子信息 + 汽车 + 大健康 + 现代化工 + 农产品加工」五大万亿支柱，别被「九省通衢/黄鹤楼」的标签带偏去挤纯管理。</li>
+      <li><b>A 档专业是压舱石。</b>光电信息、微电子、计算机、遥感测绘、电气、机械、车辆七个方向覆盖湖北最有确定性的岗位，优先冲。</li>
+      <li><b>贴「五谷」和五条产业走廊。</b>武汉光谷/车谷/药谷/星谷/网谷是核心；「汉孝随襄十」汽车走廊、「武鄂黄黄咸」光电子走廊、「宜荆荆襄」新能源材料走廊、「汉荆宜」生命健康走廊、「汉黄荆荆宜」高端装备走廊是就业落点。</li>
+      <li><b>行业特色校是最大信息差。</b>湖北汽车工业学院（车辆）、三峡大学（水电/电气）、长江大学（石油）、武汉工程大学（化工）、武汉轻工大学（食品）、武汉纺织大学（纺织）——专业全国或行业独一，分数远低于同档综合校。</li>
+      <li><b>光电子信息是湖北最被低估的王牌。</b>1.13 万亿、+12.76%，光纤光缆占全球 25%；华科光学工程 A+、武大光电齐全，分数却明显低于京沪同档，这是性价比最高的赛道。</li>
+      <li><b>遥感测绘是「全国无对手」的独一档。</b>武大遥感连续 8 年软科世界第一、测绘科学与技术 A+、北斗及应用千亿级产业；分数够武大，这条赛道的壁垒没有任何省能复制。</li>
+      <li><b>中国药谷值得比临床更认真的比较。</b>华科生医工 A+ 全国并列第一、武汉生命健康 6600 亿；如果分数够不到临床 5+3，生医工与药学是回报更高、学制更短的第二选择。</li>
+      <li><b>把「高教孤岛」当成决策前提。</b>7 所双一流 32 个学科全部在武汉；上不了武汉双一流，就果断选行业特色校的王牌专业，不要为了「留在武汉」去读一个没有壁垒的普通专业。</li>
+      <li><b>土建链只认水利水电方向。</b>房地产 -7.3%、建筑业总产值 -2.1%；三峡大学的水利水电/电气、武大水利受国家水网重大工程支撑，与房建土建是两回事。</li>
+      <li><b>算清「留鄂 vs 出走」。</b>常住人口一年净减 23 万、自然增长率 -4.60‰；湖北产业在升级但人口在收缩，选专业时同步规划深造路径与就业地，双一流集中在武汉意味着保研竞争高度内卷，要早做准备。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：湖北省统计局《湖北省 2025 年国民经济和社会发展统计公报》（2026-03-18）、《2025 年湖北经济运行情况》（2026-01-23）、湖北省经信厅「51020」先进制造业产业集群系列发布（2026-01 至 2026-06）、湖北省人民政府《加快建成中部地区崛起的重要战略支点》（2026-02-08）、五条产业走廊发布（2025-12-26）、湖北省「十五五」规划纲要（2026-04）、第八届世界大健康博览会发布（2026-04-08）、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增 38 种、第二轮「双一流」名单与第四轮学科评估。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值与产量数据跨源或有差异（尤其规上工业利润口径、新能源汽车产量增速的三套官方口径），已分别标注，未做跨年估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"光电信息科学与工程（光通信/激光/光模块）",c:"工学",ch:"光电子信息",t:"A",h:5,s:"华中科技大学（光学工程A+、双一流）／武汉大学／武汉理工大学／湖北工业大学",j:"光器件与光模块研发、光纤光缆工艺、激光装备、显示面板、6G与卫星光通信",
+  r:"光电子信息2025年1.13万亿、+12.76%，五大万亿支柱之首；光谷光纤光缆占全球25%、全国50%；长飞全球第一、光谷1.6万家企业「光芯屏端网」生态。",w:"物理数学要求高；湖北唯一「全球领先+本地万亿集群」双叠加方向，本科多做实验实习、深造溢价明显。",city:"武汉 · 鄂州"},
+ {n:"电子信息类·微电子/集成电路（先进存储）",c:"工学",ch:"先进存储",t:"A",h:5,s:"华中科技大学（微电子/集成电路强）／武汉大学／武汉理工大学／湖北工业大学",j:"存储芯片设计/制造/封测、功率与化合物半导体、车规芯片、半导体设备与材料",
+  r:"光谷集聚300多家芯片企业、2025年规模破1000亿；长江存储NAND全球份额超10%、2026Q1营收破200亿；在建世界级存算一体化产业基地。",w:"半导体强周期，按5—10年长周期规划；数理与英语文献要求高；本科进产线多，建议深造。",city:"武汉 · 黄石"},
+ {n:"计算机类（软件/AI/网络安全）",c:"工学",ch:"AI/网谷",t:"A",h:5,s:"华中科技大学（计算机双一流）／武汉大学（软工A、计算机A-）／武汉理工大学／中南民族大学／湖北大学",j:"AI算法与工程、工业软件、智能网联汽车软件、网络安全、信创",
+  r:"湖北AI产业增速保持20%+、算力运载力指数全国第三；国家网络安全基地（网谷）为全国首个国家级网安产业聚集区。",w:"工程能力＞文凭；网谷给了网络安全一个湖北独一份的出口，可关注网络空间安全、信息安全专业。",city:"武汉"},
+ {n:"遥感科学与技术/测绘工程/导航工程",c:"工学",ch:"北斗与测绘遥感",t:"A",h:5,s:"武汉大学（遥感/测绘/导航/时空信息工程，均国家一流本科专业）／中国地质大学（武汉）／长江大学",j:"遥感数据处理与解译、北斗高精度定位、时空信息平台、智慧城市/自动驾驶地图、国防与自然资源",
+  r:"武大遥感技术连续8年软科世界第一（截至2024年）、测绘科学与技术A+、全国唯一测绘遥感信息工程全国重点实验室；北斗及应用为湖北千亿级特色产业。",w:"湖北壁垒最高、全国无省能复制的专业；岗位密度小于计算机但竞争者极少；必须读到武大层次才有最大溢价。",city:"武汉"},
+ {n:"电气工程及其自动化（电网/汽车三电/水电）",c:"工学",ch:"三电/电网/水电",t:"A",h:4,s:"华中科技大学（电气双一流）／武汉大学／武汉理工大学／三峡大学（电气省级国内一流学科）",j:"国家电网/南网、电气设备、新能源三电与储能、水电与抽蓄",
+  r:"湖北建成全国最完整新能源锂电池全产业链、动力电池产能202GWh（全国第五、中部第一）；三峡水运新通道、引江补汉等国家级工程落地。",w:"电网方向需提前准备国网考试；三峡大学是湖北电气的分数洼地，水电/电力系统定向就业性价比极高。",city:"武汉 · 宜昌 · 十堰"},
+ {n:"机械设计制造及其自动化（工业母机/汽车装备）",c:"工学",ch:"工业母机/高端装备",t:"A",h:4,s:"华中科技大学（机械工程A+、双一流）／武汉理工大学（机械B+）／武汉科技大学／湖北工业大学",j:"数控系统与工业母机、汽车零部件产线、智能装备与机器人集成",
+  r:"高端装备为6个5000亿级优势产业之一；2025年7款高端工业母机新品全球首发；华中数控、武重为国内龙头；汽车制造业投资+30.6%。",w:"锁「数控系统/工业母机/汽车装备」方向，回避泛机加工；与自动化、机器人交叉复合更有溢价。",city:"武汉 · 黄石 · 荆州"},
+ {n:"车辆工程（新能源与智能网联）",c:"工学",ch:"汽车",t:"A",h:4,s:"武汉理工大学（汽车/车辆王牌）／湖北汽车工业学院（十堰、全国唯一以汽车命名的本科高校）／华中科技大学／武汉科技大学",j:"整车与零部件研发、三电系统、智能座舱与智驾、试验验证",
+  r:"2025年整车183.6万辆（+13.2%）、新能源82.4万辆（占比45%）；25家整车+2400多家零部件企业、本地配套率超95%；武汉自动驾驶里程与运营数量全国第一。",w:"锁「新能源+智能网联」方向，回避传统燃油车；湖北汽车工业学院分数不高但十堰汽车城行业认可度极高，是典型分数洼地。",city:"武汉 · 十堰 · 襄阳"},
+ {n:"生物医学工程（中国药谷）",c:"工学",ch:"中国药谷",t:"B",h:4,s:"华中科技大学（生医工A+、与东南大学并列全国第一）／武汉大学／武汉理工大学",j:"高端医学影像设备、手术机器人、体外诊断、医工交叉研发",
+  r:"武汉生命健康产业总规模超6600亿、居中部第一；联影智融手术机器人、迈瑞、药明康德集聚；武汉三甲医院31家。",w:"医工交叉比纯生物更对产业口；做高端装备研发建议深造；选科多要求物理+化学。",city:"武汉"},
+ {n:"材料科学与工程（半导体材料/硅钢/电池材料）",c:"工学",ch:"半导体/硅钢/电池",t:"B",h:4,s:"武汉理工大学（材料A+、双一流）／华中科技大学（材料双一流）／武汉科技大学／湖北大学",j:"硅钢与先进金属材料、半导体材料（硅片/碳化硅）、电池正负极材料、电子化学品",
+  r:"全国32%取向硅钢、40%电缆钢、75%超宽汽车板来自湖北（武钢全球最大高端硅钢基地）；九峰山实验室化合物半导体高地。",w:"锁「半导体材料/硅钢/电池材料」方向，回避泛材料；武理工材料全国第一梯队，分数低于同档华东985。",city:"武汉 · 黄石 · 荆门"},
+ {n:"自动化/机器人工程/智能制造工程",c:"工学",ch:"智能制造/具身智能",t:"B",h:4,s:"华中科技大学（自动化/控制）／武汉理工大学／湖北工业大学（智能制造）／武汉工程大学",j:"运动控制、工业机器人集成、智能产线、具身智能（前沿）",
+  r:"湖北实施「人形机器人突破工程」（八大未来产业工程之首）；2025年推进4082个工业技改项目、工业投资+6.6%。",w:"具身智能属未来产业、短期岗位有限，建议「自动化打底+机器人方向选修」稳妥路径。",city:"武汉 · 襄阳"},
+ {n:"新能源科学与工程/储能科学与工程",c:"工学",ch:"锂电池产业链",t:"B",h:4,s:"华中科技大学（能源双一流）／武汉理工大学／武汉科技大学／湖北工业大学",j:"电芯与电池系统、储能电站、BMS、光伏与氢能",
+  r:"全国最完整新能源锂电池全产业链、动力电池产能202GWh（全国第五、中部第一）；弗迪、亿纬锂能、中创新航、楚能均在鄂布局。",w:"新能源产能扩张快、价格竞争激烈，属周期行业；优先选有头部企业定向培养/实习通道的院校。",city:"荆门 · 襄阳 · 宜昌"},
+ {n:"化学工程与工艺（磷化工循环/电池材料/电子化学品）",c:"工学",ch:"磷化工/化工新材料",t:"B",h:3,s:"武汉工程大学（化工与矿业工程省级国内一流学科、化工行业校）／武汉理工大学／湖北工业大学／长江大学",j:"磷化工与精细化工、电子化学品、电池材料工艺、化工安全环保",
+  r:"现代化工为湖北5大万亿支柱之一；宜昌打造世界级磷化工循环产业集群、2025年产值目标破1700亿；兴发为全国最大精细磷化工企业。",w:"必须选「精细化工/电子化学品/电池材料」方向，回避传统大化工；园区安全环保要求高。",city:"宜昌 · 荆门 · 孝感"},
+ {n:"药学/生物制药",c:"医学",ch:"中国药谷",t:"B",h:3,s:"武汉大学（药学）／华中科技大学（同济药学院）／湖北中医药大学／武汉工程大学",j:"创新药研发、CRO/CDMO、药品注册与质量管理、中药新药",
+  r:"2025年3个一类新药获批、4个获批国家一类新药创历史新高；禾元生物「稻米造血」全球首创并产业化；人福、药明康德集聚。",w:"研发岗普遍要求硕士以上；蕲艾中药材方向是黄冈特色。",city:"武汉 · 黄冈"},
+ {n:"临床医学",c:"医学",ch:"大健康",t:"C",h:5,s:"华中科技大学同济医学院（临床双一流、同济/协和全国前十）／武汉大学医学部／湖北医药学院／三峡大学",j:"三甲与地市医院、临床科研、公共卫生",
+  r:"武汉三甲医院31家、三级医院82家，同济、协和位居全国医院前十；华科临床双一流、公共卫生与预防医学A+。",w:"学制长（5+3一体化/本博）、分数高、规培强度大；湖北医药学院、三峡大学是中分段留鄂从医的现实通道。",city:"武汉 · 十堰 · 宜昌"},
+ {n:"口腔医学",c:"医学",ch:"大健康",t:"C",h:4,s:"武汉大学（口腔医学双一流）／华中科技大学同济医学院／湖北医药学院",j:"口腔专科医院、综合医院口腔科、正畸与种植、民营连锁",
+  r:"武大口腔医院为全国顶尖口腔专科医院之一、口腔医学为双一流建设学科。",w:"分数高、学制长（5+3）；民营口腔市场活跃，执业路径比临床更灵活。",city:"武汉"},
+ {n:"法学",c:"法学",ch:"法律服务",t:"C",h:4,s:"武汉大学（法学A）／中南财经政法大学（法学双一流、财经法复合特色）／华中师范大学",j:"公检法、律所、企业法务与合规、知识产权",
+  r:"武大法学第四轮评估A、中南财经政法法学为双一流学科；武汉为中部法务与总部经济中心。",w:"必须通过法考；知识产权方向与光谷科创企业需求契合，是差异化切口。",city:"武汉"},
+ {n:"地质资源与地质工程/石油与天然气工程",c:"工学",ch:"磷矿/油气",t:"C",h:3,s:"中国地质大学（武汉）（地质学/地质资源与地质工程A+）／长江大学（石油与天然气工程王牌）",j:"油气勘探开发、地质调查、矿山与磷矿开发、工程勘察、地质灾害防治",
+  r:"地大地质双一流A+；长江大学是「三桶油」体系校招主力；荆州石油设备为省级300亿级集群。",w:"行业周期性明显、部分岗位需野外作业；长江大学是三桶油定向就业的高性价比选择。",city:"武汉 · 荆州 · 荆门"},
+ {n:"水利水电工程",c:"工学",ch:"国家水网",t:"C",h:3,s:"武汉大学（水利工程A-、双一流）／三峡大学（水利省级国内一流学科、行业校）／长江大学",j:"水电与水利设计院、流域管理、抽蓄与新能源、港口与航道",
+  r:"三峡水运新通道、引江补汉、抽水蓄能等国家重大工程在鄂落地；武汉大学水利为双一流学科。",w:"与土木区分——水利工程受国家水网重大工程支撑，明显好于房建土建；三峡大学是典型分数洼地。",city:"武汉 · 宜昌"},
+ {n:"船舶与海洋工程（绿色智能船舶）",c:"工学",ch:"绿色智能船舶",t:"C",h:3,s:"武汉理工大学（船舶传统强项）／华中科技大学／海军工程大学（军校、省级国内一流学科）",j:"船舶设计制造、船用动力与电气、海工装备、绿色智能船舶",
+  r:"湖北「绿色智能船舶」为省级重点方向；宜都船舶产业园、宜昌建设60艘以上新能源船舶。",w:"内河船舶体量小于沿海船企、就业半径偏窄；海军工程大学的船海/电气是稀缺军校通道。",city:"宜昌 · 武汉"},
+ {n:"农学类（园艺/动物医学/水产/作物）",c:"农学",ch:"农产品加工",t:"C",h:3,s:"华中农业大学（园艺学/畜牧学/兽医学A+）／长江大学（作物学省级国内一流学科）／湖北大学",j:"种业与育种、动物疫病防控、水产养殖与加工、农产品质检",
+  r:"华中农大园艺学、畜牧学、兽医学A+，生物学、作物学、水产A；现代农产品加工为万亿支柱；潜江小龙虾综合产值870亿。",w:"农科在湖北有「万亿农产品加工」产业托底；建议走「农科+食品/生物/数据」复合路线。",city:"武汉 · 潜江 · 随州"},
+ {n:"食品科学与工程/生物工程",c:"工学",ch:"食品加工/生物制造",t:"C",h:3,s:"华中农业大学（食品科学）／武汉轻工大学（食品省级国内一流学科）／湖北工业大学（发酵工程/轻工）",j:"食品研发与工艺、发酵工程、质量安全与检测、供应链品控",
+  r:"现代农产品加工为万亿支柱；安琪酵母为国家级生物制造中试平台（湖北4家、数量全国第一）；稻花香、周黑鸭、潜江龙虾集群。",w:"进头部企业技术岗（研发/品控）而非泛食品销售；生物制造是「十五五」未来产业方向。",city:"武汉 · 孝感 · 潜江"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"三峡大学（水利方向）／武汉大学（水利）",j:"水利水电、港口航道、桥梁隧道、智能建造",
+  r:"2025年房地产开发投资-7.3%、建筑业总产值-2.1%、新签合同额-1.0%，土建链深度承压。",w:"只认水利水电/港航/桥隧/智能建造方向或中建/中交/长江委等央企；纯房建方向不建议。",city:"武汉 · 宜昌"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"中南财经政法大学（财经+法律复合）",j:"企业职能管理、行政、咨询",
+  r:"制造业为主的经济结构，泛管理岗位供给有限；2025年社零仅+2.7%，商贸扩张温和。",w:"叠加明确行业方向（医药/汽车链/财务管理）或走中南财经政法复合路径；纯工商管理慎选。",city:"武汉"}
+];
+
+var CHAINS = [
+ {n:"光电子信息（光通信/光模块/激光）— 湖北独树一帜的王牌",u:["光纤预制棒","光芯片（硅光/薄膜铌酸锂）"],m:["光纤光缆（长飞/烽火）","光器件与光模块（光迅/华工科技）","激光器（锐科）","光通信设备（中信科移动）"],d:["AI算力数据中心","6G卫星互联网","智能网联汽车「光纤上车」","新型显示"],
+  mj:"光电信息科学与工程、电子信息工程、通信工程、微电子、材料（光纤/硅光）",
+  f:"2025年产业规模1.13万亿元、+12.76%，五大万亿支柱之首；光谷光纤光缆占全球25%、全国50%；长飞全球第一、全球最大光纤光缆研发制造基地；光谷集聚1.6万家企业；华工科技2025年高速光模块国内基地+111%、海外基地+500%。"},
+ {n:"集成电路与先进存储（「世界存储之都」）",u:["硅片/碳化硅衬底","半导体设备与材料"],m:["3D NAND闪存（长江存储）","化合物半导体（九峰山实验室）","芯片设计"],d:["AI算力","车规芯片","消费电子"],
+  mj:"集成电路设计与集成系统、微电子科学与工程、电子信息、材料、自动化（设备）",
+  f:"光谷集聚300多家芯片相关企业、2025年产业规模突破1000亿元；长江存储2026年一季度营收突破200亿元、NAND全球份额超10%逼近全球第三；湖北正建世界级存算一体化产业基地（2028年建成）。"},
+ {n:"新能源与智能网联汽车（「汉孝随襄十」大走廊）",u:["锂/磷/镍资源、正负极材料","车规级芯片"],m:["动力电池（弗迪/亿纬/中创新航/楚能）","整车（东风/岚图/奕派/猛士）","智能座舱与智驾"],d:["充换电","智能网联测试","后市场","出口"],
+  mj:"车辆工程、电气工程、自动化、计算机（智驾）、材料（轻量化/电池）",
+  f:"2025年整车183.6万辆（+13.2%）、新能源82.4万辆（+43.9%）、占比45%；全产业链规模有望破1.1万亿；本地配套率超95%；武汉智能网联开放测试道路3829公里、自动驾驶里程全国第一；岚图2026年3月港股上市。"},
+ {n:"生命健康 / 中国药谷（「汉荆宜」大走廊）",u:["原料药","生物制剂","中药材（蕲艾）"],m:["创新药（禾元生物「稻米造血」）","高端医疗装备（联影/迈瑞）","中药经典名方"],d:["三甲医院临床","康养","医药流通（九州通）"],
+  mj:"生物医学工程、药学、临床医学、生物科学、中药学、医疗器械",
+  f:"武汉2025年生命健康产业总规模超6600亿元、中部第一；生命健康类企业超5500家、上市18家；光谷生物城全国生物医药产业园第5；2025年3个一类新药获批；同济、协和位居全国医院前十、武汉三甲31家。"},
+ {n:"现代化工与新能源材料（「宜荆荆襄」大走廊）",u:["磷矿（宜昌保有储量占全省54.16%）","盐、煤、氟、硅"],m:["精细磷化工","电子化学品（兴发电子级磷酸/硫酸）","磷酸铁锂（邦普/万华兴发）","取向硅钢"],d:["新能源电池","半导体","汽车板","现代农业"],
+  mj:"化学工程与工艺、材料科学与工程、应用化学、矿业（磷矿）、环境工程",
+  f:"湖北建成全国规模最大、产业链最完整的磷化工循环产业集群与全国最完整新能源锂电池全产业链；宜昌「磷—煤—盐—氟—硅」耦合循环、2025年现代化工新材料产值目标破1700亿；荆门动力储能电池为省级500亿级集群。"},
+ {n:"北斗与测绘遥感（地球空间信息）— 全国无对手的独一档",u:["北斗卫星","遥感卫星（珞珈系列）","芯片模组（梦芯科技）"],m:["高精度定位终端","遥感数据处理（武大吉奥/立得空间）","时空信息云平台"],d:["智能交通","智慧城市","精准农业","防灾减灾"],
+  mj:"遥感科学与技术、测绘工程、导航工程、地理信息科学、时空信息工程、计算机（时空计算）",
+  f:"武汉大学遥感技术学科连续8年软科世界第一（截至2024年）、测绘科学与技术A+、全国唯一测绘遥感信息工程全国重点实验室；东湖地球空间信息集群为全国首批创新型产业集群试点；北斗及应用为湖北10个千亿级特色产业之一；我国14位北斗院士中9位出自武汉。"},
+ {n:"高端装备（工业母机/船舶/航天/网络安全）—「汉黄荆荆宜」大走廊",u:["数控系统","伺服电机","工业机器人本体"],m:["工业母机（华中数控/武重）","船舶与海工（宜昌/武船）","商业航天（星谷·快舟）","网络安全（网谷）"],d:["产线集成","运维服务","卫星应用","信创"],
+  mj:"机械设计制造及其自动化、智能制造工程、机器人工程、船舶与海洋工程、网络空间安全、信息安全",
+  f:"高端装备为6个5000亿级优势产业之一；武汉国家网络安全基地为我国首个国家级网络安全产业聚集区；星谷为国内首个国家级商业航天产业基地、发射次数与入轨卫星数量全国第一；2025年7款高端工业母机新品全球首发。"},
+ {n:"现代农产品加工与食品（江汉平原/鄂西鄂南）",u:["粮油、畜禽、水产（潜江小龙虾）、茶叶、柑橘、香菇"],m:["精深加工（安琪酵母/稻花香/周黑鸭）","纺织服装（天门513亿电商交易额）"],d:["商超","跨境电商","餐饮文旅"],
+  mj:"食品科学与工程、生物工程、农学/园艺/动物医学/水产、纺织科学与工程、物流管理",
+  f:"现代农产品加工为湖北5大万亿支柱产业之一；潜江小龙虾综合产值870亿元、带动就业22万人；天门服装电商交易额突破513亿元；安琪酵母为4家落户湖北的国家级生物制造中试平台之一（数量全国第一）。"}
+];
+
+var CITIES = [
+ {c:"武汉（「五谷丰登」）",i:"光谷（光电子信息）、车谷（新能源与智能网联汽车）、药谷（生命健康）、星谷（商业航天）、网谷（网络安全）",l:"长飞、华工科技、光迅、烽火、长江存储、东风、岚图、联影、人福、中国信科",m:"光电信息、微电子、计算机、车辆、生医工、临床、药学、网络安全"},
+ {c:"襄阳",i:"新能源与智能网联汽车、现代煤磷化工、农产品加工、高端装备、低空经济",l:"东风（襄阳基地）、航宇救生、襄阳高新区航空集群",m:"车辆、机械、化工、材料、食品、航空航天"},
+ {c:"宜昌",i:"现代化工新材料（磷化工循环）、生命健康、新能源电池材料、绿色智能船舶",l:"兴发、宜化、邦普、万华化学、楚能、安琪、三峡实验室",m:"化工、材料、药学、食品、机械、船舶"},
+ {c:"十堰",i:"中国商用车之都、新能源与智能网联汽车及关键部件、高端装备与智能农机",l:"东风商用车、湖北汽车工业学院",m:"车辆、机械、自动化、材料、农装"},
+ {c:"黄石",i:"铜基新材料、先进电子元器件、特钢精深加工、高端工模具",l:"弘盛铜业、宏和电子、大冶特钢、黄石高新区",m:"材料、冶金、电子信息、机械"},
+ {c:"荆州",i:"智能装备（重大成套装备）、农产品加工、石油设备、电子信息及智能家电",l:"恒逸、云图控股、美的荆州工厂",m:"机械、食品、化工、电气"},
+ {c:"荆门",i:"动力与储能电池、城市矿产循环利用、低空经济、通用航空",l:"亿纬锂能、格林美、荆门高新区",m:"材料、化工、电气、航空航天"},
+ {c:"孝感",i:"盐化工、高端装备制造、纸基材料、生物农业、光电子配套",l:"孝感高新区、应城生物农业集群",m:"化工、机械、材料、食品"},
+ {c:"鄂州",i:"光电子信息（对接「光芯屏端网」）、生物医药、金刚石刀具、花湖国际机场航空物流",l:"三安光电、瑞华光电、葛店高新区、顺丰枢纽",m:"光电信息、物流工程、交通运输、机械"},
+ {c:"黄冈 · 咸宁",i:"大健康与生物医药（蕲艾）、智能机电、无机非金属材料、低空经济",l:"李时珍医药工业园、咸宁智能机电集群、武大·咸宁低空经济创新研究院",m:"药学、中医、机械、材料"},
+ {c:"随州 · 江汉平原（天门/仙桃/潜江）",i:"专用汽车与移动应急装备、纺织服装电商、无纺布、小龙虾产业链",l:"程力专汽、齐星、天门服装电商、仙桃非织造布、潜江龙虾",m:"车辆、机械、纺织、食品、材料"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>

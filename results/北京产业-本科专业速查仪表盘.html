@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北京产业 · 本科专业速查仪表盘（2027届）</title>
+<style>
+:root{
+  --bg:#f7f5f4;
+  --card:#ffffff;
+  --ink:#251a1a;
+  --ink-2:#514445;
+  --ink-3:#8a7a7b;
+  --line:#e8e0df;
+  --brand:#8b1e24;
+  --brand-soft:#f7e9ea;
+  --accent:#2a8c74;
+  --accent-soft:#e8f4f0;
+  --green:#2f7a52;
+  --green-soft:#e9f4ee;
+  --red:#b23b3b;
+  --red-soft:#fbecec;
+  --purple:#6b4c9a;
+  --purple-soft:#f0ebf8;
+  --shadow:0 1px 2px rgba(37,26,26,.05),0 4px 16px rgba(37,26,26,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+header{margin-bottom:26px}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.sub{color:var(--ink-2);font-size:14px}
+.sub b{color:var(--brand)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin:20px 0 26px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lab{font-size:12px;color:var(--ink-3);margin-bottom:5px}
+.stat .val{font-size:21px;font-weight:700;color:var(--brand);line-height:1.2}
+.stat .note{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{
+  background:none;border:none;padding:10px 16px;font-size:14px;color:var(--ink-2);
+  cursor:pointer;border-bottom:2px solid transparent;transition:.15s;font-family:inherit;
+}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.frow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.fgroup{display:flex;flex-direction:column;gap:6px}
+.fgroup>label{font-size:12px;color:var(--ink-3);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 13px;
+  font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.search{
+  border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:13px;
+  min-width:220px;font-family:inherit;color:var(--ink);background:#fff;
+}
+.search:focus{outline:none;border-color:var(--brand)}
+.result-count{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.result-count b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  box-shadow:var(--shadow);transition:.18s;border-top:3px solid var(--line);
+}
+.card:hover{box-shadow:0 2px 4px rgba(37,26,26,.06),0 8px 24px rgba(37,26,26,.09);transform:translateY(-1px)}
+.card.tA{border-top-color:var(--green)}
+.card.tB{border-top-color:var(--brand)}
+.card.tC{border-top-color:var(--accent)}
+.card.tD{border-top-color:var(--red)}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cname{font-size:16px;font-weight:700;line-height:1.35}
+.tier{
+  font-size:11px;padding:3px 9px;border-radius:5px;white-space:nowrap;font-weight:600;flex-shrink:0;
+}
+.tA .tier{background:var(--green-soft);color:var(--green)}
+.tB .tier{background:var(--brand-soft);color:var(--brand)}
+.tC .tier{background:var(--accent-soft);color:var(--accent)}
+.tD .tier{background:var(--red-soft);color:var(--red)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{font-size:11.5px;padding:2.5px 8px;background:#f3efee;color:var(--ink-2);border-radius:4px}
+.tag.chain{background:var(--purple-soft);color:var(--purple)}
+.heat{color:var(--accent);letter-spacing:1px;font-size:12px}
+.cline{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cline b{color:var(--ink);font-weight:600}
+.schools{font-size:13px;color:var(--ink-2);margin-bottom:8px}
+.schools b{color:var(--brand)}
+.warn{
+  font-size:12.5px;background:var(--accent-soft);color:#1c5a4a;border-radius:7px;
+  padding:7px 10px;margin-top:8px;border-left:3px solid var(--accent);
+}
+
+.chain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.chain h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.cnum{background:var(--brand);color:#fff;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:13px}
+.flow span{background:#f3efee;padding:4px 10px;border-radius:5px;color:var(--ink-2)}
+.flow i{color:var(--ink-3);font-style:normal}
+.chain .majors{margin-top:10px;font-size:13px}
+.chain .majors b{color:var(--brand)}
+.cfact{font-size:12.5px;color:var(--ink-3);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.cfact b{color:var(--green)}
+
+.citygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.city{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.city h3{font-size:15px;margin-bottom:6px;color:var(--brand)}
+.city .ind{font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.city .lead{font-size:12.5px;color:var(--ink-3);margin-bottom:8px}
+.city .maj{font-size:12.5px;background:var(--brand-soft);color:var(--brand);padding:6px 9px;border-radius:6px}
+
+.adv{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.adv h3{font-size:17px;margin-bottom:12px;color:var(--brand)}
+.adv ol,.adv ul{margin-left:20px}
+.adv li{margin-bottom:10px;font-size:14px;color:var(--ink-2)}
+.adv li b{color:var(--ink)}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.tbox{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tbox h4{font-size:14px;margin-bottom:6px}
+.tbox p{font-size:12.5px;color:var(--ink-3)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left}
+th{background:#f3efee;font-weight:600;color:var(--ink)}
+tbody tr:nth-child(even){background:#faf8f8}
+
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+
+@media(max-width:640px){
+  .wrap{padding:18px 14px 40px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>北京产业 · 本科专业速查仪表盘</h1>
+  <div class="sub">基于 <b>2025年北京统计公报</b> · <b>「十五五」现代化产业体系规划（「2+2+6+6」）</b> · <b>「芯·模·车·星·械」硬科技 + 医药健康 + 金融总部</b> · <b>教育部本科专业目录（2026）</b>　|　面向 2027 届考生家长</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="lab">2025年GDP</div><div class="val">5.21万亿</div><div class="note">首破5万亿，+5.4%，全国第12</div></div>
+  <div class="stat"><div class="lab">三产占比</div><div class="val">86.0%</div><div class="note">全国省级最高（0.2:13.8:86.0）</div></div>
+  <div class="stat"><div class="lab">数字经济</div><div class="val">占GDP 46.4%</div><div class="note">增加值24166.3亿，+8.7%</div></div>
+  <div class="stat"><div class="lab">AI核心产业</div><div class="val">4500亿</div><div class="note">企业2500+，占全国约一半</div></div>
+  <div class="stat"><div class="lab">高技术产业投资</div><div class="val">+40.1%</div><div class="note">设备购置投资+66.0%</div></div>
+  <div class="stat"><div class="lab">房地产开发投资</div><div class="val">-15.5%</div><div class="note">土建链承压；进出口-11.5%</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="p1">专业速查</button>
+  <button class="tab" data-p="p2">8条产业链</button>
+  <button class="tab" data-p="p3">区域产业地图</button>
+  <button class="tab" data-p="p4">填报建议</button>
+</div>
+
+<!-- ========== 面板1：专业速查 ========== -->
+<div class="panel on" id="p1">
+  <div class="filters">
+    <div class="frow">
+      <div class="fgroup">
+        <label>推荐档位</label>
+        <div class="chips" id="f-tier">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="A">A 高确定性</button>
+          <button class="chip" data-v="B">B 高成长</button>
+          <button class="chip" data-v="C">C 特色刚需</button>
+          <button class="chip" data-v="D">D 谨慎</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>学科门类</label>
+        <div class="chips" id="f-cat">
+          <button class="chip on" data-v="all">全部</button>
+          <button class="chip" data-v="工学">工学</button>
+          <button class="chip" data-v="医学">医学</button>
+          <button class="chip" data-v="理学">理学</button>
+          <button class="chip" data-v="经济学">经济学</button>
+          <button class="chip" data-v="法学">法学</button>
+          <button class="chip" data-v="文学">文学</button>
+          <button class="chip" data-v="教育学">教育学</button>
+          <button class="chip" data-v="管理学">管理学</button>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label>搜索专业 / 产业 / 院校</label>
+        <input class="search" id="q" type="text" placeholder="如：计算机、人工智能、芯片、微电子、临床、电气、法学、金融、北邮、北交大、首医、北工大">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-count" id="cnt"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ========== 面板2：产业链 ========== -->
+<div class="panel" id="p2">
+  <div id="chains"></div>
+</div>
+
+<!-- ========== 面板3：区域 ========== -->
+<div class="panel" id="p3">
+  <div class="citygrid" id="cities"></div>
+</div>
+
+<!-- ========== 面板4：建议 ========== -->
+<div class="panel" id="p4">
+  <div class="adv">
+    <h3>一、先看懂 2027 届的两个新变化</h3>
+    <ul>
+      <li><b>新增专业大扩容，但要警惕「新专业陷阱」。</b>教育部 2026 年本科专业目录新增 38 种，北京几乎全部对得上：<b>具身智能</b>（对应亦庄「慧思开物」与万台级量产）、<b>生物制造</b>（对应昌平生命谷 145 家企业）、<b>半导体工艺与装备</b>（对应北方华创与亦庄装备全国第一）、<b>低空经济与管理</b>（对应延庆无人机与空天技术）、<b>氢能/储能</b>（对应大兴氢能 260+ 家企业）。但新专业无往年录取数据、无毕业生验证，务必查清是否有真实实验室、算力平台和企业联合项目。</li>
+      <li><b>大类招生被收紧，2027 届是利好。</b>2026 年招生新规要求高校原则上按专业招生。北京高校专业组划分细、组内专业差异大（同一组内可能同时含 A 档与 D 档专业），更要查清专业组包含的具体专业与分流规则，避免被调剂到土木/泛管理。</li>
+    </ul>
+  </div>
+
+  <div class="adv">
+    <h3>二、四档分类怎么用</h3>
+    <div class="tiers">
+      <div class="tbox" style="border-left:3px solid var(--green)"><h4>A 档 · 高确定性</h4><p>北京有 5000 亿级产业或国家战略集群支撑，岗位多、起薪稳、留京/外溢皆通。适合求稳、希望毕业即就业的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--brand)"><h4>B 档 · 高成长</h4><p>对应「十五五」未来产业与能级跃升产业，增速快但波动大。适合有冲劲、能持续学习、打算深造的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--accent)"><h4>C 档 · 特色刚需</h4><p>对应北京独有赛道（总部金融/法律合规/轨交/网安/外事/师范/传媒），分数友好。适合想留京、看重行业资源与体制通道的孩子。</p></div>
+      <div class="tbox" style="border-left:3px solid var(--red)"><h4>D 档 · 谨慎填报</h4><p>受地产/进口/消费承压，或本地产业体量不匹配、严重内卷。除非有明确情怀和资源，否则慎选。</p></div>
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>三、按分数段的策略</h3>
+    <table>
+      <thead><tr><th style="width:22%">分数段</th><th style="width:30%">策略</th><th>推荐方向</th></tr></thead>
+      <tbody>
+        <tr><td><b>高分段</b><br>清北/华五人档</td><td>学校优先 + 专业不将就，锁 A+ 学科与拔尖班</td><td>清华（计算机/电气/材料/控制 A+）、北大（数学/物理/计算机/临床 A+）、人大（法学/应用经济学 A+）、北航（航空宇航/软件 A+）、北理工（兵器/机械/材料 A+）</td></tr>
+        <tr><td><b>中高分</b><br>顶尖行业特色校</td><td>选「行业特色校的 A+ 王牌」优于「综合排名略高但专业弱」</td><td>北邮（信通 A+、电子 A+、计算机 A+）、北交大（交通运输 A+、信通 A+）、北科大（材料 A+、冶金 A+）、中国政法（法学 A+）、华北电力（电气）、首都医科大学（临床）</td></tr>
+        <tr><td><b>中分</b><br>双一流线边缘</td><td>用市属/行业校补分数差，紧贴产业链</td><td>北京工业大学（软件工程 A+、微电子）、北京化工大学（化工 A+，走新材料）、北京中医药大学（中医学 A+）、首都师范大学（数学双一流、师范主力）、北京信息科技大学（仪器/控制）</td></tr>
+        <tr><td><b>中低分段</b><br>及历史组</td><td>优先有行业背景与体制通道的院校，锁特色专业</td><td>中国传媒大学（新闻传播/戏剧影视 A+）、北京外国语大学（语言 A+）、对外经济贸易大学、中央财经大学、北京联合大学（应用型）、北京物资学院（物流）</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--ink-2)"><b>历史组建议：</b>法学（中国政法/人大）、金融学类（央财/对外经贸）、外国语言文学（北外）、新闻传播（人大/中传）、教育学/心理学（北师大/首师）是历史组友好方向；<b>避开需要物理+化学的工科组</b>。文科岗位对户籍与学历更敏感，建议优先选「有专业壁垒 + 可考证书」的方向（法学法考、会计 CPA、教师资格证）。</p>
+  </div>
+
+  <div class="adv">
+    <h3>四、在北京读，还是出省读？（含外省/河北考生判断）</h3>
+    <table>
+      <thead><tr><th style="width:38%">专业类型</th><th style="width:16%">建议</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>人工智能/计算机/电子信息/集成电路/自动化/机器人<br><span style="color:var(--ink-3);font-size:12.5px">（「芯·模·械」硬科技）</span></td><td><b style="color:var(--green)">优先留京</b>（含外省考生来京）</td><td>产业+高校双密集，AI 占全国约一半、IC +20%；北邮/北交大/北科大/北工大专业全国顶尖而分数友好，京沪苏浙同档分数溢价 20–50 分</td></tr>
+        <tr><td>临床医学/药学/生物医学工程</td><td><b style="color:var(--green)">留京或出省均可</b></td><td>协和/北大医学部/首医/北中医全国顶尖，但医学就业高度绑定规培与编制地，回户籍地就业须提前确认认可度</td></tr>
+        <tr><td>航空航天/车辆/材料/化工</td><td><b style="color:var(--accent)">留京读研为主，就业看京外</b></td><td>研发与总部在京，量产与制造多在京外（京津冀/长三角）；材料、化工尤甚</td></tr>
+        <tr><td>法学/金融/新闻传播/外语/教育</td><td><b style="color:var(--accent)">留京需算清门槛，否则回户籍地更优</b></td><td>总部岗位竞争激烈、学历门槛高；回河北等户籍地，北京高校文凭认可度极高，性价比反而更好</td></tr>
+        <tr><td>土木/建筑/泛管理/传统化工</td><td><b style="color:var(--red)">考虑他省或转方向</b></td><td>房地产 -15.5%、二产仅 13.8%、本地无大型化工产能</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="background:var(--brand-soft);color:#8b1e24;border-left-color:var(--brand);margin-top:14px">
+      <b>北京独有优势：高教全国断层第一（34 所双一流、8 所 985）+ 硬科技策源 + 总部与体制通道。</b><b>外省/河北考生必须算清两笔账：</b>①<b>分数溢价账</b>——北邮、北交大、北科大、中国政法、华北电力、首都医科大学等「行业特色校 A+ 专业」分数远低于清北同档，是最大信息差红利；②<b>落户门槛账</b>——应届落户年龄本科≤26/硕士≤30/博士≤35，本科限「双一流」或紧缺专业，且必须有进京指标单位。值得来：AI·计算机·电子信息·集成电路·机器人·临床·航空航天且愿意读研的孩子；要慎重：师范·文科·泛管理·财会且想本科毕业直接回河北就业的孩子；非京籍务必把「读到硕士」当成默认选项。
+    </div>
+  </div>
+
+  <div class="adv">
+    <h3>五、十条实用建议（可直接照做）</h3>
+    <ol>
+      <li><b>先定产业，再定专业。</b>北京靠「芯（集成电路）+ 模（AI 大模型）+ 车（智能网联）+ 星（空天技术）+ 械（机器人智造）+ 药（医药健康）」六引擎，别被「首都/金融/央企」标签误导去挤泛管理和纯金融。</li>
+      <li><b>A 档专业是压舱石。</b>计算机、人工智能、电子信息、集成电路、临床医学、电气六者覆盖北京最有确定性的岗位，优先冲。</li>
+      <li><b>看规划要看「十五五」版，不是「2441」。</b>集成电路、机器人和智能制造、智能网联汽车、空天技术、新材料、新型安全应急 6 个能级跃升产业，就是未来 5 年资金与岗位最集中的地方（2030 年高精尖占比要从 34.6% 提到 40%）。</li>
+      <li><b>行业特色校是最大信息差。</b>北邮（信通 A+、电子 A+、计算机 A+）、北交大（交通运输 A+）、北科大（材料 A+）、中国政法（法学 A+）、华北电力（电气）、首都医科大学（临床）、北工大（软件 A+）、北化工（化工 A+）——专业全国顶尖、分数远低于清北同档，分数够不到清北的家庭这是最优解。</li>
+      <li><b>贴「海淀 + 亦庄」双核心。</b>海淀（AI/量子/IC 设计/医药研发）是策源，亦庄（IC 制造/智能网联汽车/机器人/商业航天/信创）是转化；昌平（生命谷）、大兴（药谷/氢能/火箭大街）、顺义（智能网联）、丰台（轨交）、通州（网安）是特色极点。选专业前先看对口产业在哪个区，再倒推院校。</li>
+      <li><b>人工智能要从「模型」看到「算力+数据+具身」。</b>AI 核心产业 4500 亿元、算力 6 万 P、备案大模型全国第一；真正增量在具身智能（慧思开物、万台级量产）、AI+医疗/制造/法律；优先选「有算力平台、有真实数据、有企业联合项目」的院校。</li>
+      <li><b>集成电路是北京最被低估的硬核。</b>IC 规模 +20%、重点企业 600 余家、亦庄产值破千亿、装备占全国一半以上、设备购置投资 +66%；对数理要求高、培养周期长，务必规划本硕连读或保研。</li>
+      <li><b>医药健康要区分「短期下滑」与「长期向好」。</b>2025 年医药制造业增加值 -8.6%（短期承压），但产业规模 1.1 万亿、34 款创新药械获批（全国第一）、昌平生命谷与大兴药谷持续扩容；研发岗普遍要硕士以上。</li>
+      <li><b>土建链坚决回避传统方向，化工要接受京外就业。</b>房地产开发投资 -15.5%、北京二产占比仅 13.8%；除非清华建筑/规划 A+，或北京化工大学走「新材料/半导体材料/碳中和」方向并规划深造或京外就业。</li>
+      <li><b>把「落户」作为选专业的隐藏变量。</b>应届落户年龄卡死（本 26/硕 30/博 35）、本科限「双一流」或紧缺专业、必须有进京指标单位；非京籍家庭选专业的同时就要规划是否读研、读什么方向（AI/IC/生物医药等紧缺专业更易拿指标）、进哪类单位（央企/市属国企/专精特新）。</li>
+    </ol>
+  </div>
+</div>
+
+<footer>
+  数据来源：北京市统计局、国家统计局北京调查总队《北京市 2025 年国民经济和社会发展统计公报》（2026-03-25）、北京市统计局《2025 年北京经济稳中向好 高质量发展取得积极成效》（2026-01-21）、北京市人民政府《北京市「十五五」时期现代化产业体系发展规划》（2026-07-30）、2026 年北京市政府工作报告、北京市经信局新闻发布会（2026-02-28）、教育部《普通高等学校本科专业目录（2025 年）》及 2026 年新增专业、第二轮「双一流」名单及第五轮学科评估公开整理。<br>
+  本表用于专业方向判断与产业认知，正式填报请以考生所在省教育考试院当年公布的招生计划、院校招生章程及录取位次为准。细分产值与模型备案数跨源或有差异，已采信官方公报口径，未做跨源估算。
+</footer>
+
+</div>
+
+<script>
+var MAJORS = [
+ {n:"计算机类（含软件工程）",c:"工学",ch:"AI/软件信息服务",t:"A",h:5,s:"清华大学（计算机 A+、软件 A+）／北京大学（计算机 A+）／北京航空航天大学（软件 A+）／北京邮电大学（计算机 A+）／北京交通大学／北京工业大学（软件 A+）",j:"大模型算法与工程、基础软件与信创、分布式系统、AI 应用开发",
+  r:"信息软件业 12192 亿 +11.0%、数字经济占 GDP 46.4%；AI 核心产业 4500 亿、企业 2500+。",w:"工程能力>文凭；选科多要求物理+化学；分数低于清北看北邮/北交大/北工大，就业不输多数 985。",city:"海淀 · 亦庄 · 朝阳"},
+ {n:"人工智能（智能科学与技术）",c:"工学",ch:"AI 大模型",t:"A",h:5,s:"清华大学／北京大学／北京航空航天大学／北京理工大学／北京邮电大学（人工智能）／中国科学院大学",j:"大模型研发、具身智能、AI 应用工程、AI 医疗/AI 制药、智能体开发",
+  r:"北京 AI 核心产业规模 4500 亿、占全国约一半；备案大模型数量全国首位；算力总规模 6 万 P。",w:"新专业密集开设，须看是否有算力平台与真实项目；数学要求高，建议规划读研。",city:"海淀 · 朝阳 · 亦庄"},
+ {n:"电子信息类（通信/微电子/光电）",c:"工学",ch:"集成电路/信创",t:"A",h:5,s:"北京邮电大学（信息与通信工程 A+、电子科学与技术 A+）／清华大学（电子 A+）／北京航空航天大学（仪器 A+）／北京理工大学／北京交通大学（信通 A+）",j:"芯片设计/验证、通信设备、射频与天线、光电与新型显示、卫星通信终端",
+  r:"计算机通信电子增加值 +20.2%、高于全国 9.6 个百分点；亦庄信创园聚集 700 余家企业。",w:"北邮是「四电四邮」之首，分数显著低于清北，是外省考生最大的性价比洼地；深造（微电子/集成电路）溢价明显。",city:"海淀 · 亦庄 · 顺义"},
+ {n:"集成电路设计与集成系统/微电子",c:"工学",ch:"集成电路",t:"A",h:5,s:"清华大学（集成电路）／北京大学（微电子）／北京航空航天大学／北京理工大学／北京邮电大学（微电子）／北京工业大学（微电子）",j:"数字/模拟芯片设计、半导体装备、EDA、封测、功率与化合物半导体",
+  r:"IC 产业规模增长超 20%、重点企业 600 余家；经开区产值首破千亿、自主装备产业规模占全国一半以上。",w:"数理要求高、培养周期长，建议本硕连读或保研；「十五五」列为能级跃升产业第 1 位，政策与资金持续加码。",city:"亦庄 · 海淀 · 通州"},
+ {n:"临床医学（含口腔医学）",c:"医学",ch:"医药健康",t:"A",h:5,s:"北京协和医学院（顶尖、与清华合作办学）／北京大学医学部（临床 A+）／首都医科大学（临床强、三甲体系完整）／北京中医药大学（中医学 A+）",j:"三甲医院临床、医学科研、AI 医疗与器械企业医学岗、公共卫生",
+  r:"医药健康产业规模 1.1 万亿元；34 款创新药械获批上市，创新医疗器械与 AI 医疗产品获批数量全国第一。",w:"学制长（5+3 一体化/本博）、分数极高；首医非双一流但临床实力与就业在京极强，是分数洼地；留京须提前规划规培与就业单位。",city:"西城 · 海淀 · 丰台"},
+ {n:"电气工程及其自动化",c:"工学",ch:"新能源/绿电/电网",t:"A",h:4,s:"清华大学（电气工程 A+）／华北电力大学（北京校区，电气为双一流建设学科、国网校招第一梯队）／北京交通大学（电气）／北京科技大学",j:"电网与电力设备、新能源并网与储能、数据中心供电、汽车三电",
+  r:"锂离子电池产量 +1.2 倍、可再生能源装机占比 26.3%；2030 年新增生产用电中绿电比重达 80%。",w:"电网方向须提前准备国网考试；华电（北京）分数低于同类 985，是进电网体系的高性价比通道。",city:"昌平 · 海淀"},
+ {n:"机器人工程/智能制造工程",c:"工学",ch:"机器人与具身智能",t:"B",h:4,s:"北京航空航天大学（机械/机器人）／北京理工大学（机械工程 A+）／北京工业大学（智能制造）／北京信息科技大学（仪器/控制）／北京科技大学（机械）",j:"机器人本体研发、具身智能算法、产线集成、智能工厂系统",
+  r:"服务机器人产量 +47.6%；全球首个通用具身智能平台「慧思开物」；2030 年目标国家级智能工厂 100 家、万人机器人 100 台。",w:"属新工科，务必看清课程是否含控制+嵌入式+AI，避「挂牌专业」。",city:"亦庄 · 昌平 · 海淀"},
+ {n:"自动化",c:"工学",ch:"智驾/机器人/航天控制",t:"B",h:4,s:"清华大学（控制科学与工程 A+）／北京航空航天大学（控制/仪器 A+）／北京理工大学（控制）／北京工业大学（控制）／华北电力大学",j:"控制系统、运动控制、工业自动化、飞行器控制、智驾规控",
+  r:"智能网联汽车、具身智能控制、航天器姿态控制、智能工厂全需自动化；灯塔工厂 5 家、卓越级智能工厂 19 家。",w:"「控制+AI」复合比纯控制更有溢价；注意各校自动化归属学院（自动化/智能/机械）差异大。",city:"海淀 · 亦庄 · 房山"},
+ {n:"生物医学工程/药学/生物制药",c:"工学",ch:"医药健康/合成生物",t:"B",h:4,s:"北京大学医学部（药学 A+）／北京协和医学院（药学）／北京中医药大学（中药学）／北京化工大学（生物工程/制药工程）／首都医科大学（生医工）",j:"创新药研发、医疗器械注册与研发、AI 制药、CRO/CDMO、生物制造",
+  r:"34 款创新药械获批、AI 医疗产品获批数全国第一；昌平生命谷 145 家企业、大兴「中国药谷」三支柱。",w:"医药制造业增加值 -8.6% 是 2025 年短期下滑，与长期向好并存须区分；研发岗普遍要求硕士及以上。",city:"昌平 · 大兴 · 海淀"},
+ {n:"材料科学与工程（半导体/新材料）",c:"工学",ch:"新材料/半导体",t:"B",h:3,s:"北京科技大学（材料 A+、冶金 A+）／清华大学（材料 A+）／北京航空航天大学／北京理工大学（材料 A+）／北京化工大学（材料 A+）",j:"半导体材料工艺、航天材料、新能源材料、石墨烯与超导",
+  r:"「十五五」能级跃升产业之一，推进「AI+新材料」范式变革，北科大材料/冶金 A+。",w:"北京材料产业以「研发+小批量高端」为主，制造岗位多在京外；务必选半导体/航天/新能源材料方向，避泛材料。",city:"海淀 · 亦庄 · 房山"},
+ {n:"航空航天类（空天技术）",c:"工学",ch:"商业航天",t:"B",h:4,s:"北京航空航天大学（航空宇航 A+、仪器 A+）／北京理工大学（兵器 A+、航空宇航）／清华大学（航空航天）／北京交通大学",j:"火箭与卫星总体设计、动力系统、航天电子、地面站与测运控、遥感应用",
+  r:"朱雀三号可复用火箭首飞入轨、「一箭多星」屡刷纪录；「南箭北星」格局，深度参与国家大型星座组网。",w:"航天院所多要求硕士及以上，且在京单位进京指标竞争激烈；商业航天企业弹性更大但波动也大。",city:"大兴 · 海淀 · 丰台"},
+ {n:"统计学/数据科学",c:"理学",ch:"AI 数据底座/金融",t:"B",h:3,s:"北京大学（统计学 A+）／中国人民大学（统计学 A+）／北京师范大学（统计学 A）／中央财经大学／对外经济贸易大学",j:"数据分析与商业智能、量化与风险管理、大模型数据工程、政务与医疗数据治理",
+  r:"AI 数据运营平台汇聚数据 3.4PB；金融业 8668 亿、量化与风控需求强；西城「中国数据街」推动数据要素流通。",w:"数学要求高，是 AI 与金融的通用底座；建议叠加计算机或金融双技能。",city:"海淀 · 西城 · 朝阳"},
+ {n:"法学",c:"法学",ch:"合规/知产/法律服务",t:"C",h:4,s:"中国政法大学（法学 A+、双一流学科）／中国人民大学（法学 A+）／北京大学（法学 A+）／清华大学（法学 A+）／对外经济贸易大学（国际经济法）",j:"公检法、律所（总部与涉外业务）、企业法务与合规、知识产权",
+  r:"国家金融管理中心与央企总部聚集地，高新技术企业突破 3 万家、知产需求密集；建设国家级法律大模型创新平台。",w:"须过法考；纯法学内卷，建议叠加知产/数据合规/涉外方向；中国政法分数远低于人大法学院同档，是洼地金矿。",city:"朝阳 · 海淀 · 西城"},
+ {n:"金融学类（金融/金融工程/保险）",c:"经济学",ch:"金融/金融科技",t:"C",h:4,s:"北京大学（应用经济学 A+）／中国人民大学（应用经济学 A+）／清华大学／中央财经大学（应用经济学双一流）／对外经济贸易大学",j:"银行/证券/基金、资产管理、金融科技、风险管理、监管与自律组织",
+  r:"金融业增加值 8668.2 亿 +8.7%；朝阳金融机构 1800+ 家、亚投行总部；北交所上市公司 288 家、市值超 8600 亿。",w:"总部金融岗位竞争激烈、学历门槛高，多数核心岗要硕士；建议走「金融+数学/计算机」（量化、金融科技）复合，避纯金融。",city:"朝阳 · 西城 · 海淀"},
+ {n:"网络空间安全/信息安全",c:"工学",ch:"新型安全应急",t:"C",h:3,s:"北京邮电大学（网络空间安全）／北京航空航天大学（网络空间安全 A+）／中国人民公安大学（公安技术，需政审体检）／北京电子科技学院（需政审）",j:"安全攻防与渗透测试、数据安全与合规、信创安全、政企安全运营",
+  r:"「十五五」能级跃升产业之一；通州布局网络信息安全产业组团；数据跨境流动覆盖 26 个重点产业领域。",w:"公安类院校须政审、体检、体测，报考前查清当年招生条件；技术岗重实操与竞赛，学历门槛相对友好。",city:"通州 · 海淀"},
+ {n:"交通运输（轨道交通方向）",c:"工学",ch:"轨道交通",t:"C",h:3,s:"北京交通大学（交通运输工程 A+、系统科学 A+）／北京航空航天大学／北京工业大学（交通运输工程）",j:"轨道交通设计与运营、运输组织、智能交通、交通规划院与央企",
+  r:"北交大是全国交通运输第一梯队；丰台打造具有全球影响力的轨道交通创新中心；京津冀协同推动轨交外溢。",w:"行业稳定但增量有限，适宜求稳、愿意进央企/设计院/地铁系统的考生；北交大分数显著低于清北同档。",city:"丰台 · 海淀"},
+ {n:"车辆工程（智能网联新能源）",c:"工学",ch:"智能网联汽车",t:"C",h:3,s:"清华大学（车辆工程）／北京理工大学（机械 A+、车辆）／北京航空航天大学（交通科学与工程）／北京交通大学（车辆）／北京信息科技大学",j:"整车研发、三电系统、智能驾驶、汽车电子、试验验证",
+  r:"汽车制造业增加值 +17.7%、新能源汽车产量 69.9 万辆 +1.4 倍；亦庄自动驾驶示范区测试里程超 4800 万公里。",w:"北京整车产量体量相对有限，但「研发+总部」岗位密度全国最高；须锁智能网联/三电/软件定义汽车方向，避传统燃油车机械。",city:"亦庄 · 顺义 · 昌平"},
+ {n:"外国语言文学",c:"文学",ch:"国际交往/数字出海",t:"C",h:3,s:"北京外国语大学（外国语言文学 A+、双一流学科）／北京大学（外国语言文学 A+）／对外经济贸易大学（商务外语）／外交学院（需政审面试）／北京语言大学",j:"外交外事与国际组织、涉外法务与合规、跨境商务、语言技术与本地化",
+  r:"国际交往中心，亚投行总部及世行/IMF 驻华机构在京；数字出海覆盖 29 个重点国家、在谈订单约 26 亿美元。",w:"纯语言内卷严重，必须叠加「法律/国贸/数据/区域国别」第二技能；AI 翻译冲击基础岗位，高端涉外通道仍稀缺。",city:"海淀 · 朝阳"},
+ {n:"新闻传播学/网络与新媒体",c:"文学",ch:"信息内容消费",t:"C",h:3,s:"中国人民大学（新闻传播学 A+）／中国传媒大学（新闻传播学 A+、戏剧与影视学 A+）／北京大学／北京师范大学",j:"内容策划与运营、视听制作、品牌与公关、AIGC 内容工程",
+  r:"朝阳为国家文创实验区、建成全市首个 AIGC 视听产业创新中心；石景山全国首个元宇宙综合体。",w:"传统媒体岗位收缩，新媒体与 AIGC 岗位增长；作品集与实习>文凭；建议叠加数据/编程/设计技能。",city:"朝阳 · 海淀 · 石景山"},
+ {n:"教育学/心理学/师范",c:"教育学",ch:"教育/公共服务",t:"C",h:3,s:"北京师范大学（教育学 A+、心理学 A+）／首都师范大学（数学双一流学科、师范主力）／北京联合大学（师范/应用）",j:"中小学教师、教研与教育管理、心理咨询、教育科技产品",
+  r:"北师大教育学/心理学全国第一；首都师大是北京市属师范主力；对接 AI+教育、青少年心理健康新场景。",w:"北京公办教师编制竞争激烈，多数区对应届生有户籍或居住证限制；外省考生回户籍地任教认可度高；心理学本科就业面窄，建议规划读研。",city:"海淀 · 西城"},
+ {n:"土木/建筑/城乡规划",c:"工学",ch:"土建",t:"D",h:2,s:"清华大学（仅建筑学/城乡规划 A+，走设计院或学术路线）",j:"设计院、施工、基建、智能建造、城市更新",
+  r:"房地产开发投资 -15.5%、房屋施工面积 -8.9%、商品房销售面积 -6.9%、基础设施投资 -1.6%。",w:"北京增量建设空间有限，城市更新与存量运维为主；且北京土建岗位对户籍/指标不友好。",city:"北京（存量更新）"},
+ {n:"工商管理/泛管理",c:"管理学",ch:"泛管理",t:"D",h:2,s:"中国人民大学（仅顶尖平台，须规划硕士与人脉资源）",j:"企业职能管理、行政、咨询",
+  r:"总部管理岗以「名校硕士+行业经验+内部晋升」为主，本科泛管理直接进入门槛极高；「十五五」无泛管理赛道支撑。",w:"无技术壁垒、无行业绑定、被 AI 与内卷双重挤压；除非明确走「行业+管理」或有明确资源承接路径。",city:"朝阳 · 西城"},
+ {n:"化学工程与工艺",c:"工学",ch:"化工新材料",t:"D",h:2,s:"北京化工大学（化学工程与技术 A+，走新材料/半导体材料/碳中和方向）",j:"新材料、半导体材料、精细化工、生物制造",
+  r:"北京二产占比仅 13.8%、本地无大型石化/煤化工产能；同期医药制造业 -8.6% 拖累精细化工需求。",w:"北京化工产业体量与北化工学科实力严重不匹配，本地对口岗位少，毕业生多数外流；须明确接受京外就业。",city:"房山 · 大兴"}
+];
+
+var CHAINS = [
+ {n:"人工智能与大模型（北京第一引擎）",u:["智能算力芯片","智算集群（6 万 P、3 万卡级国产）","数据要素（超 2000TB）"],m:["大模型（备案 209 款、全国首位）","AI 框架","智能体"],d:["AI+医疗/制造/金融/法律","具身智能"],
+  mj:"人工智能、计算机、软件工程、智能科学与技术、统计学",
+  f:"2025 年 AI 核心产业规模 4500 亿元、相关企业超 2500 家，均占全国约一半；海淀集聚 AI 企业超 1300 家；「十五五」力争 2 年内核心产业规模破万亿。"},
+ {n:"集成电路（增长最猛的能级跃升产业）",u:["半导体材料","半导体装备（北方华创）"],m:["芯片设计","晶圆制造","封测"],d:["AI 算力芯片","车规级芯片","消费电子","显示驱动"],
+  mj:"集成电路、微电子、电子信息、材料",
+  f:"重点企业 600 余家、产业规模约 2000 亿元、增长超 20%；经开区 2025 年产值首破千亿、增速约 20%，自主装备产业规模占全国一半以上；设备购置投资 +66.0% 主要由 IC 项目带动。"},
+ {n:"医药健康与创新药械（1.1 万亿优势引领）",u:["生命科学基础研究","AI 制药"],m:["创新药","细胞与基因治疗","高端医疗器械"],d:["互联网医院（119 家）","临床诊疗","康养"],
+  mj:"临床医学、药学、生物医学工程、生物制药",
+  f:"产业规模 1.1 万亿元；34 款创新药械获批上市、创新医疗器械与 AI 医疗产品获批数量全国第一；昌平生命谷 145 家企业、大兴「中国药谷」三支柱；但医药制造业增加值 -8.6% 短期承压，须区分。"},
+ {n:"智能网联汽车与新能源汽车",u:["车规级芯片","电池材料","锂资源"],m:["整车（小米汽车/北京奔驰/理想）","三电系统","智驾系统（地平线）"],d:["充换电","自动驾驶示范运营","后市场"],
+  mj:"车辆工程、电气、自动化、计算机（智驾）、机械",
+  f:"汽车制造业增加值 +17.7%；新能源汽车产量 69.9 万辆、增长 1.4 倍；亦庄高级别自动驾驶示范区累计测试里程超 4800 万公里（全国领先）。"},
+ {n:"机器人与智能制造（含具身智能）",u:["减速器/伺服电机/传感器","具身大模型"],m:["人形机器人本体","工业机器人","智能工厂"],d:["工业产线","零售/医疗/文旅服务场景"],
+  mj:"机器人工程、智能制造工程、机械、自动化",
+  f:"服务机器人产量 +47.6%；经开区发布全球首个通用具身智能平台「慧思开物」；2030 年目标国家级智能工厂 100 家、万人机器人拥有量 100 台；经开区预计 2027 年底形成万台级具身智能机器人量产。"},
+ {n:"空天技术/商业航天（「南箭北星」）",u:["火箭发动机","卫星载荷","航天材料"],m:["火箭总装（大兴火箭大街）","卫星研制（海淀）","地面站"],d:["卫星互联网","遥感与导航应用","「北斗+」融合"],
+  mj:"航空航天类、自动化、电子信息、材料、测绘",
+  f:"空天技术列入「十五五」6 个能级跃升产业；朱雀三号可重复使用火箭首飞入轨；「一箭多星」屡刷纪录；北京商业航天产业基地（大兴 2.52 平方公里）加速「飞地」合作。"},
+ {n:"软件与信息服务/数字经济（占 GDP 46.4%）",u:["算力","数据要素（国际数据口岸）"],m:["基础软件","工业软件","信创（亦庄国家信创园 700 余家）"],d:["金融/政务/互联网应用","数字出海"],
+  mj:"软件工程、计算机、网络空间安全、数据科学",
+  f:"数字经济增加值 24166.3 亿元、占 GDP 46.4%；信息传输/软件业增加值 12192.4 亿元 +11.0%；32 家平台企业入选中国互联网百强、数量全国第一；每万人 5G 基站 70 个、全国首位。"},
+ {n:"科技服务与金融（总部经济/生产性服务业）",u:["高校院所","国家实验室"],m:["技术转移","检验检测","知识产权"],d:["金融","总部决策","国际组织"],
+  mj:"金融学、法学、会计学、统计学",
+  f:"金融业增加值 8668.2 亿元 +8.7%；朝阳金融机构超 1800 家；北交所上市公司 288 家、总市值超 8600 亿元；国家级高新技术企业突破 3 万家。"}
+];
+
+var CITIES = [
+ {c:"海淀区",i:"人工智能（全球高地）、具身智能、量子科技、集成电路设计、医药健康",l:"百度、字节/抖音、小米、智谱、月之暗面、智源研究院",m:"人工智能、计算机、软件、微电子、电子信息、统计学"},
+ {c:"北京经开区（亦庄）",i:"集成电路、智能网联汽车、机器人与具身智能、商业航天、生物医药、信创",l:"北方华创、中芯京城、小米汽车、北京奔驰、京东、国家信创园（700 余家）",m:"集成电路、车辆、机器人工程、自动化、计算机、航空航天"},
+ {c:"朝阳区",i:"金融（国际金融主聚集区）、人工智能、产业互联网、信息内容消费、文创",l:"金融机构 1800+ 家（外资/合资近 400 家）、阿里巴巴、亚投行",m:"金融学、计算机、法学、新闻传播、统计学"},
+ {c:"昌平区",i:"医药健康（生命谷）、机器人、绿色能源、智能制造与装备、合成生物",l:"昌平生命谷（145 家企业）、小米智能工厂、南口全国重点实验室集群",m:"药学、生物医学工程、临床医学、机械、自动化"},
+ {c:"大兴区",i:"临空经济、生物医药（中国药谷）、氢能、商业航天（火箭大街）、数字经济",l:"大兴生物医药基地、国际氢能示范区（260+ 家）、北京商业航天产业基地",m:"药学、生物、能源动力、航空航天、计算机"},
+ {c:"顺义区",i:"智能网联汽车、第三代半导体、航空航天",l:"北京奔驰、理想汽车、第三代半导体企业",m:"车辆、微电子、材料、航空航天"},
+ {c:"丰台区",i:"轨道交通（全球影响力创新中心）、航空航天",l:"中国中车系、航天科技系、轨道交通企业",m:"交通运输、车辆、机械、自动化"},
+ {c:"石景山区",i:"虚拟现实/元宇宙（全国首个元宇宙综合体）、数字金融、数字人民币",l:"元宇宙综合体、数字金融企业",m:"计算机、数字媒体技术、金融学、设计学"},
+ {c:"房山区",i:"智能制造与装备、前沿新材料、智能网联汽车、氢能",l:"新材料与装备企业、京东方系配套",m:"材料、机械、自动化、化工"},
+ {c:"通州区（城市副中心）",i:"网络信息安全、数字经济、新兴智造（千亿级投资规模）",l:"网络安全产业组团、北京通州站",m:"网络空间安全、计算机、信息安全"},
+ {c:"门头沟/怀柔/延庆（生态涵养区）",i:"京西智谷算力与 AI、高端科学仪器与传感器、无人机与低空经济",l:"中关村（京西）AI 科技园、怀柔科学城、延庆无人机产业园",m:"计算机、测控技术与仪器、航空航天、自动化"}
+];
+
+var TIER_LABEL = {A:"A 高确定性",B:"B 高成长",C:"C 特色刚需",D:"D 谨慎"};
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function stars(n){var s='';for(var i=0;i<5;i++){s+= (i<n?'★':'☆');}return s;}
+
+var fTier='all', fCat='all', fQ='';
+
+function render(){
+  var out=[];
+  for(var i=0;i<MAJORS.length;i++){
+    var m=MAJORS[i];
+    if(fTier!=='all' && m.t!==fTier) continue;
+    if(fCat!=='all' && m.c!==fCat) continue;
+    if(fQ){
+      var hay=(m.n+m.c+m.ch+m.s+m.j+m.r+m.city).toLowerCase();
+      if(hay.indexOf(fQ.toLowerCase())<0) continue;
+    }
+    out.push(m);
+  }
+  document.getElementById('cnt').innerHTML='共 <b>'+out.length+'</b> 个专业方向'
+    + (fTier!=='all'?'　·　档位：'+TIER_LABEL[fTier]:'')
+    + (fCat!=='all'?'　·　门类：'+fCat:'');
+  var html='';
+  for(var k=0;k<out.length;k++){
+    var m=out[k];
+    html+='<div class="card t'+m.t+'">'
+      +'<div class="chead"><div class="cname">'+esc(m.n)+'</div><div class="tier">'+TIER_LABEL[m.t]+'</div></div>'
+      +'<div class="meta"><span class="tag">'+esc(m.c)+'</span><span class="tag chain">'+esc(m.ch)+'</span>'
+      +'<span class="heat" title="报考热度">'+stars(m.h)+'</span></div>'
+      +'<div class="cline">'+esc(m.r)+'</div>'
+      +'<div class="cline"><b>就业方向：</b>'+esc(m.j)+'</div>'
+      +'<div class="schools"><b>省内院校：</b>'+esc(m.s)+'</div>'
+      +'<div class="cline" style="font-size:12.5px;color:var(--ink-3)"><b>主要区域：</b>'+esc(m.city)+'</div>'
+      +'<div class="warn">'+esc(m.w)+'</div>'
+      +'</div>';
+  }
+  document.getElementById('grid').innerHTML = html || '<div style="color:var(--ink-3);padding:20px 0">没有匹配的专业，试试换个关键词。</div>';
+}
+
+function renderChains(){
+  var html='';
+  for(var i=0;i<CHAINS.length;i++){
+    var c=CHAINS[i];
+    html+='<div class="chain"><h3><span class="cnum">'+(i+1)+'</span>'+esc(c.n)+'</h3><div class="flow">';
+    html+='<span><b>上游</b> '+esc(c.u.join('、'))+'</span><i>→</i>';
+    html+='<span><b>中游</b> '+esc(c.m.join('、'))+'</span><i>→</i>';
+    html+='<span><b>下游</b> '+esc(c.d.join('、'))+'</span></div>';
+    html+='<div class="majors"><b>对应专业：</b>'+esc(c.mj)+'</div>';
+    html+='<div class="cfact"><b>产业事实：</b>'+esc(c.f)+'</div></div>';
+  }
+  document.getElementById('chains').innerHTML=html;
+}
+
+function renderCities(){
+  var html='';
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    html+='<div class="city"><h3>'+esc(c.c)+'</h3>'
+      +'<div class="ind"><b>主导产业：</b>'+esc(c.i)+'</div>'
+      +'<div class="lead"><b>代表龙头：</b>'+esc(c.l)+'</div>'
+      +'<div class="maj"><b>最对口专业：</b>'+esc(c.m)+'</div></div>';
+  }
+  document.getElementById('cities').innerHTML=html;
+}
+
+var tierBox=document.getElementById('f-tier');
+tierBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=tierBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fTier=b.getAttribute('data-v'); render();
+});
+var catBox=document.getElementById('f-cat');
+catBox.addEventListener('click',function(e){
+  var b=e.target.closest('.chip'); if(!b) return;
+  var all=catBox.querySelectorAll('.chip');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+  b.classList.add('on'); fCat=b.getAttribute('data-v'); render();
+});
+document.getElementById('q').addEventListener('input',function(e){fQ=e.target.value.trim();render();});
+
+var tabs=document.querySelectorAll('.tab');
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener('click',function(){
+    var all=document.querySelectorAll('.tab');
+    for(var k=0;k<all.length;k++) all[k].classList.remove('on');
+    this.classList.add('on');
+    var ps=document.querySelectorAll('.panel');
+    for(var j=0;j<ps.length;j++) ps[j].classList.remove('on');
+    document.getElementById(this.getAttribute('data-p')).classList.add('on');
+  });
+}
+
+render(); renderChains(); renderCities();
+</script>
+</body>
+</html>
